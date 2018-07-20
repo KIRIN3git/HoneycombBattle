@@ -29,6 +29,8 @@ public class TimeMng {
 	static long sCountDownMS = 3 * 1000;
 	// バトル時間ミリ秒
 	static long sBattleMS = 60 * 1000;
+	// バトル時間ミリ秒
+	static long sGameOverMS = 2 * 1000;
 	// カウントダウン開始時間保存
 	static long sStartCountDownMS;
 	// 戦闘開始時間保存
@@ -39,22 +41,19 @@ public class TimeMng {
 	static long BeforeTimeMillis = sStartCountDownMS;
 
 	// 状況 0:何もなし,1:カウントダウン,2:バトル中,3,GAMEOVER
-	static int sSituation = 0;
-	static final int SITUATION_NOTHING = 0;
-	static final int SITUATION_COUNTDOWN = 1;
-	static final int SITUATION_BATTLE = 2;
-	static final int SITUATION_GAMEOVER = 3;
+	public static final int SITUATION_NOTHING = 0;
+	public static final int SITUATION_COUNTDOWN = 1;
+	public static final int SITUATION_BATTLE = 2;
+	public static final int SITUATION_GAMEOVER = 3;
+	public static int sSituation = SITUATION_NOTHING;
 
-	/*
-	static boolean countDownFlg = false;
-	static boolean battleFlg = false;
-	static boolean gameOverFlg = false;
-*/
-
-	// sFps
+	// FPS
 	static long sFps = Config.FPS;
-	static long sFpsMsec = 1000/ sFps;
 	static long sRunStartTime = 0, sRunEndTime = 0;
+
+	public static int getSituation(){
+		return sSituation;
+	}
 
 	public static void countDownStart(Context context){
 		sSituation = SITUATION_COUNTDOWN;
@@ -62,7 +61,7 @@ public class TimeMng {
 	}
 
 	public static void battleStart(Context context){
-		sSituation = SITUATION_COUNTDOWN;
+		sSituation = SITUATION_BATTLE;
 		sStartBattleMS = getCurrentTime();
 	}
 
@@ -155,6 +154,14 @@ public class TimeMng {
 				Thread.sleep(getsFpsMsec() - (sRunEndTime - sRunStartTime));
 			} catch (InterruptedException e) {
 			}
+		}
+	}
+
+	// ゲームオーバー時のスリープ
+	public static void sleepGameOver(){
+		try {
+			Thread.sleep(sGameOverMS);
+		} catch (InterruptedException e) {
 		}
 	}
 }
