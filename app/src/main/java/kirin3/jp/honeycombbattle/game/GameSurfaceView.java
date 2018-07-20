@@ -10,6 +10,10 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import kirin3.jp.honeycombbattle.mng.TimeMng;
+
+import static kirin3.jp.honeycombbattle.mng.TimeMng.sleepGameOver;
+
 /**
  * Created by shinji on 2017/04/06.
  */
@@ -18,6 +22,11 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 	// スクリーンの大きさ(px)
 	int screen_width, screen_height;
+
+	Context mContext;
+
+	// 背景ALPHA
+	final static int BACK_ALPHA = 255 ;
 
 	// 背景RGB
 	final static int BACK_R = 200 ;
@@ -30,12 +39,13 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 	public GameSurfaceView(Context context){
 		super(context);
 
+		mContext = context;
+
 		// プレイヤー情報の初期化
 		PlayerMng.playerInit(context);
 		// フィールド情報の初期化
 		FieldMng.fieldInit(context);
-		// 時間情報の初期化
-		TimeMng.timeInit(context);
+
 
 		scoreFlg = false;
 
@@ -49,13 +59,16 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 	@Override
 	public void run() {
 
+		// 時間情報の初期化
+		TimeMng.countDownStart(mContext);
+
 		// キャンバスを設定
 		Canvas canvas;
 
 		// ペイントを設定
 		Paint paint = new Paint();
 		Paint bgPaint = new Paint();
-		bgPaint.setColor(Color.argb(255, BACK_R, BACK_G, BACK_B));
+		bgPaint.setColor(Color.argb(BACK_ALPHA, BACK_R, BACK_G, BACK_B));
 
 		while(thread != null){
 			try{
@@ -63,41 +76,34 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 				canvas = surfaceHolder.lockCanvas();
 				canvas.drawRect( 0, 0, screen_width, screen_height, bgPaint);
-				Log.w( "AAAAA", "aaa02");
-				// タップ移動比率xyと指示マーカーのxyを取得
-				if( TimeMng.battleFlg ) PlayerMng.GetMoveXY();
-				Log.w( "AAAAA", "aaa03");
+
 				// 基本六角形
 				FieldMng.DrawHex(paint, canvas);
-				Log.w( "AAAAA", "aaa04");
 				// プレイヤーの表示
 				PlayerMng.DrawPlayer(paint, canvas);
 
-				Log.w( "AAAAA", "aaa05");
 				// カウントダウン中
-				if( TimeMng.countDownFlg ){
-					Log.w( "AAAAA", "aaa1 countDownFlg");
+				if( TimeMng.getSituation() == TimeMng.SITUATION_COUNTDOWN ){
 					// 開始カウントダウンの表示
-					TimeMng.drawCountDown(paint, canvas);
+					TimeMng.drawCountDown(mContext,paint, canvas);
 				}
 				// 試合中
-				else if( TimeMng.battleFlg ){
+				else if( TimeMng.getSituation() == TimeMng.SITUATION_BATTLE ){
+					// バトル中なら、タップ移動比率xyと指示マーカーのxyを取得
+					PlayerMng.GetMoveXY();
+
 					// 指示器の表示
 					PlayerMng.DrawIndicator(paint, canvas);
-					// リミット時間の表示
-					TimeMng.drawLimitTime(paint, canvas);
-				}
-				else if( TimeMng.gameOverFlg ) {
-					try {
-						Thread.sleep(2000);
-					} catch (InterruptedException e) {
-					}
 
-					// インテントのインスタンス生成
-					Intent intent = new Intent(getContext(), ResultActivity.class);
+					// リミット時間の表示
+					TimeMng.drawLimitTime(mContext,paint, canvas);
+				}
+				else if( TimeMng.getSituation() == TimeMng.SITUATION_GAMEOVER ){
+					TimeMng.sleepGameOver();
+
 					// スコア画面の起動
 					if(!scoreFlg){
-						Log.w( "DEBUG_DATA", "gameOverFlg2");
+						Intent intent = new Intent(getContext(), ResultActivity.class);
 						getContext().startActivity(intent);
 						scoreFlg = true;
 					}
