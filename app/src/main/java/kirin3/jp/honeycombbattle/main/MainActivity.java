@@ -1,12 +1,18 @@
 package kirin3.jp.honeycombbattle.main;
 
 import android.content.Intent;
+import android.graphics.Point;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 
+import java.lang.reflect.Method;
+
 import kirin3.jp.honeycombbattle.R;
+import kirin3.jp.honeycombbattle.game.GameActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,10 +26,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // インテントのインスタンス生成
-//                Intent intent = new Intent(MainActivity.this, GameActivity.class);
+                Intent intent = new Intent(MainActivity.this, GameActivity.class);
                 // ゲーム画面の起動
-//                startActivity(intent);
+                startActivity(intent);
             }
         });
     }
+
 }

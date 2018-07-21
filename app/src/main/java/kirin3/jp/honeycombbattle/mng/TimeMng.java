@@ -9,8 +9,8 @@ import java.util.Locale;
 import kirin3.jp.honeycombbattle.Config;
 
 import static kirin3.jp.honeycombbattle.util.TimeUtils.getCurrentTime;
+import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 import static kirin3.jp.honeycombbattle.util.ViewUtils.mirrorDrowText;
-import static kirin3.jp.honeycombbattle.util.ViewUtils.pxToDp;
 
 /**
  * Created by shinji on 2017/06/08.
@@ -21,9 +21,11 @@ import static kirin3.jp.honeycombbattle.util.ViewUtils.pxToDp;
 public class TimeMng {
 	// カウントダウンテキストサイズ
 	static float COUNTDONW_TEXT_SIZE_DP = 60.0f;
+	static float COUNTDONW_TEXT_SIZE_PX;
 
 	// リミットテキストサイズ
 	static float LIMIT_TEXT_SIZE_DP = 40.0f;
+	static float LIMIT_TEXT_SIZE_PX;
 
 	// カウントダウンミリ秒
 	static long sCountDownMS = 3 * 1000;
@@ -51,6 +53,11 @@ public class TimeMng {
 	static long sFps = Config.FPS;
 	static long sRunStartTime = 0, sRunEndTime = 0;
 
+	public static void timeInit(Context context){
+		COUNTDONW_TEXT_SIZE_PX = dpToPx(COUNTDONW_TEXT_SIZE_DP,context.getResources());
+		LIMIT_TEXT_SIZE_PX = dpToPx(LIMIT_TEXT_SIZE_DP,context.getResources());
+	}
+
 	public static int getSituation(){
 		return sSituation;
 	}
@@ -75,7 +82,7 @@ public class TimeMng {
 		long StartMillis = getCurrentTime() - sStartCountDownMS;
 
 		paint.reset();
-		paint.setTextSize(pxToDp(COUNTDONW_TEXT_SIZE_DP,context.getResources()));
+		paint.setTextSize(COUNTDONW_TEXT_SIZE_PX);
 		paint.setColor(Color.RED);
 
 		if( sCountDownMS - StartMillis > 0 ){
@@ -113,7 +120,7 @@ public class TimeMng {
 		if( getBattleLimitTImeS() < 0 ) timeOverFlg = true;
 
 		paint.reset();
-		paint.setTextSize(pxToDp(LIMIT_TEXT_SIZE_DP,context.getResources()));
+		paint.setTextSize(LIMIT_TEXT_SIZE_PX);
 		paint.setColor(Color.RED);
 		if( !timeOverFlg ){
 			// 反転表示

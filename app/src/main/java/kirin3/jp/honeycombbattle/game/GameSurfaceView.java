@@ -5,12 +5,20 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.sql.Time;
+
+import kirin3.jp.honeycombbattle.AppApplication;
+import kirin3.jp.honeycombbattle.main.MainActivity;
+import kirin3.jp.honeycombbattle.mng.FieldMng;
+import kirin3.jp.honeycombbattle.mng.PlayerMng;
 import kirin3.jp.honeycombbattle.mng.TimeMng;
+import kirin3.jp.honeycombbattle.util.ViewUtils;
 
 import static kirin3.jp.honeycombbattle.mng.TimeMng.sleepGameOver;
 
@@ -32,19 +40,24 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 	final static int BACK_R = 200 ;
 	final static int BACK_G = 200 ;
 	final static int BACK_B = 200 ;
+
 	boolean scoreFlg;
+
 	SurfaceHolder surfaceHolder;
 	Thread thread;
+
 
 	public GameSurfaceView(Context context){
 		super(context);
 
 		mContext = context;
 
-		// プレイヤー情報の初期化
-		PlayerMng.playerInit(context);
+		// 時間情報の初期化
+		TimeMng.timeInit(context);
 		// フィールド情報の初期化
 		FieldMng.fieldInit(context);
+		// プレイヤー情報の初期化
+		PlayerMng.playerInit(context,2);
 
 
 		scoreFlg = false;
@@ -52,13 +65,13 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		surfaceHolder = getHolder();
 		surfaceHolder.addCallback(this);
 
+
 //		hex_color_num = new int[SQUARE_NUM][SQUARE_NUM];
 
 	}
 
 	@Override
 	public void run() {
-
 		// 時間情報の初期化
 		TimeMng.countDownStart(mContext);
 
@@ -70,6 +83,8 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		Paint bgPaint = new Paint();
 		bgPaint.setColor(Color.argb(BACK_ALPHA, BACK_R, BACK_G, BACK_B));
 
+		TimeMng.countDownStart(mContext);
+
 		while(thread != null){
 			try{
 				TimeMng.fpsStart();
@@ -80,16 +95,16 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 				// 基本六角形
 				FieldMng.DrawHex(paint, canvas);
 				// プレイヤーの表示
-				PlayerMng.DrawPlayer(paint, canvas);
+				PlayerMng.DrawPlayer(mContext,paint, canvas);
 
 				// カウントダウン中
 				if( TimeMng.getSituation() == TimeMng.SITUATION_COUNTDOWN ){
 					// 開始カウントダウンの表示
 					TimeMng.drawCountDown(mContext,paint, canvas);
 				}
-				// 試合中
+				// バトル中
 				else if( TimeMng.getSituation() == TimeMng.SITUATION_BATTLE ){
-					// バトル中なら、タップ移動比率xyと指示マーカーのxyを取得
+					// タップ移動比率xyと指示マーカーのxyを取得
 					PlayerMng.GetMoveXY();
 
 					// 指示器の表示
@@ -103,9 +118,11 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 					// スコア画面の起動
 					if(!scoreFlg){
+						/* ☆
 						Intent intent = new Intent(getContext(), ResultActivity.class);
 						getContext().startActivity(intent);
 						scoreFlg = true;
+						*/
 					}
 				}
 
@@ -142,11 +159,13 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 			case MotionEvent.ACTION_POINTER_DOWN:
 
 				//2人プレイなら
-				if(PlayerMng.playerNum == 2){
+				if(PlayerMng.sPlayerNum == 2){
 					//フィールド下半分が1P
-					if( MainActivity.real.y / 2 < y )
+
+					if( screen_height / 2 < y )
 						user_i = 0;
 					else user_i = 1;
+
 				}
 				else break;
 
@@ -166,11 +185,11 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 			// 最後じゃない指を上げる
 			case MotionEvent.ACTION_POINTER_UP:
 
-				for( user_i = 0; user_i < PlayerMng.playerNum; user_i++ ){
+				for( user_i = 0; user_i < PlayerMng.sPlayerNum; user_i++ ){
 					if( PlayerMng.players.get(user_i).point_id == point_id ) break;
 				}
 				// ユーザー一致せず
-				if( user_i == PlayerMng.playerNum ) break;
+				if( user_i == PlayerMng.sPlayerNum ) break;
 
 				PlayerMng.players.get(user_i).touch_flg = false;
 				PlayerMng.players.get(user_i).point_id = -1;
@@ -192,7 +211,7 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 			if (point_id == -1) continue;
 
-			for( user_i = 0; user_i < PlayerMng.playerNum; user_i++ ){
+			for( user_i = 0; user_i < PlayerMng.sPlayerNum; user_i++ ){
 				if(point_id == PlayerMng.players.get(user_i).point_id ){
 					// タッチしている位置取得
 					PlayerMng.players.get(user_i).now_touch_x = (int)x;
