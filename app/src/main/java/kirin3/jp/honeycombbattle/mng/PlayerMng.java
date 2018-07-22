@@ -25,13 +25,17 @@ import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 public class PlayerMng {
 
 	// プレイヤー人数
-	public static int sPlayerNum = 2;
+	public static int sPlayerNum = 4;
 
 	// プレイヤースタート位置
-	static int playerXY[][] = {{20,-150},{20,150},{-20,-150},{-20,150}};
+	static int PLAYER_XY[][] = {{240,-305},{240,305},{-240,-305},{-240,305}};
 
 	// プレイヤーカラー
-	static int playerColor[][] = {{255,127,127},{127,127,255},{50,205,50},{200,205,50}};
+	static int PLAYER_COLOR[][] = {
+			{255,127,127},
+			{127,127,255},
+			{50,205,50},
+			{255,227,80}};
 
 	// プレイヤーの半径
 	static float PLAYER_RADIUS_DP = 10.0f;
@@ -46,7 +50,7 @@ public class PlayerMng {
 	static float DIRECTION_WIDHT_PX;
 
 	// プレイヤーのスピード
-	final static int playerSpeed = 20;
+	final static int PLEYER_SPEED = 10;
 
 
 	// プライヤーデータ
@@ -64,12 +68,12 @@ public class PlayerMng {
 		players.clear();
 		for(int i = 0; i < sPlayerNum; i++ ){
 			Log.w( "DEBUG_DATA", "i[%d]" + i);
-			player = new PlayerStatus( i+1,playerXY[i],playerColor[i] );
+			player = new PlayerStatus( i+1, PLAYER_XY[i], PLAYER_COLOR[i] );
 			players.add(player);
 		}
 	}
 
-	public static void DrawPlayer(Context context,Paint paint, Canvas canvas){
+	public static void drawPlayer(Context context, Paint paint, Canvas canvas){
 		// Canvas 中心点
 		float center_x = canvas.getWidth() / 2;
 		float center_y = canvas.getHeight() / 2;
@@ -79,15 +83,15 @@ public class PlayerMng {
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);
 
 		for(int i = 0; i < sPlayerNum; i++ ) {
-			paint.setColor(Color.argb(255, PlayerMng.players.get(i).color_r, PlayerMng.players.get(i).color_g, PlayerMng.players.get(i).color_b));
+			paint.setColor(Color.argb(255, PlayerMng.players.get(i).colorR, PlayerMng.players.get(i).colorG, PlayerMng.players.get(i).colorB));
 			// (x1,y1,r,paint) 中心x1座標, 中心y1座標, r半径
-			canvas.drawCircle(center_x - PlayerMng.players.get(i).now_position_x, center_y - PlayerMng.players.get(i).now_position_y, PLAYER_RADIUS_PX, paint);
+			canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX, center_y - PlayerMng.players.get(i).nowPositionY, PLAYER_RADIUS_PX, paint);
 
 			for (int j = 0; j < sPlayerNum; j++) {
 
 				if (i == j) continue;
-				if( ((PlayerMng.players.get(i).now_position_x - PlayerMng.players.get(j).now_position_x) * (PlayerMng.players.get(i).now_position_x - PlayerMng.players.get(j).now_position_x)
-						+ (PlayerMng.players.get(i).now_position_y - PlayerMng.players.get(j).now_position_y) * (PlayerMng.players.get(i).now_position_y - PlayerMng.players.get(j).now_position_y)) < Math.pow(PLAYER_RADIUS_PX * 2, 2) ){
+				if( ((PlayerMng.players.get(i).nowPositionX - PlayerMng.players.get(j).nowPositionX) * (PlayerMng.players.get(i).nowPositionX - PlayerMng.players.get(j).nowPositionX)
+						+ (PlayerMng.players.get(i).nowPositionY - PlayerMng.players.get(j).nowPositionY) * (PlayerMng.players.get(i).nowPositionY - PlayerMng.players.get(j).nowPositionY)) < Math.pow(PLAYER_RADIUS_PX * 2, 2) ){
 /*
 					Log.w( "DEBUG_DATA", "円重なり");
 					// もし侵入中だったら
@@ -106,15 +110,15 @@ public class PlayerMng {
 		}
 	}
 
-	public static void DrawIndicator(Paint paint, Canvas canvas){
+	public static void drawIndicator(Paint paint, Canvas canvas){
 
 		int start_touch_x = 0,start_touch_y = 0;
 		int indicatorXY[] = {0,0};
 
 		for(int i = 0; i < sPlayerNum; i++ ){
-			if(!players.get(i).touch_flg) continue;
-			start_touch_x = players.get(i).start_touch_x;
-			start_touch_y = players.get(i).start_touch_y;
+			if(!players.get(i).touchFlg) continue;
+			start_touch_x = players.get(i).startTouchX;
+			start_touch_y = players.get(i).startTouchY;
 			indicatorXY = players.get(i).indicatorXY;
 
 			// セーブタップ位置に〇を表示
@@ -146,8 +150,8 @@ public class PlayerMng {
 		}
 
 
-		//Log.w( "DEBUG_DATA", "CENTER players.get(i).start_touch_x " + players.get(i).start_touch_x );
-		//Log.w( "DEBUG_DATA", "CENTER players.get(i).start_touch_y " + players.get(i).start_touch_y );
+		//Log.w( "DEBUG_DATA", "CENTER players.get(i).startTouchX " + players.get(i).startTouchX );
+		//Log.w( "DEBUG_DATA", "CENTER players.get(i).startTouchY " + players.get(i).startTouchY );
 		//Log.w( "DEBUG_DATA", "CENTER direXY[0] " + players.get(i).indicatorXY[0] );
 		//Log.w( "DEBUG_DATA", "CENTER direXY[1] " + players.get(i).indicatorXY[1] );
 
@@ -158,16 +162,16 @@ public class PlayerMng {
 	 * インディケーターの位置を取得
 	 * インディケーターと初回タップ位置の差分を取得
 	 */
-	public static void GetMoveXY(){
+	public static void getMoveXY(){
 
 		for(int i = 0; i < sPlayerNum; i++ ){
-			if( players.get(i).touch_flg ){
+			if( players.get(i).touchFlg){
 				// タップ移動比率xyと指示マーカーのxyを取得
-//				getIndicatorXY(i,players.get(i).start_touch_x, players.get(i).start_touch_y, players.get(i).now_touch_x, players.get(i).now_touch_y, players.get(i).indicatorDiff, players.get(i).indicatorXY);
-				getIndicatorXY(i,players.get(i).start_touch_x, players.get(i).start_touch_y, players.get(i).now_touch_x, players.get(i).now_touch_y);
+//				getIndicatorXY(i,players.get(i).startTouchX, players.get(i).startTouchY, players.get(i).nowTouchX, players.get(i).nowTouchY, players.get(i).indicatorDiff, players.get(i).indicatorXY);
+				getIndicatorXY(i,players.get(i).startTouchX, players.get(i).startTouchY, players.get(i).nowTouchX, players.get(i).nowTouchY);
 				// ユーザーの位置を登録
-				players.get(i).now_position_x = players.get(i).now_position_x - (players.get(i).indicatorDiff[0] / playerSpeed);
-				players.get(i).now_position_y = players.get(i).now_position_y - (players.get(i).indicatorDiff[1] / playerSpeed);
+				players.get(i).nowPositionX = players.get(i).nowPositionX - (players.get(i).indicatorDiff[0] / PLEYER_SPEED);
+				players.get(i).nowPositionY = players.get(i).nowPositionY - (players.get(i).indicatorDiff[1] / PLEYER_SPEED);
 			}
 		}
 	}
@@ -175,7 +179,7 @@ public class PlayerMng {
 
 	// 指示マーカーの位置を取得
 	public static void getIndicatorXY(int user_id,int start_touch_x,int start_touch_y,int now_touch_x,int now_touch_y){
-//		public static void getIndicatorXY(int user_id,int start_touch_x,int start_touch_y,int now_touch_x,int now_touch_y,int[] indicatorDiff,int[] indicatorXY){
+//		public static void getIndicatorXY(int user_id,int startTouchX,int startTouchY,int nowTouchX,int nowTouchY,int[] indicatorDiff,int[] indicatorXY){
 		// 移動方向の正、負
 		boolean positive_x = true,positive_y = true;
 		// セーブ位置と現在位置の絶対値差分
@@ -195,10 +199,10 @@ public class PlayerMng {
 		sa_x = abs(start_touch_x - now_touch_x);
 		sa_y = abs(start_touch_y - now_touch_y);
 
-		//Log.w( "DEBUG_DATA", "PlayerMng.players.get(0).start_touch_x " + PlayerMng.players.get(0).start_touch_x  );
-		//Log.w( "DEBUG_DATA", "PlayerMng.players.get(0).start_touch_y " + PlayerMng.players.get(0).start_touch_y  );
-		//Log.w( "DEBUG_DATA", "PlayerMng.players.get(0).now_touch_x " + PlayerMng.players.get(0).now_touch_x  );
-		//Log.w( "DEBUG_DATA", "PlayerMng.players.get(0).now_touch_y " + PlayerMng.players.get(0).now_touch_y  );
+		//Log.w( "DEBUG_DATA", "PlayerMng.players.get(0).startTouchX " + PlayerMng.players.get(0).startTouchX  );
+		//Log.w( "DEBUG_DATA", "PlayerMng.players.get(0).startTouchY " + PlayerMng.players.get(0).startTouchY  );
+		//Log.w( "DEBUG_DATA", "PlayerMng.players.get(0).nowTouchX " + PlayerMng.players.get(0).nowTouchX  );
+		//Log.w( "DEBUG_DATA", "PlayerMng.players.get(0).nowTouchY " + PlayerMng.players.get(0).nowTouchY  );
 
 		//Log.w( "DEBUG_DATA", "sa_x " + sa_x  );
 		//Log.w( "DEBUG_DATA", "sa_y " + sa_y  );

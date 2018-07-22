@@ -36,14 +36,18 @@ public class FieldMng {
 	final static int HEX_NUM_ROW = 19;
 	final static int HEX_NUM_COL = 20;
 
-	// 四角形の半径の長さ
-	static float TET_LENGTH_DP = 5.0f;
-	static float TET_LENGTH_PX;
+	// タワーの半径
+	static float TOWER_RADIUS_DP = 1.0f;
+	static float TOWER_RADIUS_PX;
+	static int TOWER_COLOR_RGB[] = {50,0,50};
 
-	final static int CLEAN_NO = 0; // 白
+	// １桁目
+	final static int CLCOUNTEAN_NO = 0; // 白
 	final static int COUNT_NO = 7;
 	final static int WALL_NO = 8;
 	final static int DALETE_NO = 9;
+	// ２桁目
+	final static int TOWER_NO = 1;
 
 	static boolean countHitFlg = false;
 
@@ -51,19 +55,17 @@ public class FieldMng {
 	// ２桁の場合は1桁目が奪おうとするNO,１桁目が奪われようとしているNO
 	static int hex_color_num[][];
 
-	static int hex_color_rgb_main[][] = {
+	static int HEX_COLOR_RGB[][] = {
 			{255,255,255},
-//			{127 ,255 ,127}, //黄緑
-			{255 ,193 ,255}, //ピンク
-//			{255 ,188 ,188}, //薄赤
-			{127 ,255 ,255}, //水色
-			{129 ,129 ,129},
-			{129 ,129 ,129},
-			{129 ,129 ,129},
-			{129 ,129 ,129},
-			{255 ,193 ,255},
-			{129 ,129 ,129},
-			{129 ,129 ,129}
+			{255,193,255}, //ピンク
+			{127,255,255}, //水色
+			{153,252,153}, //薄緑色
+			{255,255,120}, //薄黄色
+			{255,255,255},
+			{129,129,129},
+			{255,193,255},
+			{129,129,129},
+			{129,129,129}
 	};
 
 
@@ -72,11 +74,15 @@ public class FieldMng {
 		// dp→px変換
 		HEX_LENGTH_PX = dpToPx(HEX_LENGTH_DP,context.getResources());
 		HEX_WIDHT_PX = dpToPx(HEX_WIDHT_DP,context.getResources());
-		TET_LENGTH_PX = dpToPx(TET_LENGTH_DP,context.getResources());
+		TOWER_RADIUS_PX = dpToPx(TOWER_RADIUS_DP,context.getResources());
 
 //		//六角形1 19 20
 		hex_color_num = new int[][]{
-				{8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8},
+				{9,9,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,9,9},
+				{8,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,8},
+				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
+				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
+				{8,0,0,0,10,0,0,0,0,0,0,0,0,0,10,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
@@ -87,20 +93,16 @@ public class FieldMng {
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
+				{8,0,0,0,10,0,0,0,0,0,0,0,0,0,10,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
-				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
-				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
-				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
-				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
-				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
-				{8,0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8},
-				{9,8,9,8,9,8,9,8,9,8,9,8,9,8,9,8,9,8,9}
+				{9,8,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8,8,9},
+				{9,9,9,8,9,8,9,8,9,8,9,8,9,8,9,8,9,9,9}
 		};
 
 	}
 
-	public static void DrawHex(Paint paint, Canvas canvas){
+	public static void drawHex(Paint paint, Canvas canvas){
 		float add_x,add_y;
 
 		// Canvas 中心点
@@ -111,7 +113,7 @@ public class FieldMng {
 
 		paint.reset();
 		paint.setStrokeWidth(HEX_WIDHT_PX);
-		paint.setStyle(Paint.Style.FILL_AND_STROKE);
+
 		for( int col = 0; col < HEX_NUM_COL; col++ ){
 			for( int row = 0; row < HEX_NUM_ROW; row++ ){
 				// 移動分
@@ -123,37 +125,42 @@ public class FieldMng {
 				// すでにペイント済み、枠内に中心点が入ったら
 				// 一旦、円で計算
 				for( int i = 0; i < PlayerMng.sPlayerNum; i++ ){
-					if( ((add_x + PlayerMng.players.get(i).now_position_x) * (add_x + PlayerMng.players.get(i).now_position_x) + (add_y + PlayerMng.players.get(i).now_position_y) * (add_y + PlayerMng.players.get(i).now_position_y)) < Math.pow(HEX_LENGTH_PX, 2) ){
+					if( ((add_x + PlayerMng.players.get(i).nowPositionX) * (add_x + PlayerMng.players.get(i).nowPositionX) + (add_y + PlayerMng.players.get(i).nowPositionY) * (add_y + PlayerMng.players.get(i).nowPositionY)) < Math.pow(HEX_LENGTH_PX, 2) ){
 
 						//現在位置(col,row)を記録
-						PlayerMng.players.get(i).now_position_col = col;
-						PlayerMng.players.get(i).now_position_row = row;
+						PlayerMng.players.get(i).nowPositionCol = col;
+						PlayerMng.players.get(i).nowPositionNow = row;
 
-						/*
 						// 初期エリア色塗り
 						if( PlayerMng.players.get(i).erea_flg == false ){
 							SetRoundColoer(i,col,row);
 						}
-						*/
+
 						// 壁にぶつかったら
-						if( hex_color_num[col][row] == WALL_NO ){
-							PlayerMng.players.get(i).now_position_x = 0;
-							PlayerMng.players.get(i).now_position_y = 0;
+						if( hex_color_num[col][row] % 10 == WALL_NO ){
+							PlayerMng.players.get(i).nowPositionX = 0;
+							PlayerMng.players.get(i).nowPositionY = 0;
 						}
 						// 自分の領域でなかったら
-						else if( hex_color_num[col][row] != PlayerMng.players.get(i).no ){
+						else if( hex_color_num[col][row] % 10 != PlayerMng.players.get(i).no ){
 							// 色を記録
-							hex_color_num[col][row] = PlayerMng.players.get(i).no;
+							// ２桁目は永続で保存
+							Log.w( "DEBUG_DATA", "hex_color_num[col][row] " + hex_color_num[col][row]);
+							hex_color_num[col][row]  = changeIntADigit( hex_color_num[col][row], PlayerMng.players.get(i).no);
+//							( hex_color_num[col][row] / 10 ) + PlayerMng.players.get(i).no;
 						}
 					}
 				}
 
 				// 表示なし
-				if( hex_color_num[col][row] == DALETE_NO ) continue;
+				if( hex_color_num[col][row] % 10 == DALETE_NO ) continue;
+
+
 
 				// ○六角形の描画
-				// 色（一桁目の数字）
-				paint.setColor(Color.argb(255, hex_color_rgb_main[hex_color_num[col][row]][0], hex_color_rgb_main[hex_color_num[col][row]][1], hex_color_rgb_main[hex_color_num[col][row]][2]));
+				// 色
+				paint.setStyle(Paint.Style.FILL_AND_STROKE);
+				paint.setColor(Color.argb(255, HEX_COLOR_RGB[hex_color_num[col][row] % 10][0], HEX_COLOR_RGB[hex_color_num[col][row] % 10][1], HEX_COLOR_RGB[hex_color_num[col][row] % 10][2]));
 
 				path.reset();
 				// 右
@@ -171,13 +178,81 @@ public class FieldMng {
 				path.close();
 				canvas.drawPath(path, paint);
 
+
+				if( hex_color_num[col][row] / 10 == TOWER_NO ){
+					paint.setStyle(Paint.Style.FILL_AND_STROKE);
+					paint.setColor(Color.argb(255, TOWER_COLOR_RGB[0], TOWER_COLOR_RGB[1], TOWER_COLOR_RGB[2]));
+					canvas.drawCircle(center_x + add_x, center_y + add_y, TOWER_RADIUS_PX, paint);
+				}
 			}
 		}
 	}
 
+	public static void SetRoundColoer( int user_no,int col,int row ){
+		List<List<Integer>> connect;
+		connect = GetConnect(col,row);
+		Log.w( "DEBUG_DATA1", "user_no" + user_no);
+		Log.w( "DEBUG_DATA1", "connect.size()" + connect.size());
 
+		hex_color_num[col][row]  = changeIntADigit( hex_color_num[col][row], PlayerMng.players.get(user_no).no);
+		for(int i = 0; i < connect.size(); i++){
+			Log.w( "DEBUG_DATA1", "i" + i);
+			hex_color_num[connect.get(i).get(0)][connect.get(i).get(1)] = changeIntADigit( hex_color_num[connect.get(i).get(0)][connect.get(i).get(1)], PlayerMng.players.get(user_no).no);
+		}
 
-	public static void CountHex(Paint paint, Canvas canvas, int col_check, int row_check){
+		PlayerMng.players.get(user_no).erea_flg = true;
+	}
+
+	public static List<List<Integer>> GetConnect(int col,int row) {
+
+		List<List<Integer>> list = new ArrayList<>();
+
+		// 左端でなければ
+		if (col != 0) {
+			list.add(Arrays.asList(col - 1, row));
+
+		}
+		// 右端でなければ
+		if (col != hex_color_num[0].length - 1) {
+			list.add(Arrays.asList(col + 1, row));
+		}
+		// 上端でなければ
+		if (row != 0) {
+			list.add(Arrays.asList(col, row - 1));
+		}
+		// 上端でなければ
+		if (row != hex_color_num.length - 1) {
+			list.add(Arrays.asList(col, row + 1));
+		}
+
+		if (col != 0 && row % 2 == 0) {
+			if (col != 0) {
+				list.add(Arrays.asList(col + 1, row - 1));
+			}
+			if (col != hex_color_num[0].length - 1) {
+				list.add(Arrays.asList(col + 1, row + 1));
+			}
+		} else if (col != hex_color_num[0].length - 1 && row % 2 == 1) {
+			if (col != 0) {
+				list.add(Arrays.asList(col - 1, row - 1));
+			}
+			if (col != hex_color_num[0].length - 1) {
+				list.add(Arrays.asList(col - 1, row + 1));
+			}
+		}
+		return list;
+	}
+
+	/*
+	 * １つの目引数の２桁目をキープして、２つ目の引数の値を１桁目に入れ替える
+	 */
+	public static int changeIntADigit( int a,int b){
+		Log.w( "DEBUG_DATA", "( a % 10 ) * 10 + b " + ( a % 10 ) * 10 + b);
+		return ( a / 10 ) * 10 + b;
+
+	}
+
+	public static void countHex(Paint paint, Canvas canvas, int col_check, int row_check){
 		float add_x,add_y;
 
 		// Canvas 中心点
@@ -213,10 +288,10 @@ public class FieldMng {
 //				Log.w( "LOG1", "row[" + row + "] add_y[" + add_y + "]");
 
 				// 表示なし
-				if( hex_color_num[col][row] == DALETE_NO ) continue;
+				if( hex_color_num[col][row] % 10 == DALETE_NO ) continue;
 
 				// 六角形の描画
-				paint.setColor(Color.argb(255, hex_color_rgb_main[hex_color_num[col][row]][0], hex_color_rgb_main[hex_color_num[col][row]][1], hex_color_rgb_main[hex_color_num[col][row]][2]));
+				paint.setColor(Color.argb(255, HEX_COLOR_RGB[hex_color_num[col][row] % 10][0], HEX_COLOR_RGB[hex_color_num[col][row] % 10][1], HEX_COLOR_RGB[hex_color_num[col][row] % 10][2]));
 				path.reset();
 
 				// 右

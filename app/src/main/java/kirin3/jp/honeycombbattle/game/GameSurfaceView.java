@@ -1,26 +1,16 @@
 package kirin3.jp.honeycombbattle.game;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import java.sql.Time;
-
-import kirin3.jp.honeycombbattle.AppApplication;
-import kirin3.jp.honeycombbattle.main.MainActivity;
 import kirin3.jp.honeycombbattle.mng.FieldMng;
 import kirin3.jp.honeycombbattle.mng.PlayerMng;
 import kirin3.jp.honeycombbattle.mng.TimeMng;
-import kirin3.jp.honeycombbattle.util.ViewUtils;
-
-import static kirin3.jp.honeycombbattle.mng.TimeMng.sleepGameOver;
 
 /**
  * Created by shinji on 2017/04/06.
@@ -57,7 +47,7 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		// フィールド情報の初期化
 		FieldMng.fieldInit(context);
 		// プレイヤー情報の初期化
-		PlayerMng.playerInit(context,2);
+		PlayerMng.playerInit(context,PlayerMng.sPlayerNum);
 
 
 		scoreFlg = false;
@@ -93,9 +83,9 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 				canvas.drawRect( 0, 0, screen_width, screen_height, bgPaint);
 
 				// 基本六角形
-				FieldMng.DrawHex(paint, canvas);
+				FieldMng.drawHex(paint, canvas);
 				// プレイヤーの表示
-				PlayerMng.DrawPlayer(mContext,paint, canvas);
+				PlayerMng.drawPlayer(mContext,paint, canvas);
 
 				// カウントダウン中
 				if( TimeMng.getSituation() == TimeMng.SITUATION_COUNTDOWN ){
@@ -105,10 +95,10 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 				// バトル中
 				else if( TimeMng.getSituation() == TimeMng.SITUATION_BATTLE ){
 					// タップ移動比率xyと指示マーカーのxyを取得
-					PlayerMng.GetMoveXY();
+					PlayerMng.getMoveXY();
 
 					// 指示器の表示
-					PlayerMng.DrawIndicator(paint, canvas);
+					PlayerMng.drawIndicator(paint, canvas);
 
 					// リミット時間の表示
 					TimeMng.drawLimitTime(mContext,paint, canvas);
@@ -161,23 +151,41 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 				//2人プレイなら
 				if(PlayerMng.sPlayerNum == 2){
 					//フィールド下半分が1P
-
-					if( screen_height / 2 < y )
-						user_i = 0;
+					if( screen_height / 2 < y ) user_i = 0;
 					else user_i = 1;
-
+				}
+				else if(PlayerMng.sPlayerNum == 3){
+					//フィールド下半分が1P
+					if( screen_height / 2 < y ){
+						if( screen_width / 2 > x) user_i = 0;
+						else user_i = 2;
+					}
+					else{
+						user_i = 1;
+					}
+				}
+				else if(PlayerMng.sPlayerNum == 4){
+					//フィールド下半分が1P
+					if( screen_height / 2 < y ){
+						if( screen_width / 2 > x) user_i = 0;
+						else user_i = 2;
+					}
+					else{
+						if( screen_width / 2 > x) user_i = 1;
+						else user_i = 3;
+					}
 				}
 				else break;
 
 				// 未タッチでなければ、処理せず
-				if(PlayerMng.players.get(user_i).point_id != -1) break;
+				if(PlayerMng.players.get(user_i).pointId != -1) break;
 
-				PlayerMng.players.get(user_i).start_touch_x = (int)x;
-				PlayerMng.players.get(user_i).start_touch_y = (int)y;
-				PlayerMng.players.get(user_i).now_touch_x = (int)x;
-				PlayerMng.players.get(user_i).now_touch_y = (int)y;
-				PlayerMng.players.get(user_i).touch_flg = true;
-				PlayerMng.players.get(user_i).point_id = point_id;
+				PlayerMng.players.get(user_i).startTouchX = (int)x;
+				PlayerMng.players.get(user_i).startTouchY = (int)y;
+				PlayerMng.players.get(user_i).nowTouchX = (int)x;
+				PlayerMng.players.get(user_i).nowTouchY = (int)y;
+				PlayerMng.players.get(user_i).touchFlg = true;
+				PlayerMng.players.get(user_i).pointId = point_id;
 
 				break;
 			// 最後の指一本を上げる
@@ -186,13 +194,13 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 			case MotionEvent.ACTION_POINTER_UP:
 
 				for( user_i = 0; user_i < PlayerMng.sPlayerNum; user_i++ ){
-					if( PlayerMng.players.get(user_i).point_id == point_id ) break;
+					if( PlayerMng.players.get(user_i).pointId == point_id ) break;
 				}
 				// ユーザー一致せず
 				if( user_i == PlayerMng.sPlayerNum ) break;
 
-				PlayerMng.players.get(user_i).touch_flg = false;
-				PlayerMng.players.get(user_i).point_id = -1;
+				PlayerMng.players.get(user_i).touchFlg = false;
+				PlayerMng.players.get(user_i).pointId = -1;
 				PlayerMng.players.get(user_i).indicatorXY[0] = 0;
 				PlayerMng.players.get(user_i).indicatorXY[1] = 0;
 
@@ -203,7 +211,7 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 			// ポインタID
 			point_id = event.getPointerId(i);
 			// インデックスID
-			//index_id = event.findPointerIndex(point_id);
+			//index_id = event.findPointerIndex(pointId);
 			index_id = i; // 必ず同一
 
 			x = event.getX(index_id);
@@ -212,10 +220,10 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 			if (point_id == -1) continue;
 
 			for( user_i = 0; user_i < PlayerMng.sPlayerNum; user_i++ ){
-				if(point_id == PlayerMng.players.get(user_i).point_id ){
+				if(point_id == PlayerMng.players.get(user_i).pointId){
 					// タッチしている位置取得
-					PlayerMng.players.get(user_i).now_touch_x = (int)x;
-					PlayerMng.players.get(user_i).now_touch_y = (int)y;
+					PlayerMng.players.get(user_i).nowTouchX = (int)x;
+					PlayerMng.players.get(user_i).nowTouchY = (int)y;
 				}
 			}
 		}

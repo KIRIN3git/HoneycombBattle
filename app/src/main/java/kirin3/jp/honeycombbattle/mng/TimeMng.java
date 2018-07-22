@@ -28,11 +28,11 @@ public class TimeMng {
 	static float LIMIT_TEXT_SIZE_PX;
 
 	// カウントダウンミリ秒
-	static long sCountDownMS = 3 * 1000;
+	static long COUNT_DONW_MS = 3 * 1000;
 	// バトル時間ミリ秒
-	static long sBattleMS = 60 * 1000;
+	static long BATTLE_MS = 60 * 1000;
 	// バトル時間ミリ秒
-	static long sGameOverMS = 2 * 1000;
+	static long GAMEOVER_MS = 2 * 1000;
 	// カウントダウン開始時間保存
 	static long sStartCountDownMS;
 	// 戦闘開始時間保存
@@ -85,10 +85,10 @@ public class TimeMng {
 		paint.setTextSize(COUNTDONW_TEXT_SIZE_PX);
 		paint.setColor(Color.RED);
 
-		if( sCountDownMS - StartMillis > 0 ){
-			printText = String.valueOf( ( (sCountDownMS - StartMillis) / 1000 ) + 1 );
+		if( COUNT_DONW_MS - StartMillis > 0 ){
+			printText = String.valueOf( ( (COUNT_DONW_MS - StartMillis) / 1000 ) + 1 );
 		}
-		else if( sCountDownMS - StartMillis > -500 ){
+		else if( COUNT_DONW_MS - StartMillis > -500 ){
 			printText = "START";
 		}
 		else{
@@ -105,10 +105,10 @@ public class TimeMng {
 	}
 
 	public static long getBattleLimitTImeS(){
-		return ( ( sBattleMS - (getCurrentTime() - sStartBattleMS) ) / 1000 ) + 1;
+		return ( ( BATTLE_MS - (getCurrentTime() - sStartBattleMS) ) / 1000 ) + 1;
 	}
 	public static long getBattleLimitTImeMS(){
-		return ( sBattleMS - (System.currentTimeMillis() - sStartBattleMS) ) - ( getBattleLimitTImeS() * 1000 ) + 1000;
+		return ( BATTLE_MS - (System.currentTimeMillis() - sStartBattleMS) ) - ( getBattleLimitTImeS() * 1000 ) + 1000;
 	}
 
 
@@ -167,7 +167,7 @@ public class TimeMng {
 	// ゲームオーバー時のスリープ
 	public static void sleepGameOver(){
 		try {
-			Thread.sleep(sGameOverMS);
+			Thread.sleep(GAMEOVER_MS);
 		} catch (InterruptedException e) {
 		}
 	}
