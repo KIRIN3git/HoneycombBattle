@@ -9,8 +9,8 @@ import java.util.Locale;
 import kirin3.jp.honeycombbattle.Config;
 
 import static kirin3.jp.honeycombbattle.util.TimeUtils.getCurrentTime;
+import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 import static kirin3.jp.honeycombbattle.util.ViewUtils.mirrorDrowText;
-import static kirin3.jp.honeycombbattle.util.ViewUtils.pxToDp;
 
 /**
  * Created by shinji on 2017/06/08.
@@ -21,16 +21,18 @@ import static kirin3.jp.honeycombbattle.util.ViewUtils.pxToDp;
 public class TimeMng {
 	// カウントダウンテキストサイズ
 	static float COUNTDONW_TEXT_SIZE_DP = 60.0f;
+	static float COUNTDONW_TEXT_SIZE_PX;
 
 	// リミットテキストサイズ
 	static float LIMIT_TEXT_SIZE_DP = 40.0f;
+	static float LIMIT_TEXT_SIZE_PX;
 
 	// カウントダウンミリ秒
-	static long sCountDownMS = 3 * 1000;
+	static long COUNT_DONW_MS = 3 * 1000;
 	// バトル時間ミリ秒
-	static long sBattleMS = 60 * 1000;
+	static long BATTLE_MS = 60 * 1000;
 	// バトル時間ミリ秒
-	static long sGameOverMS = 2 * 1000;
+	static long GAMEOVER_MS = 2 * 1000;
 	// カウントダウン開始時間保存
 	static long sStartCountDownMS;
 	// 戦闘開始時間保存
@@ -50,6 +52,11 @@ public class TimeMng {
 	// FPS
 	static long sFps = Config.FPS;
 	static long sRunStartTime = 0, sRunEndTime = 0;
+
+	public static void timeInit(Context context){
+		COUNTDONW_TEXT_SIZE_PX = dpToPx(COUNTDONW_TEXT_SIZE_DP,context.getResources());
+		LIMIT_TEXT_SIZE_PX = dpToPx(LIMIT_TEXT_SIZE_DP,context.getResources());
+	}
 
 	public static int getSituation(){
 		return sSituation;
@@ -75,13 +82,13 @@ public class TimeMng {
 		long StartMillis = getCurrentTime() - sStartCountDownMS;
 
 		paint.reset();
-		paint.setTextSize(pxToDp(COUNTDONW_TEXT_SIZE_DP,context.getResources()));
+		paint.setTextSize(COUNTDONW_TEXT_SIZE_PX);
 		paint.setColor(Color.RED);
 
-		if( sCountDownMS - StartMillis > 0 ){
-			printText = String.valueOf( ( (sCountDownMS - StartMillis) / 1000 ) + 1 );
+		if( COUNT_DONW_MS - StartMillis > 0 ){
+			printText = String.valueOf( ( (COUNT_DONW_MS - StartMillis) / 1000 ) + 1 );
 		}
-		else if( sCountDownMS - StartMillis > -500 ){
+		else if( COUNT_DONW_MS - StartMillis > -500 ){
 			printText = "START";
 		}
 		else{
@@ -98,10 +105,10 @@ public class TimeMng {
 	}
 
 	public static long getBattleLimitTImeS(){
-		return ( ( sBattleMS - (getCurrentTime() - sStartBattleMS) ) / 1000 ) + 1;
+		return ( ( BATTLE_MS - (getCurrentTime() - sStartBattleMS) ) / 1000 ) + 1;
 	}
 	public static long getBattleLimitTImeMS(){
-		return ( sBattleMS - (System.currentTimeMillis() - sStartBattleMS) ) - ( getBattleLimitTImeS() * 1000 ) + 1000;
+		return ( BATTLE_MS - (System.currentTimeMillis() - sStartBattleMS) ) - ( getBattleLimitTImeS() * 1000 ) + 1000;
 	}
 
 
@@ -113,7 +120,7 @@ public class TimeMng {
 		if( getBattleLimitTImeS() < 0 ) timeOverFlg = true;
 
 		paint.reset();
-		paint.setTextSize(pxToDp(LIMIT_TEXT_SIZE_DP,context.getResources()));
+		paint.setTextSize(LIMIT_TEXT_SIZE_PX);
 		paint.setColor(Color.RED);
 		if( !timeOverFlg ){
 			// 反転表示
@@ -160,7 +167,7 @@ public class TimeMng {
 	// ゲームオーバー時のスリープ
 	public static void sleepGameOver(){
 		try {
-			Thread.sleep(sGameOverMS);
+			Thread.sleep(GAMEOVER_MS);
 		} catch (InterruptedException e) {
 		}
 	}

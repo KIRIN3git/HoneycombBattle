@@ -1,8 +1,10 @@
 package kirin3.jp.honeycombbattle.mng;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -13,6 +15,7 @@ import static java.lang.Math.abs;
 import static java.lang.Math.pow;
 import static java.lang.Math.round;
 import static java.lang.Math.sqrt;
+import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 
 /**
  * Created by shinji on 2017/06/07.
@@ -22,53 +25,55 @@ import static java.lang.Math.sqrt;
 public class PlayerMng {
 
 	// プレイヤー人数
-	static int sPlayerNum = 2;
+	public static int sPlayerNum = 4;
 
 	// プレイヤースタート位置
-	static int playerXY2[][] = {{0,-150},{0,150}};
-	static int playerXY3[][] = {{20,-150},{20,150},{-20,-150}};
-	static int playerXY4[][] = {{20,-150},{20,150},{-20,-150},{-20,150}};
+	static int PLAYER_XY[][] = {{240,-305},{240,305},{-240,-305},{-240,305}};
 
 	// プレイヤーカラー
-	static int playerColor[][] = {{255,127,127},{127,127,255},{50,205,50},{200,205,50}};
+	static int PLAYER_COLOR[][] = {
+			{255,127,127},
+			{127,127,255},
+			{50,205,50},
+			{255,227,80}};
 
 	// プレイヤーの半径
 	static float PLAYER_RADIUS_DP = 10.0f;
+	static float PLAYER_RADIUS_PX;
+
 	// 移動マーカーの半径
 	static float DIRECTION_RADIUS_DP = 20.0f;
+	static float DIRECTION_RADIUS_PX;
+
 	// 移動マーカーの線の太さ
 	static float DIRECTION_WIDHT_DP = 5.0f;
+	static float DIRECTION_WIDHT_PX;
 
 	// プレイヤーのスピード
-	final static int playerSpeed = 10;
+	final static int PLEYER_SPEED = 10;
+
 
 	// プライヤーデータ
 	public static ArrayList<PlayerStatus> players = new ArrayList<PlayerStatus>();
 
-	public static void playerInit(int num){
+	public static void playerInit(Context context,int num){
+
+		PLAYER_RADIUS_PX = dpToPx(PLAYER_RADIUS_DP,context.getResources());
+		DIRECTION_RADIUS_PX = dpToPx(DIRECTION_RADIUS_DP,context.getResources());
+		DIRECTION_WIDHT_PX = dpToPx(DIRECTION_WIDHT_DP,context.getResources());
 
 		PlayerStatus player;
 
 		sPlayerNum = num;
 		players.clear();
 		for(int i = 0; i < sPlayerNum; i++ ){
-			player = new PlayerStatus( getPlayerXY(sPlayerNum,i),playerColor[i] );
+			Log.w( "DEBUG_DATA", "i[%d]" + i);
+			player = new PlayerStatus( i+1, PLAYER_XY[i], PLAYER_COLOR[i] );
 			players.add(player);
 		}
 	}
 
-	public static int[] getPlayerXY(int num,int no){
-		int xy[];
-
-		if( num == 2 ){
-			if(no == 1) return playerXY2[0];
-			else return playerXY2[1];
-		}
-
-
-	}
-
-	public static void DrawPlayer(Paint paint, Canvas canvas){
+	public static void drawPlayer(Context context, Paint paint, Canvas canvas){
 		// Canvas 中心点
 		float center_x = canvas.getWidth() / 2;
 		float center_y = canvas.getHeight() / 2;
@@ -77,22 +82,17 @@ public class PlayerMng {
 //		paint.setAntiAlias(true);
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);
 
-//		paint.setColor(Color.argb(255, PlayerMng.players.get(1).r, PlayerMng.players.get(1).g, PlayerMng.players.get(1).b));
-//		canvas.drawCircle(0,0, 800, paint);
-
 		for(int i = 0; i < sPlayerNum; i++ ) {
-			paint.setColor(Color.argb(255, PlayerMng.players.get(i).r, PlayerMng.players.get(i).g, PlayerMng.players.get(i).b));
+			paint.setColor(Color.argb(255, PlayerMng.players.get(i).colorR, PlayerMng.players.get(i).colorG, PlayerMng.players.get(i).colorB));
 			// (x1,y1,r,paint) 中心x1座標, 中心y1座標, r半径
-			canvas.drawCircle(center_x - PlayerMng.players.get(i).now_position_x, center_y - PlayerMng.players.get(i).now_position_y, PLAYER_RADIUS_PX, paint);
-//			canvas.drawCircle(0,0, PLAYER_RADIUS_PX, paint);
+			canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX, center_y - PlayerMng.players.get(i).nowPositionY, PLAYER_RADIUS_PX, paint);
 
-/*
 			for (int j = 0; j < sPlayerNum; j++) {
 
 				if (i == j) continue;
-				if( ((PlayerMng.players.get(i).now_position_x - PlayerMng.players.get(j).now_position_x) * (PlayerMng.players.get(i).now_position_x - PlayerMng.players.get(j).now_position_x)
-						+ (PlayerMng.players.get(i).now_position_y - PlayerMng.players.get(j).now_position_y) * (PlayerMng.players.get(i).now_position_y - PlayerMng.players.get(j).now_position_y)) < Math.pow(PLAYER_RADIUS_PX * 2, 2) ){
-
+				if( ((PlayerMng.players.get(i).nowPositionX - PlayerMng.players.get(j).nowPositionX) * (PlayerMng.players.get(i).nowPositionX - PlayerMng.players.get(j).nowPositionX)
+						+ (PlayerMng.players.get(i).nowPositionY - PlayerMng.players.get(j).nowPositionY) * (PlayerMng.players.get(i).nowPositionY - PlayerMng.players.get(j).nowPositionY)) < Math.pow(PLAYER_RADIUS_PX * 2, 2) ){
+/*
 					Log.w( "DEBUG_DATA", "円重なり");
 					// もし侵入中だったら
 					if( PlayerMng.players.get(i).status == 1 && PlayerMng.players.get(j).status == 0){
@@ -103,22 +103,22 @@ public class PlayerMng {
 						PlayerMng.players.get(i).status = 2;
 						return;
 					}
+					*/
 				}
 
 			}
-*/
 		}
 	}
 
-	public static void DrawIndicator(Paint paint, Canvas canvas){
+	public static void drawIndicator(Paint paint, Canvas canvas){
 
 		int start_touch_x = 0,start_touch_y = 0;
 		int indicatorXY[] = {0,0};
 
 		for(int i = 0; i < sPlayerNum; i++ ){
-			if(!players.get(i).touch_flg) continue;
-			start_touch_x = players.get(i).start_touch_x;
-			start_touch_y = players.get(i).start_touch_y;
+			if(!players.get(i).touchFlg) continue;
+			start_touch_x = players.get(i).startTouchX;
+			start_touch_y = players.get(i).startTouchY;
 			indicatorXY = players.get(i).indicatorXY;
 
 			// セーブタップ位置に〇を表示
@@ -150,28 +150,36 @@ public class PlayerMng {
 		}
 
 
-		//Log.w( "DEBUG_DATA", "CENTER players.get(i).start_touch_x " + players.get(i).start_touch_x );
-		//Log.w( "DEBUG_DATA", "CENTER players.get(i).start_touch_y " + players.get(i).start_touch_y );
+		//Log.w( "DEBUG_DATA", "CENTER players.get(i).startTouchX " + players.get(i).startTouchX );
+		//Log.w( "DEBUG_DATA", "CENTER players.get(i).startTouchY " + players.get(i).startTouchY );
 		//Log.w( "DEBUG_DATA", "CENTER direXY[0] " + players.get(i).indicatorXY[0] );
 		//Log.w( "DEBUG_DATA", "CENTER direXY[1] " + players.get(i).indicatorXY[1] );
 
 	}
 
-	public static void GetMoveXY(){
+	/*
+	 * プレイヤーの位置を取得
+	 * インディケーターの位置を取得
+	 * インディケーターと初回タップ位置の差分を取得
+	 */
+	public static void getMoveXY(){
 
 		for(int i = 0; i < sPlayerNum; i++ ){
-			if( players.get(i).touch_flg ){
+			if( players.get(i).touchFlg){
 				// タップ移動比率xyと指示マーカーのxyを取得
-				getIndicatorXY(players.get(i).start_touch_x, players.get(i).start_touch_y, players.get(i).now_touch_x, players.get(i).now_touch_y, players.get(i).indicatorDiff, players.get(i).indicatorXY);
-				players.get(i).now_position_x = players.get(i).now_position_x - (players.get(i).indicatorDiff[0] / playerSpeed[i]);
-				players.get(i).now_position_y = players.get(i).now_position_y - (players.get(i).indicatorDiff[1] / playerSpeed[i]);
+//				getIndicatorXY(i,players.get(i).startTouchX, players.get(i).startTouchY, players.get(i).nowTouchX, players.get(i).nowTouchY, players.get(i).indicatorDiff, players.get(i).indicatorXY);
+				getIndicatorXY(i,players.get(i).startTouchX, players.get(i).startTouchY, players.get(i).nowTouchX, players.get(i).nowTouchY);
+				// ユーザーの位置を登録
+				players.get(i).nowPositionX = players.get(i).nowPositionX - (players.get(i).indicatorDiff[0] / PLEYER_SPEED);
+				players.get(i).nowPositionY = players.get(i).nowPositionY - (players.get(i).indicatorDiff[1] / PLEYER_SPEED);
 			}
 		}
 	}
 
 
 	// 指示マーカーの位置を取得
-	public static void getIndicatorXY(int start_touch_x,int start_touch_y,int now_touch_x,int now_touch_y,int[] indicatorDiff,int[] indicatorXY){
+	public static void getIndicatorXY(int user_id,int start_touch_x,int start_touch_y,int now_touch_x,int now_touch_y){
+//		public static void getIndicatorXY(int user_id,int startTouchX,int startTouchY,int nowTouchX,int nowTouchY,int[] indicatorDiff,int[] indicatorXY){
 		// 移動方向の正、負
 		boolean positive_x = true,positive_y = true;
 		// セーブ位置と現在位置の絶対値差分
@@ -191,10 +199,10 @@ public class PlayerMng {
 		sa_x = abs(start_touch_x - now_touch_x);
 		sa_y = abs(start_touch_y - now_touch_y);
 
-		//Log.w( "DEBUG_DATA", "PlayerMng.players.get(0).start_touch_x " + PlayerMng.players.get(0).start_touch_x  );
-		//Log.w( "DEBUG_DATA", "PlayerMng.players.get(0).start_touch_y " + PlayerMng.players.get(0).start_touch_y  );
-		//Log.w( "DEBUG_DATA", "PlayerMng.players.get(0).now_touch_x " + PlayerMng.players.get(0).now_touch_x  );
-		//Log.w( "DEBUG_DATA", "PlayerMng.players.get(0).now_touch_y " + PlayerMng.players.get(0).now_touch_y  );
+		//Log.w( "DEBUG_DATA", "PlayerMng.players.get(0).startTouchX " + PlayerMng.players.get(0).startTouchX  );
+		//Log.w( "DEBUG_DATA", "PlayerMng.players.get(0).startTouchY " + PlayerMng.players.get(0).startTouchY  );
+		//Log.w( "DEBUG_DATA", "PlayerMng.players.get(0).nowTouchX " + PlayerMng.players.get(0).nowTouchX  );
+		//Log.w( "DEBUG_DATA", "PlayerMng.players.get(0).nowTouchY " + PlayerMng.players.get(0).nowTouchY  );
 
 		//Log.w( "DEBUG_DATA", "sa_x " + sa_x  );
 		//Log.w( "DEBUG_DATA", "sa_y " + sa_y  );
@@ -208,14 +216,14 @@ public class PlayerMng {
 		//Log.w( "DEBUG_DATA", "ratio " + ratio  );
 
 		// 指示マーカーとセーブ位置の差分を取得（四捨五入のため誤差あり）
-		if( positive_x ) indicatorDiff[0] = (int)round(sa_x * ratio);
-		else indicatorDiff[0] = - (int)round(sa_x * ratio);
-		if( positive_y ) indicatorDiff[1] = (int)round(sa_y * ratio);
-		else indicatorDiff[1] = - (int)round(sa_y * ratio);
+		if( positive_x ) players.get(user_id).indicatorDiff[0] = (int)round(sa_x * ratio);
+		else players.get(user_id).indicatorDiff[0] = - (int)round(sa_x * ratio);
+		if( positive_y ) players.get(user_id).indicatorDiff[1] = (int)round(sa_y * ratio);
+		else players.get(user_id).indicatorDiff[1] = - (int)round(sa_y * ratio);
 
 		// 四捨五入して指示マーカーの位置を取得
-		indicatorXY[0] = start_touch_x + indicatorDiff[0];
-		indicatorXY[1] = start_touch_y + indicatorDiff[1];
+		players.get(user_id).indicatorXY[0] = start_touch_x + players.get(user_id).indicatorDiff[0];
+		players.get(user_id).indicatorXY[1] = start_touch_y + players.get(user_id).indicatorDiff[1];
 
 		//Log.w( "DEBUG_DATA", "(int)round(sa_x * ratio) " + (int)round(sa_x * ratio)  );
 		//Log.w( "DEBUG_DATA", "(int)round(sa_y * ratio) " + (int)round(sa_y * ratio)  );
@@ -235,7 +243,7 @@ public class PlayerMng {
 				win_user_id = 99; //ドロー
 			}
 			else if( players.get(i).score > win_score ){
-				win_user_id = playerColorNo[i];
+				win_user_id = i;
 				win_score = players.get(i).score;
 			}
 		}
