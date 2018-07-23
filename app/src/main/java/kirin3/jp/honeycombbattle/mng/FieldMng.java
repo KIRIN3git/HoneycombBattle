@@ -47,7 +47,10 @@ public class FieldMng {
 	final static int WALL_NO = 8;
 	final static int DALETE_NO = 9;
 	// ２桁目
-	final static int TOWER_NO = 1;
+	final static int PLAYER_START_ONE = 1;
+	final static int PLAYER_START_TWO = 2;
+	final static int PLAYER_START_THREE = 3;
+	final static int PLAYER_START_FOUR = 4;
 
 	static boolean countHitFlg = false;
 
@@ -82,7 +85,7 @@ public class FieldMng {
 				{8,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
-				{8,0,0,0,10,0,0,0,0,0,0,0,0,0,10,0,0,0,8},
+				{8,0,0,0,10,0,0,0,0,0,0,0,0,0,40,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
@@ -93,7 +96,7 @@ public class FieldMng {
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
-				{8,0,0,0,10,0,0,0,0,0,0,0,0,0,10,0,0,0,8},
+				{8,0,0,0,20,0,0,0,0,0,0,0,0,0,30,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
 				{9,8,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8,8,9},
@@ -155,8 +158,6 @@ public class FieldMng {
 				// 表示なし
 				if( hex_color_num[col][row] % 10 == DALETE_NO ) continue;
 
-
-
 				// ○六角形の描画
 				// 色
 				paint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -179,10 +180,22 @@ public class FieldMng {
 				canvas.drawPath(path, paint);
 
 
-				if( hex_color_num[col][row] / 10 == TOWER_NO ){
+				if( hex_color_num[col][row] / 10 >= 1 ){
 					paint.setStyle(Paint.Style.FILL_AND_STROKE);
 					paint.setColor(Color.argb(255, TOWER_COLOR_RGB[0], TOWER_COLOR_RGB[1], TOWER_COLOR_RGB[2]));
 					canvas.drawCircle(center_x + add_x, center_y + add_y, TOWER_RADIUS_PX, paint);
+					/*
+					for( int i = 1; i <= PlayerMng.sPlayerNum; i++ ){
+						if( hex_color_num[col][row] / 10 == i ){
+
+							PlayerMng.players.get(i-1).nowPositionX = (int)center_x + (int)add_x;
+							PlayerMng.players.get(i-1).nowPositionY = (int)center_x + (int)add_y;
+
+							Log.w( "DEBUG_DATA", "PlayerMng.players.get(i-1).nowPositionX " + PlayerMng.players.get(i-1).nowPositionX );
+							Log.w( "DEBUG_DATA", "PlayerMng.players.get(i-1).nowPositionY " + PlayerMng.players.get(i-1).nowPositionY );
+						}
+					}
+					*/
 				}
 			}
 		}

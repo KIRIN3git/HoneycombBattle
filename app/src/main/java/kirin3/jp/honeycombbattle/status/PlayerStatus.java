@@ -40,12 +40,12 @@ public class PlayerStatus {
 
 	public int score;
 
-	public PlayerStatus(int _no, int xy[], int color[] ){
+	public PlayerStatus(int _no, int x,int y, int color[] ){
 		no = _no;
-		startPositionX = xy[0];
-		startPositionY = xy[1];
-		nowPositionX = xy[0];
-		nowPositionY = xy[1];
+		startPositionX = x;
+		startPositionY = y;
+		nowPositionX = x;
+		nowPositionY = y;
 		pointId = -1;
 		score = 0;
 

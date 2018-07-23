@@ -28,8 +28,9 @@ public class PlayerMng {
 	public static int sPlayerNum = 4;
 
 	// プレイヤースタート位置
-	static int PLAYER_XY[][] = {{240,-305},{240,305},{-240,-305},{-240,305}};
-
+//	static int sPlayerXY[][] = {{240,-305},{240,305},{-240,-305},{-240,305}};
+	static float sPlayerXY[][] = {{92,-116},{92,116},{-92,-116},{-92,116}};
+	//    static int sPlayerXY[][];
 	// プレイヤーカラー
 	static int PLAYER_COLOR[][] = {
 			{255,127,127},
@@ -63,12 +64,13 @@ public class PlayerMng {
 		DIRECTION_WIDHT_PX = dpToPx(DIRECTION_WIDHT_DP,context.getResources());
 
 		PlayerStatus player;
-
 		sPlayerNum = num;
 		players.clear();
 		for(int i = 0; i < sPlayerNum; i++ ){
-			Log.w( "DEBUG_DATA", "i[%d]" + i);
-			player = new PlayerStatus( i+1, PLAYER_XY[i], PLAYER_COLOR[i] );
+			Log.w( "DEBUG_DATA", "sPlayerXY[i][0] " + (int)dpToPx(sPlayerXY[i][0],context.getResources()));
+			Log.w( "DEBUG_DATA", "sPlayerXY[i][1] " + (int)dpToPx(sPlayerXY[i][1],context.getResources()));
+
+			player = new PlayerStatus( i+1, (int)dpToPx(sPlayerXY[i][0],context.getResources()),(int)dpToPx(sPlayerXY[i][1],context.getResources()), PLAYER_COLOR[i] );
 			players.add(player);
 		}
 	}
@@ -105,7 +107,6 @@ public class PlayerMng {
 					}
 					*/
 				}
-
 			}
 		}
 	}
