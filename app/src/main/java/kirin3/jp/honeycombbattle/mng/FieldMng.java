@@ -36,10 +36,17 @@ public class FieldMng {
 	final static int HEX_NUM_ROW = 19;
 	final static int HEX_NUM_COL = 20;
 
+
+	// 六角形の線の太さ
+	static float TOWER_WIDHT_DP = 2.0f;
+	static float TOWER_WIDHT_PX;
+
 	// タワーの半径
-	static float TOWER_RADIUS_DP = 1.0f;
+	static float TOWER_RADIUS_DP = 5.0f;
 	static float TOWER_RADIUS_PX;
-	static int TOWER_COLOR_RGB[] = {50,0,50};
+
+	// タワーの色
+	static int TOWER_COLOR_RGB[] = {129,129,129};
 
 	// １桁目
 	final static int CLCOUNTEAN_NO = 0; // 白
@@ -78,6 +85,7 @@ public class FieldMng {
 		HEX_LENGTH_PX = dpToPx(HEX_LENGTH_DP,context.getResources());
 		HEX_WIDHT_PX = dpToPx(HEX_WIDHT_DP,context.getResources());
 		TOWER_RADIUS_PX = dpToPx(TOWER_RADIUS_DP,context.getResources());
+		TOWER_WIDHT_PX = dpToPx(TOWER_WIDHT_DP,context.getResources());
 
 //		//六角形1 19 20
 		hex_color_num = new int[][]{
@@ -115,7 +123,6 @@ public class FieldMng {
 		Path path = new Path();
 
 		paint.reset();
-		paint.setStrokeWidth(HEX_WIDHT_PX);
 
 		for( int col = 0; col < HEX_NUM_COL; col++ ){
 			for( int row = 0; row < HEX_NUM_ROW; row++ ){
@@ -160,6 +167,8 @@ public class FieldMng {
 
 				// ○六角形の描画
 				// 色
+
+				paint.setStrokeWidth(HEX_WIDHT_PX);
 				paint.setStyle(Paint.Style.FILL_AND_STROKE);
 				paint.setColor(Color.argb(255, HEX_COLOR_RGB[hex_color_num[col][row] % 10][0], HEX_COLOR_RGB[hex_color_num[col][row] % 10][1], HEX_COLOR_RGB[hex_color_num[col][row] % 10][2]));
 
@@ -181,8 +190,9 @@ public class FieldMng {
 
 
 				if( hex_color_num[col][row] / 10 >= 1 ){
-					paint.setStyle(Paint.Style.FILL_AND_STROKE);
+					paint.setStyle(Paint.Style.STROKE);
 					paint.setColor(Color.argb(255, TOWER_COLOR_RGB[0], TOWER_COLOR_RGB[1], TOWER_COLOR_RGB[2]));
+					paint.setStrokeWidth(TOWER_WIDHT_PX);
 					canvas.drawCircle(center_x + add_x, center_y + add_y, TOWER_RADIUS_PX, paint);
 					/*
 					for( int i = 1; i <= PlayerMng.sPlayerNum; i++ ){

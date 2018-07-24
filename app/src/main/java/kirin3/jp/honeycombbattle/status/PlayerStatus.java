@@ -23,6 +23,7 @@ public class PlayerStatus {
 	// 0:自分の領域,1:外部に侵入中,2:死亡
 	public int status = 0;
 
+	public int lifeNum;
 
 	// タッチの開始位置
 	public int startTouchX, startTouchY;
@@ -40,7 +41,7 @@ public class PlayerStatus {
 
 	public int score;
 
-	public PlayerStatus(int _no, int x,int y, int color[] ){
+	public PlayerStatus(int _no, int x,int y, int color[],int life_num ){
 		no = _no;
 		startPositionX = x;
 		startPositionY = y;
@@ -52,6 +53,8 @@ public class PlayerStatus {
 		colorR = color[0];
 		colorG = color[1];
 		colorB = color[2];
+
+		lifeNum = life_num;
 
 	}
 }

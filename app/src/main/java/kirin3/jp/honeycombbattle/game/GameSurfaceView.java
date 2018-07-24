@@ -87,6 +87,9 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 				// プレイヤーの表示
 				PlayerMng.drawPlayer(mContext,paint, canvas);
 
+				// プレイヤーの表示
+				PlayerMng.drawLife(mContext,paint, canvas);
+
 				// カウントダウン中
 				if( TimeMng.getSituation() == TimeMng.SITUATION_COUNTDOWN ){
 					// 開始カウントダウンの表示
