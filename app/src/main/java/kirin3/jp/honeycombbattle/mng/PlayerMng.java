@@ -28,9 +28,13 @@ public class PlayerMng {
 	public static int sPlayerNum = 4;
 
 	// プレイヤースタート位置
-//	static int sPlayerXY[][] = {{240,-305},{240,305},{-240,-305},{-240,305}};
-	static float sPlayerXY[][] = {{92,-116},{92,116},{-92,-116},{-92,116}};
-	//    static int sPlayerXY[][];
+//	static int sPlayerDpXY[][] = {{240,-305},{240,305},{-240,-305},{-240,305}};
+	static float sPlayerDpXY[][] = {{92,-116},{92,116},{-92,-116},{-92,116}};
+
+	// プレイヤー残機位置
+	static float sLifeDpXY[][] = {{165,-220},{165,240},{-165,-220},{-165,240}};
+
+	//    static int sPlayerDpXY[][];
 	// プレイヤーカラー
 	static int PLAYER_COLOR[][] = {
 			{255,127,127},
@@ -53,6 +57,8 @@ public class PlayerMng {
 	// プレイヤーのスピード
 	final static int PLEYER_SPEED = 10;
 
+	// プレイヤーのスピード
+	final static int LIFE_NUMBER = 3;
 
 	// プライヤーデータ
 	public static ArrayList<PlayerStatus> players = new ArrayList<PlayerStatus>();
@@ -67,10 +73,10 @@ public class PlayerMng {
 		sPlayerNum = num;
 		players.clear();
 		for(int i = 0; i < sPlayerNum; i++ ){
-			Log.w( "DEBUG_DATA", "sPlayerXY[i][0] " + (int)dpToPx(sPlayerXY[i][0],context.getResources()));
-			Log.w( "DEBUG_DATA", "sPlayerXY[i][1] " + (int)dpToPx(sPlayerXY[i][1],context.getResources()));
+			Log.w( "DEBUG_DATA", "sPlayerDpXY[i][0] " + (int)dpToPx(sPlayerDpXY[i][0],context.getResources()));
+			Log.w( "DEBUG_DATA", "sPlayerDpXY[i][1] " + (int)dpToPx(sPlayerDpXY[i][1],context.getResources()));
 
-			player = new PlayerStatus( i+1, (int)dpToPx(sPlayerXY[i][0],context.getResources()),(int)dpToPx(sPlayerXY[i][1],context.getResources()), PLAYER_COLOR[i] );
+			player = new PlayerStatus( i+1, (int)dpToPx(sPlayerDpXY[i][0],context.getResources()),(int)dpToPx(sPlayerDpXY[i][1],context.getResources()), PLAYER_COLOR[i],LIFE_NUMBER );
 			players.add(player);
 		}
 	}
@@ -250,5 +256,27 @@ public class PlayerMng {
 		}
 
 		return win_user_id;
+	}
+
+	public static void drawLife(Context context, Paint paint, Canvas canvas) {
+		int sa_x;
+		// Canvas 中心点
+		float center_x = canvas.getWidth() / 2;
+		float center_y = canvas.getHeight() / 2;
+
+		paint.reset();
+//		paint.setAntiAlias(true);
+		paint.setStyle(Paint.Style.FILL_AND_STROKE);
+
+		for (int i = 0; i < sPlayerNum; i++) {
+			paint.setColor(Color.argb(255, PlayerMng.players.get(i).colorR, PlayerMng.players.get(i).colorG, PlayerMng.players.get(i).colorB));
+			sa_x = 0;
+			for (int j = 0; j < PlayerMng.players.get(i).lifeNum; j++) {
+				// (x1,y1,r,paint) 中心x1座標, 中心y1座標, r半径
+				canvas.drawCircle(center_x - dpToPx(PlayerMng.sLifeDpXY[i][0] + sa_x, context.getResources()), center_y - dpToPx(PlayerMng.sLifeDpXY[i][1], context.getResources()), PLAYER_RADIUS_PX, paint);
+				if( i == 0 || i== 1 ) sa_x -= ( PLAYER_RADIUS_PX + 1 );
+				else sa_x += ( PLAYER_RADIUS_PX + 1 );
+			}
+		}
 	}
 }
