@@ -84,10 +84,14 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 				// 基本六角形
 				FieldMng.drawHex(paint, canvas);
+
+				// プレイヤーの復活処理
+				PlayerMng.revivalPlayer();
+
 				// プレイヤーの表示
 				PlayerMng.drawPlayer(mContext,paint, canvas);
 
-				// プレイヤーの表示
+				// プレイヤーのライフ表示
 				PlayerMng.drawLife(mContext,paint, canvas);
 
 				// カウントダウン中

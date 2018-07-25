@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static kirin3.jp.honeycombbattle.mng.PlayerMng.STATUS_DEAD;
 import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 
 /**
@@ -148,16 +149,21 @@ public class FieldMng {
 
 						// 壁にぶつかったら
 						if( hex_color_num[col][row] % 10 == WALL_NO ){
-							PlayerMng.players.get(i).nowPositionX = 0;
-							PlayerMng.players.get(i).nowPositionY = 0;
+
+							PlayerMng.deadPlayer(i);
+
 						}
-						// 自分の領域でなかったら
-						else if( hex_color_num[col][row] % 10 != PlayerMng.players.get(i).no ){
+						// ステータスノーマルで、自分の領域でなかったら
+						else if( PlayerMng.players.get(i).status == PlayerMng.STATUS_NORMAL && hex_color_num[col][row] % 10 != PlayerMng.players.get(i).no ){
+
+						    // スコアの増減
+                            if( ((hex_color_num[col][row] % 10) - 1) >= 1 && ((hex_color_num[col][row] % 10) - 1) <= 4 ){
+                            	PlayerMng.players.get((hex_color_num[col][row] % 10) - 1).score--;
+	                          }
+                            PlayerMng.players.get(i).score++;
 							// 色を記録
 							// ２桁目は永続で保存
-							Log.w( "DEBUG_DATA", "hex_color_num[col][row] " + hex_color_num[col][row]);
 							hex_color_num[col][row]  = changeIntADigit( hex_color_num[col][row], PlayerMng.players.get(i).no);
-//							( hex_color_num[col][row] / 10 ) + PlayerMng.players.get(i).no;
 						}
 					}
 				}
@@ -218,9 +224,12 @@ public class FieldMng {
 		Log.w( "DEBUG_DATA1", "connect.size()" + connect.size());
 
 		hex_color_num[col][row]  = changeIntADigit( hex_color_num[col][row], PlayerMng.players.get(user_no).no);
+		PlayerMng.players.get(user_no).score++;
+
 		for(int i = 0; i < connect.size(); i++){
 			Log.w( "DEBUG_DATA1", "i" + i);
 			hex_color_num[connect.get(i).get(0)][connect.get(i).get(1)] = changeIntADigit( hex_color_num[connect.get(i).get(0)][connect.get(i).get(1)], PlayerMng.players.get(user_no).no);
+			PlayerMng.players.get(user_no).score++;
 		}
 
 		PlayerMng.players.get(user_no).erea_flg = true;
