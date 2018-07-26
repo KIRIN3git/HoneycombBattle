@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -17,6 +18,7 @@ import kirin3.jp.honeycombbattle.mng.TimeMng;
  */
 
 public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHolder.Callback{
+
 
 	// スクリーンの大きさ(px)
 	int screen_width, screen_height;
@@ -55,9 +57,7 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		surfaceHolder = getHolder();
 		surfaceHolder.addCallback(this);
 
-
 //		hex_color_num = new int[SQUARE_NUM][SQUARE_NUM];
-
 	}
 
 	@Override
@@ -77,6 +77,8 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 		while(thread != null){
 			try{
+
+
 				TimeMng.fpsStart();
 
 				canvas = surfaceHolder.lockCanvas();
@@ -84,10 +86,14 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 				// 基本六角形
 				FieldMng.drawHex(paint, canvas);
+
+				// プレイヤーの復活処理
+				PlayerMng.revivalPlayer(paint, canvas);
+
 				// プレイヤーの表示
 				PlayerMng.drawPlayer(mContext,paint, canvas);
 
-				// プレイヤーの表示
+				// プレイヤーのライフ表示
 				PlayerMng.drawLife(mContext,paint, canvas);
 
 				// カウントダウン中
@@ -124,6 +130,7 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 				// fps
 				TimeMng.fpsEnd();
+
 
 			} catch(Exception e){}
 		}
@@ -253,6 +260,7 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 	// 破棄時に呼び出される
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
+
 		thread = null;
 	}
 

@@ -15,6 +15,7 @@ import static java.lang.Math.abs;
 import static java.lang.Math.pow;
 import static java.lang.Math.round;
 import static java.lang.Math.sqrt;
+import static kirin3.jp.honeycombbattle.util.TimeUtils.getCurrentTime;
 import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 
 /**
@@ -25,7 +26,7 @@ import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 public class PlayerMng {
 
 	// プレイヤー人数
-	public static int sPlayerNum = 4;
+	public static int sPlayerNum = 3;
 
 	// プレイヤースタート位置
 //	static int sPlayerDpXY[][] = {{240,-305},{240,305},{-240,-305},{-240,305}};
@@ -42,6 +43,9 @@ public class PlayerMng {
 			{50,205,50},
 			{255,227,80}};
 
+	// プレイヤーデッドカラー
+	static int PLAYER_DEAD_COLOR[] = {170, 170, 170};
+
 	// プレイヤーの半径
 	static float PLAYER_RADIUS_DP = 10.0f;
 	static float PLAYER_RADIUS_PX;
@@ -54,11 +58,19 @@ public class PlayerMng {
 	static float DIRECTION_WIDHT_DP = 5.0f;
 	static float DIRECTION_WIDHT_PX;
 
-	// プレイヤーのスピード
-	final static int PLEYER_SPEED = 10;
+	// スピード
+	final static int PLEYER_SPEED = 20;
 
-	// プレイヤーのスピード
+	// ライフ
 	final static int LIFE_NUMBER = 3;
+
+	// ステータス
+	final static int STATUS_NORMAL = 0;
+	final static int STATUS_DEAD = 1;
+	final static int STATUS_GAMEOVER = 2;
+
+	// プレイヤー復活時間（ミリ秒）
+	final static int REVIVAL_TIME = 1 * 1000;
 
 	// プライヤーデータ
 	public static ArrayList<PlayerStatus> players = new ArrayList<PlayerStatus>();
@@ -73,9 +85,6 @@ public class PlayerMng {
 		sPlayerNum = num;
 		players.clear();
 		for(int i = 0; i < sPlayerNum; i++ ){
-			Log.w( "DEBUG_DATA", "sPlayerDpXY[i][0] " + (int)dpToPx(sPlayerDpXY[i][0],context.getResources()));
-			Log.w( "DEBUG_DATA", "sPlayerDpXY[i][1] " + (int)dpToPx(sPlayerDpXY[i][1],context.getResources()));
-
 			player = new PlayerStatus( i+1, (int)dpToPx(sPlayerDpXY[i][0],context.getResources()),(int)dpToPx(sPlayerDpXY[i][1],context.getResources()), PLAYER_COLOR[i],LIFE_NUMBER );
 			players.add(player);
 		}
@@ -86,32 +95,42 @@ public class PlayerMng {
 		float center_x = canvas.getWidth() / 2;
 		float center_y = canvas.getHeight() / 2;
 
+
 		paint.reset();
 //		paint.setAntiAlias(true);
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);
 
 		for(int i = 0; i < sPlayerNum; i++ ) {
-			paint.setColor(Color.argb(255, PlayerMng.players.get(i).colorR, PlayerMng.players.get(i).colorG, PlayerMng.players.get(i).colorB));
-			// (x1,y1,r,paint) 中心x1座標, 中心y1座標, r半径
-			canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX, center_y - PlayerMng.players.get(i).nowPositionY, PLAYER_RADIUS_PX, paint);
-
-			for (int j = 0; j < sPlayerNum; j++) {
-
-				if (i == j) continue;
-				if( ((PlayerMng.players.get(i).nowPositionX - PlayerMng.players.get(j).nowPositionX) * (PlayerMng.players.get(i).nowPositionX - PlayerMng.players.get(j).nowPositionX)
-						+ (PlayerMng.players.get(i).nowPositionY - PlayerMng.players.get(j).nowPositionY) * (PlayerMng.players.get(i).nowPositionY - PlayerMng.players.get(j).nowPositionY)) < Math.pow(PLAYER_RADIUS_PX * 2, 2) ){
+			if( PlayerMng.players.get(i).status == STATUS_GAMEOVER ) {
+				//NOOP
+			}
+			else if( PlayerMng.players.get(i).status == STATUS_DEAD ) {
 /*
-					Log.w( "DEBUG_DATA", "円重なり");
-					// もし侵入中だったら
-					if( PlayerMng.players.get(i).status == 1 && PlayerMng.players.get(j).status == 0){
-						Log.w( "DEBUG_DATA", "死亡" + TimeMng.gameOverFlg );
-							// 死亡
-						TimeMng.gameOverFlg = true;
-						TimeMng.battleFlg = false;
-						PlayerMng.players.get(i).status = 2;
-						return;
+				paint.setColor(Color.argb(255, PLAYER_DEAD_COLOR[0], PLAYER_DEAD_COLOR[1], PLAYER_DEAD_COLOR[2]));
+				// (x1,y1,r,paint) 中心x1座標, 中心y1座標, r半径
+				canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX, center_y - PlayerMng.players.get(i).nowPositionY, PLAYER_RADIUS_PX, paint);
+*/
+			}
+			else{
+				paint.setColor(Color.argb(255, PlayerMng.players.get(i).colorR, PlayerMng.players.get(i).colorG, PlayerMng.players.get(i).colorB));
+				// (x1,y1,r,paint) 中心x1座標, 中心y1座標, r半径
+				canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX, center_y - PlayerMng.players.get(i).nowPositionY, PLAYER_RADIUS_PX, paint);
+
+				// 円の重なりをチェック
+				for (int j = 0; j < sPlayerNum; j++) {
+					if (i == j) continue;
+					if( PlayerMng.players.get(i).status == STATUS_DEAD || PlayerMng.players.get(j).status == STATUS_DEAD ) continue;
+					if( PlayerMng.players.get(i).status == STATUS_GAMEOVER || PlayerMng.players.get(j).status == STATUS_GAMEOVER ) continue;
+
+					if( ((PlayerMng.players.get(i).nowPositionX - PlayerMng.players.get(j).nowPositionX) * (PlayerMng.players.get(i).nowPositionX - PlayerMng.players.get(j).nowPositionX)
+							+ (PlayerMng.players.get(i).nowPositionY - PlayerMng.players.get(j).nowPositionY) * (PlayerMng.players.get(i).nowPositionY - PlayerMng.players.get(j).nowPositionY)) < Math.pow(PLAYER_RADIUS_PX * 2, 2) ){
+						if( PlayerMng.players.get(i).score > PlayerMng.players.get(j).score ) deadPlayer(i);
+						else if( PlayerMng.players.get(i).score < PlayerMng.players.get(j).score ) deadPlayer(j);
+						else{
+							deadPlayer(i);
+							deadPlayer(j);
+						}
 					}
-					*/
 				}
 			}
 		}
@@ -172,14 +191,16 @@ public class PlayerMng {
 	public static void getMoveXY(){
 
 		for(int i = 0; i < sPlayerNum; i++ ){
-			if( players.get(i).touchFlg){
+//			if( players.get(i).touchFlg) {
 				// タップ移動比率xyと指示マーカーのxyを取得
 //				getIndicatorXY(i,players.get(i).startTouchX, players.get(i).startTouchY, players.get(i).nowTouchX, players.get(i).nowTouchY, players.get(i).indicatorDiff, players.get(i).indicatorXY);
-				getIndicatorXY(i,players.get(i).startTouchX, players.get(i).startTouchY, players.get(i).nowTouchX, players.get(i).nowTouchY);
+				getIndicatorXY(i, players.get(i).startTouchX, players.get(i).startTouchY, players.get(i).nowTouchX, players.get(i).nowTouchY);
 				// ユーザーの位置を登録
-				players.get(i).nowPositionX = players.get(i).nowPositionX - (players.get(i).indicatorDiff[0] / PLEYER_SPEED);
-				players.get(i).nowPositionY = players.get(i).nowPositionY - (players.get(i).indicatorDiff[1] / PLEYER_SPEED);
-			}
+				if (players.get(i).status == STATUS_NORMAL) {
+					players.get(i).nowPositionX = players.get(i).nowPositionX - (players.get(i).indicatorDiff[0] / PLEYER_SPEED);
+					players.get(i).nowPositionY = players.get(i).nowPositionY - (players.get(i).indicatorDiff[1] / PLEYER_SPEED);
+				}
+//			}
 		}
 	}
 
@@ -223,10 +244,16 @@ public class PlayerMng {
 		//Log.w( "DEBUG_DATA", "ratio " + ratio  );
 
 		// 指示マーカーとセーブ位置の差分を取得（四捨五入のため誤差あり）
-		if( positive_x ) players.get(user_id).indicatorDiff[0] = (int)round(sa_x * ratio);
-		else players.get(user_id).indicatorDiff[0] = - (int)round(sa_x * ratio);
-		if( positive_y ) players.get(user_id).indicatorDiff[1] = (int)round(sa_y * ratio);
-		else players.get(user_id).indicatorDiff[1] = - (int)round(sa_y * ratio);
+		if( sa_x == 0 && sa_y == 0 ){
+			// 差分に変更なしで移動し続ける
+		}
+		else {
+			if (positive_x) players.get(user_id).indicatorDiff[0] = (int) round(sa_x * ratio);
+			else players.get(user_id).indicatorDiff[0] = -(int) round(sa_x * ratio);
+			if (positive_y) players.get(user_id).indicatorDiff[1] = (int) round(sa_y * ratio);
+			else players.get(user_id).indicatorDiff[1] = -(int) round(sa_y * ratio);
+		}
+
 
 		// 四捨五入して指示マーカーの位置を取得
 		players.get(user_id).indicatorXY[0] = start_touch_x + players.get(user_id).indicatorDiff[0];
@@ -277,6 +304,74 @@ public class PlayerMng {
 				if( i == 0 || i== 1 ) sa_x -= ( PLAYER_RADIUS_PX + 1 );
 				else sa_x += ( PLAYER_RADIUS_PX + 1 );
 			}
+		}
+	}
+
+
+	public static void deadPlayer(int user_id){
+
+		if( PlayerMng.players.get(user_id).status != PlayerMng.STATUS_NORMAL ) return;
+
+
+		PlayerMng.players.get(user_id).status = PlayerMng.STATUS_DEAD;
+		PlayerMng.players.get(user_id).deadTime = getCurrentTime();
+
+		/*
+		PlayerMng.players.get(user_id).lifeNum--;
+		if( PlayerMng.players.get(user_id).lifeNum <= 0 ){
+			PlayerMng.players.get(user_id).status = PlayerMng.STATUS_GAMEOVER;
+		}
+		else {
+			PlayerMng.players.get(user_id).status = PlayerMng.STATUS_DEAD;
+			PlayerMng.players.get(user_id).deadTime = getCurrentTime();
+			PlayerMng.players.get(user_id).nowPositionX = PlayerMng.players.get(user_id).startPositionX;
+			PlayerMng.players.get(user_id).nowPositionY = PlayerMng.players.get(user_id).startPositionY;
+		}
+		*/
+	}
+
+	public static void revivalPlayer(Paint paint, Canvas canvas){
+		// Canvas 中心点
+		float center_x = canvas.getWidth() / 2;
+		float center_y = canvas.getHeight() / 2;
+
+		paint.reset();
+		paint.setStyle(Paint.Style.FILL_AND_STROKE);
+
+		for (int i = 0; i < sPlayerNum; i++) {
+
+			if( PlayerMng.players.get(i).status == PlayerMng.STATUS_DEAD ){
+				if( PlayerMng.players.get(i).deadTime + REVIVAL_TIME <= getCurrentTime() ){
+					PlayerMng.players.get(i).status = PlayerMng.STATUS_NORMAL;
+					PlayerMng.players.get(i).deadTime = 0;
+					PlayerMng.players.get(i).nowPositionX = PlayerMng.players.get(i).startPositionX;
+					PlayerMng.players.get(i).nowPositionY = PlayerMng.players.get(i).startPositionY;
+					PlayerMng.players.get(i).lifeNum--;
+					if( PlayerMng.players.get(i).lifeNum <= 0 ){
+						PlayerMng.players.get(i).status = PlayerMng.STATUS_GAMEOVER;
+					}
+					else PlayerMng.players.get(i).status = PlayerMng.STATUS_NORMAL;
+				}
+				else {
+					long sabun1 = ( getCurrentTime() - PlayerMng.players.get(i).deadTime ) / 7;
+					long sabun2 = ( getCurrentTime() - PlayerMng.players.get(i).deadTime ) / 10;
+					
+					paint.setColor(Color.argb(255, PlayerMng.players.get(i).colorR, PlayerMng.players.get(i).colorG, PlayerMng.players.get(i).colorB));
+
+					canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX + sabun1, center_y - PlayerMng.players.get(i).nowPositionY, PLAYER_RADIUS_PX / 2, paint);
+					canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX - sabun1, center_y - PlayerMng.players.get(i).nowPositionY, PLAYER_RADIUS_PX / 2, paint);
+					canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX, center_y - PlayerMng.players.get(i).nowPositionY + sabun1, PLAYER_RADIUS_PX / 2, paint);
+					canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX, center_y - PlayerMng.players.get(i).nowPositionY - sabun1, PLAYER_RADIUS_PX / 2, paint);
+
+					canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX + sabun2, center_y - PlayerMng.players.get(i).nowPositionY + sabun2, PLAYER_RADIUS_PX / 2, paint);
+					canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX + sabun2, center_y - PlayerMng.players.get(i).nowPositionY - sabun2, PLAYER_RADIUS_PX / 2, paint);
+					canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX - sabun2, center_y - PlayerMng.players.get(i).nowPositionY + sabun2, PLAYER_RADIUS_PX / 2, paint);
+					canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX - sabun2, center_y - PlayerMng.players.get(i).nowPositionY - sabun2, PLAYER_RADIUS_PX / 2, paint);
+				}
+			}
+
+
+
 		}
 	}
 }

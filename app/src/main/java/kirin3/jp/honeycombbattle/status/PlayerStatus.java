@@ -10,19 +10,27 @@ public class PlayerStatus {
 	public int no;
 	// プレイヤーの開始位置
 	public int startPositionX, startPositionY;
+
 	// プレイヤーの現在位置(x,y)
 	public int nowPositionX, nowPositionY;
+
 	// プレイヤーの現在位置(row,col)
 	public int nowPositionNow, nowPositionCol;
+
 	// プレイヤーの初回エリア表示判定
 	public boolean erea_flg = false;
 
 	// プレイヤーカラー
 	public int colorR, colorG, colorB;
+
 	// プレイヤーの状態
-	// 0:自分の領域,1:外部に侵入中,2:死亡
+	// 0:通常,1:死,2:ゲームオーバー
 	public int status = 0;
 
+	// 死亡時間（ミリ秒）
+	public long deadTime;
+
+	// プレイヤーのライフ数
 	public int lifeNum;
 
 	// タッチの開始位置
