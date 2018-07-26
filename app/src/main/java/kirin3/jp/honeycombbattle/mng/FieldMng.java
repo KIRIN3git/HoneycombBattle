@@ -220,14 +220,11 @@ public class FieldMng {
 	public static void SetRoundColoer( int user_no,int col,int row ){
 		List<List<Integer>> connect;
 		connect = GetConnect(col,row);
-		Log.w( "DEBUG_DATA1", "user_no" + user_no);
-		Log.w( "DEBUG_DATA1", "connect.size()" + connect.size());
 
 		hex_color_num[col][row]  = changeIntADigit( hex_color_num[col][row], PlayerMng.players.get(user_no).no);
 		PlayerMng.players.get(user_no).score++;
 
 		for(int i = 0; i < connect.size(); i++){
-			Log.w( "DEBUG_DATA1", "i" + i);
 			hex_color_num[connect.get(i).get(0)][connect.get(i).get(1)] = changeIntADigit( hex_color_num[connect.get(i).get(0)][connect.get(i).get(1)], PlayerMng.players.get(user_no).no);
 			PlayerMng.players.get(user_no).score++;
 		}
@@ -279,7 +276,6 @@ public class FieldMng {
 	 * １つの目引数の２桁目をキープして、２つ目の引数の値を１桁目に入れ替える
 	 */
 	public static int changeIntADigit( int a,int b){
-		Log.w( "DEBUG_DATA", "( a % 10 ) * 10 + b " + ( a % 10 ) * 10 + b);
 		return ( a / 10 ) * 10 + b;
 
 	}
