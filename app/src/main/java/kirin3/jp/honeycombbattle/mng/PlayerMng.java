@@ -59,7 +59,7 @@ public class PlayerMng {
 	static float DIRECTION_WIDHT_PX;
 
 	// スピード
-	final static int PLEYER_SPEED = 20;
+	final static int PLEYER_SPEED = 15;
 
 	// ライフ
 	final static int LIFE_NUMBER = 3;
@@ -300,9 +300,9 @@ public class PlayerMng {
 			sa_x = 0;
 			for (int j = 0; j < PlayerMng.players.get(i).lifeNum; j++) {
 				// (x1,y1,r,paint) 中心x1座標, 中心y1座標, r半径
-				canvas.drawCircle(center_x - dpToPx(PlayerMng.sLifeDpXY[i][0] + sa_x, context.getResources()), center_y - dpToPx(PlayerMng.sLifeDpXY[i][1], context.getResources()), PLAYER_RADIUS_PX, paint);
-				if( i == 0 || i== 1 ) sa_x -= ( PLAYER_RADIUS_PX + 1 );
-				else sa_x += ( PLAYER_RADIUS_PX + 1 );
+				canvas.drawCircle(center_x - dpToPx(PlayerMng.sLifeDpXY[i][0], context.getResources())  - sa_x, center_y - dpToPx(PlayerMng.sLifeDpXY[i][1], context.getResources()), PLAYER_RADIUS_PX, paint);
+				if( i == 0 || i== 1 ) sa_x -= ( ( PLAYER_RADIUS_PX * 2 ) + dpToPx(3, context.getResources()) );
+				else sa_x += ( ( PLAYER_RADIUS_PX * 2 ) + dpToPx(3, context.getResources()) );
 			}
 		}
 	}
