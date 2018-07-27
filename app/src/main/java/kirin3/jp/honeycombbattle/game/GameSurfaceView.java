@@ -10,6 +10,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import kirin3.jp.honeycombbattle.mng.FieldMng;
+import kirin3.jp.honeycombbattle.mng.ItemMng;
 import kirin3.jp.honeycombbattle.mng.PlayerMng;
 import kirin3.jp.honeycombbattle.mng.TimeMng;
 
@@ -18,7 +19,6 @@ import kirin3.jp.honeycombbattle.mng.TimeMng;
  */
 
 public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHolder.Callback{
-
 
 	// スクリーンの大きさ(px)
 	int screen_width, screen_height;
@@ -95,6 +95,10 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 				// プレイヤーのライフ表示
 				PlayerMng.drawLife(mContext,paint, canvas);
+
+				// プレイヤーの表示
+				ItemMng.drawItem(mContext,paint, canvas);
+
 
 				// カウントダウン中
 				if( TimeMng.getSituation() == TimeMng.SITUATION_COUNTDOWN ){

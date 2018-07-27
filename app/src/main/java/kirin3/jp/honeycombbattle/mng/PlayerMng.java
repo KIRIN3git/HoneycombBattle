@@ -59,7 +59,7 @@ public class PlayerMng {
 	static float DIRECTION_WIDHT_PX;
 
 	// スピード
-	final static int PLEYER_SPEED = 15;
+	final static int PLEYER_SPEED = 20;
 
 	// ライフ
 	final static int LIFE_NUMBER = 3;
