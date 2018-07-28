@@ -28,9 +28,9 @@ public class TimeMng {
 	static float LIMIT_TEXT_SIZE_PX;
 
 	// カウントダウンミリ秒
-	static long COUNT_DONW_MS = 1 * 1000;
+	static long COUNT_DONW_MS = 3 * 1000;
 	// バトル時間ミリ秒
-	static long BATTLE_MS = 6000 * 1000;
+	static long BATTLE_MS = 60 * 1000;
 	// ゲームオーバー時間ミリ秒
 	static long GAMEOVER_MS = 2 * 1000;
 	// カウントダウン開始時間保存
