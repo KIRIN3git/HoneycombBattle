@@ -77,8 +77,6 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 		while(thread != null){
 			try{
-
-
 				TimeMng.fpsStart();
 
 				canvas = surfaceHolder.lockCanvas();
@@ -91,13 +89,16 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 				PlayerMng.revivalPlayer(paint, canvas);
 
 				// プレイヤーの表示
-				PlayerMng.drawPlayer(mContext,paint, canvas);
+				PlayerMng.drawPlayer(mContext, paint, canvas);
 
 				// プレイヤーのライフ表示
-				PlayerMng.drawLife(mContext,paint, canvas);
+				PlayerMng.drawLife(mContext, paint, canvas);
 
-				// プレイヤーの表示
-				ItemMng.drawItem(mContext,paint, canvas);
+				// アイテムの表示
+				ItemMng.createItem(mContext, canvas);
+
+				// アイテムの表示
+				ItemMng.drawItem(mContext, paint, canvas);
 
 
 				// カウントダウン中
