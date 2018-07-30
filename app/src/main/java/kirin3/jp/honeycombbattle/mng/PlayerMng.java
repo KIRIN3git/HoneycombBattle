@@ -26,7 +26,7 @@ import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 public class PlayerMng {
 
 	// プレイヤー人数
-	public static int sPlayerNum = 3;
+	public static int sPlayerNum = 4;
 
 	// プレイヤースタート位置
 //	static int sPlayerDpXY[][] = {{240,-305},{240,305},{-240,-305},{-240,305}};
@@ -59,7 +59,7 @@ public class PlayerMng {
 	static float DIRECTION_WIDHT_PX;
 
 	// スピード
-	final static int PLEYER_SPEED = 20;
+	final static int PLEYER_SPEED = 15;
 
 	// ライフ
 	final static int LIFE_NUMBER = 3;
