@@ -29,7 +29,6 @@ public class PlayerMng {
 	public static int sPlayerNum = 4;
 
 	// プレイヤースタート位置
-//	static int sPlayerDpXY[][] = {{240,-305},{240,305},{-240,-305},{-240,305}};
 	static float sPlayerDpXY[][] = {{92,-116},{92,116},{-92,-116},{-92,116}};
 
 	// プレイヤー残機位置
@@ -38,7 +37,7 @@ public class PlayerMng {
 	//    static int sPlayerDpXY[][];
 	// プレイヤーカラー
 	static int PLAYER_COLOR[][] = {
-			{255,127,127},
+            {255,127,127},
 			{127,127,255},
 			{50,205,50},
 			{255,227,80}};
@@ -116,7 +115,7 @@ public class PlayerMng {
 				// (x1,y1,r,paint) 中心x1座標, 中心y1座標, r半径
 				canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX, center_y - PlayerMng.players.get(i).nowPositionY, PLAYER_RADIUS_PX, paint);
 
-				// 円の重なりをチェック
+				// プレイヤー同士の円の重なりをチェック
 				for (int j = 0; j < sPlayerNum; j++) {
 					if (i == j) continue;
 					if( PlayerMng.players.get(i).status == STATUS_DEAD || PlayerMng.players.get(j).status == STATUS_DEAD ) continue;
