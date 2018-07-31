@@ -29,8 +29,8 @@ public class PlayerMng {
 	public static int sPlayerNum = 4;
 
 	// プレイヤースタート位置
-//	static float sPlayerDpXY[][] = {{-92,116},{-92,-116},{92,116},{92,-116}};
-	static float sPlayerDpXY[][] = {{-72,106},{-82,-116},{65,150},{92,-116}};
+	static float sPlayerDpXY[][] = {{-92,116},{-92,-116},{92,116},{92,-116}};
+//	static float sPlayerDpXY[][] = {{-72,106},{-82,-116},{65,150},{92,-116}};
 
 	// プレイヤー残機位置
 	static float sLifeDpXY[][] = {{165,-220},{165,240},{-165,-220},{-165,240}};
@@ -75,9 +75,13 @@ public class PlayerMng {
 	final static public int STATUS_GAMEOVER = 2;
 
 	// プレイヤー復活時間（ミリ秒）
-	final static int REVIVAL_TIME = 1 * 1000;
+	final static int REVIVAL_TIME = 2 * 1000;
 
+	// スピードアップ時間（ミリ秒）
+	final static int SPEEDUP_TIME = 5 * 1000;
 
+	// 無敵時間（ミリ秒）
+	final static int UNRIVALE_TIME = 5 * 1000;
 
 	// プライヤーデータ
 	public static ArrayList<PlayerStatus> players = new ArrayList<PlayerStatus>();
@@ -123,6 +127,7 @@ public class PlayerMng {
 				// (x1,y1,r,paint) 中心x1座標, 中心y1座標, r半径
 				canvas.drawCircle(center_x + PlayerMng.players.get(i).nowPositionX, center_y + PlayerMng.players.get(i).nowPositionY, PLAYER_RADIUS_PX, paint);
 
+				/*
 				// プレイヤー同士の円の重なりをチェック
 				for (int j = 0; j < sPlayerNum; j++) {
 					if (i == j) continue;
@@ -139,6 +144,7 @@ public class PlayerMng {
 						}
 					}
 				}
+				*/
 			}
 		}
 	}
@@ -204,6 +210,7 @@ public class PlayerMng {
 				getIndicatorXY(i, players.get(i).startTouchX, players.get(i).startTouchY, players.get(i).nowTouchX, players.get(i).nowTouchY);
 				// ユーザーの位置を登録
 				if (players.get(i).status == STATUS_NORMAL) {
+
 					players.get(i).nowPositionX = players.get(i).nowPositionX + (players.get(i).indicatorDiff[0] / PLEYER_SPEED);
 					players.get(i).nowPositionY = players.get(i).nowPositionY + (players.get(i).indicatorDiff[1] / PLEYER_SPEED);
 				}
@@ -322,6 +329,15 @@ public class PlayerMng {
 
 		PlayerMng.players.get(user_id).status = PlayerMng.STATUS_DEAD;
 		PlayerMng.players.get(user_id).deadTime = getCurrentTime();
+
+		PlayerMng.players.get(user_id).indicatorDiff[0] = 0;
+		PlayerMng.players.get(user_id).indicatorDiff[1] = 0;
+		PlayerMng.players.get(user_id).indicatorXY[0] = 0;
+		PlayerMng.players.get(user_id).indicatorXY[1] = 0;
+		PlayerMng.players.get(user_id).startTouchX = 0;
+		PlayerMng.players.get(user_id).startTouchY = 0;
+		PlayerMng.players.get(user_id).nowTouchX = 0;
+		PlayerMng.players.get(user_id).nowTouchY = 0;
 
 		/*
 		PlayerMng.players.get(user_id).lifeNum--;

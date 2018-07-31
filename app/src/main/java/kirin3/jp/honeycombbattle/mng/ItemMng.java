@@ -4,31 +4,39 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
-import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import kirin3.jp.honeycombbattle.status.ItemStatus;
-import kirin3.jp.honeycombbattle.status.PlayerStatus;
+import kirin3.jp.honeycombbattle.util.TimeUtils;
 
+import static kirin3.jp.honeycombbattle.mng.FieldMng.DALETE_NO;
+import static kirin3.jp.honeycombbattle.mng.FieldMng.WALL_NO;
+import static kirin3.jp.honeycombbattle.mng.FieldMng.changeIntADigit;
+import static kirin3.jp.honeycombbattle.mng.FieldMng.hex_color_num;
 import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 
 public class ItemMng {
 
     // アイテムの半径
-    static float ITEM_RADIUS_DP = 10.0f;
+    static float ITEM_RADIUS_DP = 14.0f;
     static float ITEM_RADIUS_PX;
 
     static float ITEM_TEXT_DP = 20.0f;
     static float ITEM_TEXT_PX;
 
-    // アイテム人数
+    // アイテム数
     public static int sItemNum = 0;
 
+
+    // アイテム種類
+    static int type;
+
     // アイテムベースTEXT
-    static String ITEM_BASE_TEXT[] ={"S","B","L","D"};
+    static String ITEM_BASE_TEXT[] ={"B","L","W","D"};
 
     // アイテムベースカラー
     static int ITEM_BASE_COLOR[][] = {
@@ -41,7 +49,7 @@ public class ItemMng {
     static int ITEM_TEXT_COLOR[][] = {
             {255,0,0},
             {0,255,0},
-            {0,0,255},
+            {140,140,200},
             {255,0,255}};
 
     // ステータス
@@ -95,7 +103,7 @@ public class ItemMng {
                 y_dire_random = - ( r.nextInt(5) + 1 );
             }
 
-            item = new ItemStatus( sItemNum,start_x_random,start_y_random,ITEM_BASE_TEXT[item_random],ITEM_BASE_COLOR[item_random],ITEM_TEXT_COLOR[item_random],x_dire_random,y_dire_random );
+            item = new ItemStatus( sItemNum,start_x_random,start_y_random,item_random,ITEM_BASE_TEXT[item_random],ITEM_BASE_COLOR[item_random],ITEM_TEXT_COLOR[item_random],x_dire_random,y_dire_random );
             items.add(item);
         }
     }
@@ -138,7 +146,6 @@ public class ItemMng {
             canvas.drawText(ItemMng.items.get(i).text, ItemMng.items.get(i).nowPositionX - (widht / 2), ItemMng.items.get(i).nowPositionY + (height / 2), paint);
 
             // アイテムとプレイヤーの重なりをチェック
-            // プレイヤー同士の円の重なりをチェック
             for (int j = 0; j < PlayerMng.sPlayerNum; j++) {
                 if( PlayerMng.players.get(j).status == PlayerMng.STATUS_DEAD ) continue;
                 if( PlayerMng.players.get(j).status == PlayerMng.STATUS_GAMEOVER ) continue;
@@ -149,11 +156,188 @@ public class ItemMng {
 
                     ItemMng.items.get(i).status = STATUS_USED;
 
+                    if(ItemMng.items.get(i).type == 0) setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,0,2);
+                    else if(ItemMng.items.get(i).type == 1) setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,1,2);
+                    else setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,2,2);
+
                 }
             }
 
             ItemMng.items.get(i).nowPositionX = ItemMng.items.get(i).nowPositionX + ItemMng.items.get(i).x_direction;
             ItemMng.items.get(i).nowPositionY = ItemMng.items.get(i).nowPositionY + ItemMng.items.get(i).y_direction;
+
+        }
+    }
+
+    public static void setAtackColoer(int user_id, int col, int row, int mode, int distance ){
+        List<List<Integer>> cr;
+
+        if(mode == 0) cr = GetAround(col,row,distance);
+        else if(mode == 1) cr = GetColLine(row);
+        else cr = GetRowLine(col);
+
+        hex_color_num[col][row]  = changeIntADigit( hex_color_num[col][row], PlayerMng.players.get(user_id).no);
+        PlayerMng.players.get(user_id).score++;
+
+        for(int i = 0; i < cr.size(); i++){
+            // 壁等は色を塗れない
+            if( hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] == WALL_NO || hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] == DALETE_NO) continue;
+            hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] = changeIntADigit( hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)], PlayerMng.players.get(user_id).no);
+            PlayerMng.players.get(user_id).score++;
+            // 爆破範囲内のキャラは死亡
+            for(int j = 0; j < PlayerMng.sPlayerNum; j++){
+
+                // 自分は平気
+                if( j == user_id ) continue;
+                if( PlayerMng.players.get(j).nowPositionCol == cr.get(i).get(0) && PlayerMng.players.get(j).nowPositionRow == cr.get(i).get(1) ){
+                    PlayerMng.deadPlayer(j);
+                }
+            }
+        }
+
+        PlayerMng.players.get(user_id).erea_flg = true;
+    }
+
+    public static List<List<Integer>> GetAround(int col, int row, int distance) {
+
+        List<List<Integer>> list = new ArrayList<>();
+
+        // 左端でなければ
+        if (col >= 1) {
+            list.add(Arrays.asList(col - 1, row));
+        }
+        // 右端でなければ
+        if (col <= hex_color_num[0].length - 2) {
+            list.add(Arrays.asList(col + 1, row));
+        }
+        // 上端でなければ
+        if (row >= 1) {
+            list.add(Arrays.asList(col, row - 1));
+        }
+        // 下端でなければ
+        if (row <= hex_color_num.length - 2) {
+            list.add(Arrays.asList(col, row + 1));
+        }
+
+        if (row % 2 == 0) {
+            if (col <= hex_color_num[0].length - 2 && row >= 1) {
+                list.add(Arrays.asList(col + 1, row - 1));
+            }
+            if (col <= hex_color_num[0].length - 2 && row <= hex_color_num.length - 2) {
+                list.add(Arrays.asList(col + 1, row + 1));
+            }
+        } else{
+            if (col >= 1 && row >= 1) {
+                list.add(Arrays.asList(col - 1, row - 1));
+            }
+            if (col >= 1 && row <= hex_color_num.length - 2) {
+                list.add(Arrays.asList(col - 1, row + 1));
+            }
+        }
+
+        if( distance >= 2 ){
+            // 左端でなければ
+            if (col >= 2) {
+                list.add(Arrays.asList(col - 2, row));
+            }
+            // 右端でなければ
+            if (col <= hex_color_num[0].length - 3) {
+                list.add(Arrays.asList(col + 2, row));
+            }
+            // 上端でなければ
+            if (row >= 2) {
+                list.add(Arrays.asList(col, row - 2));
+            }
+            // 下端でなければ
+            if (row <= hex_color_num.length - 3) {
+                list.add(Arrays.asList(col, row + 2));
+            }
+
+            if (row % 2 == 0) {
+                if (col <= hex_color_num[0].length - 3 && row >= 1) {
+                    list.add(Arrays.asList(col + 2, row - 1));
+                }
+                if (col <= hex_color_num[0].length - 3 && row <= hex_color_num.length - 2) {
+                    list.add(Arrays.asList(col + 2, row + 1));
+                }
+                if (col <= hex_color_num[0].length - 2 && row >= 2) {
+                    list.add(Arrays.asList(col + 1, row - 2));
+                }
+                if (col <= hex_color_num[0].length - 2 && row <= hex_color_num.length - 3) {
+                    list.add(Arrays.asList(col + 1, row + 2));
+                }
+                if (col >= 1 && row >= 1) {
+                    list.add(Arrays.asList(col - 1, row - 1));
+                }
+                if (col >= 1 && row <= hex_color_num.length - 2) {
+                    list.add(Arrays.asList(col - 1, row + 1));
+                }
+                if (col >= 1 && row >= 2) {
+                    list.add(Arrays.asList(col - 1, row - 2));
+                }
+                if (col >= 1 && row <= hex_color_num.length - 3) {
+                    list.add(Arrays.asList(col - 1, row + 2));
+                }
+            } else{
+                if (col >= 2 && row >= 1) {
+                    list.add(Arrays.asList(col - 2, row - 1));
+                }
+                if (col >= 2 && row <= hex_color_num.length - 2) {
+                    list.add(Arrays.asList(col - 2, row + 1));
+                }
+                if (col >= 1 && row >= 2) {
+                    list.add(Arrays.asList(col - 1, row - 2));
+                }
+                if (col >= 1 && row <= hex_color_num.length - 3) {
+                    list.add(Arrays.asList(col - 1, row + 2));
+                }
+                if (col <= hex_color_num[0].length - 2 && row >= 1) {
+                    list.add(Arrays.asList(col + 1, row - 1));
+                }
+                if (col <= hex_color_num[0].length - 2 && row <= hex_color_num.length - 2) {
+                    list.add(Arrays.asList(col + 1, row + 1));
+                }
+                if (col <= hex_color_num[0].length - 2 && row >= 2) {
+                    list.add(Arrays.asList(col + 1, row - 2));
+                }
+                if (col <= hex_color_num[0].length - 2 && row <= hex_color_num.length - 3) {
+                    list.add(Arrays.asList(col + 1, row + 2));
+                }
+            }
+        }
+
+
+        return list;
+    }
+
+    public static List<List<Integer>> GetColLine(int row) {
+
+        List<List<Integer>> list = new ArrayList<>();
+
+        for(int i = 0; i < hex_color_num.length; i++ ){
+            list.add(Arrays.asList(i, row));
+        }
+
+        return list;
+    }
+
+    public static List<List<Integer>> GetRowLine(int col) {
+
+        List<List<Integer>> list = new ArrayList<>();
+
+        for(int i = 0; i < hex_color_num[0].length; i++ ){
+            list.add(Arrays.asList(col, i));
+        }
+
+        return list;
+    }
+
+    public static void setSpeedUp(int user_id){
+        PlayerMng.players.get(user_id).speedUpTime = TimeUtils.getCurrentTime();
+    }
+
+    public static void checkItemEffect(){
+        for(int i = 0; i < PlayerMng.sPlayerNum; i++){
 
         }
     }

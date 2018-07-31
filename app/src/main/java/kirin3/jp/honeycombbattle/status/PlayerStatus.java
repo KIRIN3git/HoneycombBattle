@@ -15,7 +15,7 @@ public class PlayerStatus {
 	public int nowPositionX, nowPositionY;
 
 	// プレイヤーの現在位置(row,col)
-	public int nowPositionNow, nowPositionCol;
+	public int nowPositionRow, nowPositionCol;
 
 	// プレイヤーの初回エリア表示判定
 	public boolean erea_flg = false;
@@ -32,6 +32,14 @@ public class PlayerStatus {
 
 	// プレイヤーのライフ数
 	public int lifeNum;
+
+	// スピードアップ開始時間
+	public long speedUpTime = 0;
+
+	// 無敵開始時間
+	public long unrivaledTime = 0;
+
+
 
 	// タッチの開始位置
 	public int startTouchX, startTouchY;

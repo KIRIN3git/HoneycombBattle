@@ -88,13 +88,16 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 				// プレイヤーの復活処理
 				PlayerMng.revivalPlayer(paint, canvas);
 
+				// アイテムの効果チェック
+				ItemMng.checkItemEffect();
+
 				// プレイヤーの表示
 				PlayerMng.drawPlayer(mContext, paint, canvas);
 
 				// プレイヤーのライフ表示
 				PlayerMng.drawLife(mContext, paint, canvas);
 
-				// アイテムの表示
+				// アイテムの作成
 				ItemMng.createItem(mContext, canvas);
 
 				// アイテムの表示

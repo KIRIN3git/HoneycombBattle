@@ -5,13 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static kirin3.jp.honeycombbattle.mng.PlayerMng.STATUS_DEAD;
 import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 
 /**
@@ -140,11 +134,11 @@ public class FieldMng {
 
 						//現在位置(col,row)を記録
 						PlayerMng.players.get(i).nowPositionCol = col;
-						PlayerMng.players.get(i).nowPositionNow = row;
+						PlayerMng.players.get(i).nowPositionRow = row;
 
 						// 初期エリア色塗り
 						if( PlayerMng.players.get(i).erea_flg == false ){
-							SetRoundColoer(i,col,row,1);
+							ItemMng.setAtackColoer(i,col,row,0,1);
 						}
 
 						// 壁にぶつかったら
@@ -217,133 +211,8 @@ public class FieldMng {
 		}
 	}
 
-	public static void SetRoundColoer( int user_no,int col,int row,int distance ){
-		List<List<Integer>> connect;
-		connect = GetConnect(col,row,2);
-
-		hex_color_num[col][row]  = changeIntADigit( hex_color_num[col][row], PlayerMng.players.get(user_no).no);
-		PlayerMng.players.get(user_no).score++;
-
-		for(int i = 0; i < connect.size(); i++){
-			hex_color_num[connect.get(i).get(0)][connect.get(i).get(1)] = changeIntADigit( hex_color_num[connect.get(i).get(0)][connect.get(i).get(1)], PlayerMng.players.get(user_no).no);
-			PlayerMng.players.get(user_no).score++;
-		}
-
-		PlayerMng.players.get(user_no).erea_flg = true;
-	}
-
-	public static List<List<Integer>> GetConnect(int col,int row,int distance) {
-
-		List<List<Integer>> list = new ArrayList<>();
-
-		// 左端でなければ
-		if (col >= 1) {
-			list.add(Arrays.asList(col - 1, row));
-		}
-		// 右端でなければ
-		if (col <= hex_color_num[0].length - 2) {
-			list.add(Arrays.asList(col + 1, row));
-		}
-		// 上端でなければ
-		if (row >= 1) {
-			list.add(Arrays.asList(col, row - 1));
-		}
-		// 下端でなければ
-		if (row <= hex_color_num.length - 2) {
-			list.add(Arrays.asList(col, row + 1));
-		}
-
-		if (row % 2 == 0) {
-			if (col >= 1 && row >= 1) {
-				list.add(Arrays.asList(col + 1, row - 1));
-			}
-			if (col <= hex_color_num[0].length - 2 && row <= hex_color_num.length - 2) {
-				list.add(Arrays.asList(col + 1, row + 1));
-			}
-		} else{
-			if (col >= 1 && row >= 1) {
-				list.add(Arrays.asList(col - 1, row - 1));
-			}
-			if (col <= hex_color_num[0].length - 2 && row <= hex_color_num.length - 2) {
-				list.add(Arrays.asList(col - 1, row + 1));
-			}
-		}
-
-		if( distance >= 2 ){
-			// 左端でなければ
-			if (col >= 2) {
-				list.add(Arrays.asList(col - 2, row));
-			}
-			// 右端でなければ
-			if (col <= hex_color_num[0].length - 3) {
-				list.add(Arrays.asList(col + 2, row));
-			}
-			// 上端でなければ
-			if (row >= 2) {
-				list.add(Arrays.asList(col, row - 2));
-			}
-			// 下端でなければ
-			if (row <= hex_color_num.length - 3) {
-				list.add(Arrays.asList(col, row + 2));
-			}
-
-			if (row % 2 == 0) {
-				if (col <= hex_color_num[0].length - 3 && row >= 1) {
-					list.add(Arrays.asList(col + 2, row - 1));
-				}
-				if (col <= hex_color_num[0].length - 3 && row <= hex_color_num.length - 2) {
-					list.add(Arrays.asList(col + 2, row + 1));
-				}
-				if (col <= hex_color_num[0].length - 2 && row >= 2) {
-					list.add(Arrays.asList(col + 1, row - 2));
-				}
-				if (col <= hex_color_num[0].length - 2 && row <= hex_color_num.length - 3) {
-					list.add(Arrays.asList(col + 1, row + 2));
-				}
-				if (col >= 1 && row >= 1) {
-					list.add(Arrays.asList(col - 1, row - 1));
-				}
-				if (col >= 1 && row <= hex_color_num.length - 2) {
-					list.add(Arrays.asList(col - 1, row + 1));
-				}
-				if (col >= 1 && row >= 2) {
-					list.add(Arrays.asList(col - 1, row - 2));
-				}
-				if (col >= 1 && row <= hex_color_num.length - 3) {
-					list.add(Arrays.asList(col - 1, row + 2));
-				}
-			} else{
-				if (col >= 2 && row >= 1) {
-					list.add(Arrays.asList(col - 2, row - 1));
-				}
-				if (col >= 2 && row <= hex_color_num.length - 2) {
-					list.add(Arrays.asList(col - 2, row + 1));
-				}
-				if (col >= 1 && row >= 2) {
-					list.add(Arrays.asList(col - 1, row - 2));
-				}
-				if (col >= 1 && row <= hex_color_num.length - 3) {
-					list.add(Arrays.asList(col - 1, row + 2));
-				}
-				if (col <= hex_color_num[0].length - 2 && row >= 1) {
-					list.add(Arrays.asList(col + 1, row - 1));
-				}
-				if (col <= hex_color_num[0].length - 2 && row <= hex_color_num.length - 2) {
-					list.add(Arrays.asList(col + 1, row + 1));
-				}
-				if (col <= hex_color_num[0].length - 2 && row >= 2) {
-					list.add(Arrays.asList(col + 1, row - 2));
-				}
-				if (col <= hex_color_num[0].length - 2 && row <= hex_color_num.length - 3) {
-					list.add(Arrays.asList(col + 1, row + 2));
-				}
-			}
-
-		}
 
 
-		return list;
-	}
 
 	/*
 	 * １つの目引数の２桁目をキープして、２つ目の引数の値を１桁目に入れ替える

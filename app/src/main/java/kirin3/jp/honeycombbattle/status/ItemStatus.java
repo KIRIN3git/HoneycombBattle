@@ -17,6 +17,9 @@ public class ItemStatus {
 	// プレイヤーの現在位置(x,y) （注意）左上座標基準、右下がプラス方向
 	public int nowPositionX, nowPositionY;
 
+	// タイプ
+	public int type;
+
 	// テキスト
 	public String text;
 
@@ -35,12 +38,14 @@ public class ItemStatus {
 
 	public int score;
 
-	public ItemStatus(int _no, int x, int y, String _text, int base_color[], int text_color[], int x_dire, int y_dire ){
+	public ItemStatus(int _no, int x, int y, int _type, String _text,int base_color[], int text_color[], int x_dire, int y_dire ){
 		no = _no;
 		startPositionX = x;
 		startPositionY = y;
 		nowPositionX = x;
 		nowPositionY = y;
+
+		type = _type;
 
 		baseColorR = base_color[0];
 		baseColorG = base_color[1];
