@@ -29,7 +29,8 @@ public class PlayerMng {
 	public static int sPlayerNum = 4;
 
 	// プレイヤースタート位置
-	static float sPlayerDpXY[][] = {{92,-116},{92,116},{-92,-116},{-92,116}};
+//	static float sPlayerDpXY[][] = {{-92,116},{-92,-116},{92,116},{92,-116}};
+	static float sPlayerDpXY[][] = {{-72,106},{-82,-116},{65,150},{92,-116}};
 
 	// プレイヤー残機位置
 	static float sLifeDpXY[][] = {{165,-220},{165,240},{-165,-220},{-165,240}};
@@ -53,6 +54,11 @@ public class PlayerMng {
 	static float DIRECTION_RADIUS_DP = 20.0f;
 	static float DIRECTION_RADIUS_PX;
 
+
+	// 移動マーカーカラー
+	static int DIRECTION_ARAUND_COLOR[] = {255, 204, 102};
+	static int DIRECTION_CENTER_COLOR[] = {0, 51, 204};
+
 	// 移動マーカーの線の太さ
 	static float DIRECTION_WIDHT_DP = 5.0f;
 	static float DIRECTION_WIDHT_PX;
@@ -64,12 +70,14 @@ public class PlayerMng {
 	final static int LIFE_NUMBER = 3;
 
 	// ステータス
-	final static int STATUS_NORMAL = 0;
-	final static int STATUS_DEAD = 1;
-	final static int STATUS_GAMEOVER = 2;
+	final static public int STATUS_NORMAL = 0;
+	final static public int STATUS_DEAD = 1;
+	final static public int STATUS_GAMEOVER = 2;
 
 	// プレイヤー復活時間（ミリ秒）
 	final static int REVIVAL_TIME = 1 * 1000;
+
+
 
 	// プライヤーデータ
 	public static ArrayList<PlayerStatus> players = new ArrayList<PlayerStatus>();
@@ -113,7 +121,7 @@ public class PlayerMng {
 			else{
 				paint.setColor(Color.argb(255, PlayerMng.players.get(i).colorR, PlayerMng.players.get(i).colorG, PlayerMng.players.get(i).colorB));
 				// (x1,y1,r,paint) 中心x1座標, 中心y1座標, r半径
-				canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX, center_y - PlayerMng.players.get(i).nowPositionY, PLAYER_RADIUS_PX, paint);
+				canvas.drawCircle(center_x + PlayerMng.players.get(i).nowPositionX, center_y + PlayerMng.players.get(i).nowPositionY, PLAYER_RADIUS_PX, paint);
 
 				// プレイヤー同士の円の重なりをチェック
 				for (int j = 0; j < sPlayerNum; j++) {
@@ -148,7 +156,7 @@ public class PlayerMng {
 
 			// セーブタップ位置に〇を表示
 			paint.reset();
-			paint.setColor(Color.argb(120, 188, 200, 219)); // 水浅葱
+			paint.setColor(Color.argb(155, DIRECTION_ARAUND_COLOR[0], DIRECTION_ARAUND_COLOR[1], DIRECTION_ARAUND_COLOR[2])); // 水浅葱
 			paint.setStrokeWidth(DIRECTION_WIDHT_PX);
 			paint.setStyle(Paint.Style.STROKE);
 			paint.setAntiAlias(true);
@@ -156,7 +164,7 @@ public class PlayerMng {
 
 			// セーブタップ位置を中心にタップ〇移動範囲を表示
 			paint.reset();
-			paint.setColor(Color.argb(120, 188, 200, 219)); // 水浅葱
+			paint.setColor(Color.argb(155, DIRECTION_ARAUND_COLOR[0], DIRECTION_ARAUND_COLOR[1], DIRECTION_ARAUND_COLOR[2])); // 水浅葱
 			paint.setStrokeWidth(DIRECTION_WIDHT_PX);
 			paint.setStyle(Paint.Style.STROKE);
 			paint.setAntiAlias(true);
@@ -164,7 +172,7 @@ public class PlayerMng {
 
 			// 移動方向に〇を表示
 			paint.reset();
-			paint.setColor(Color.argb(120, 235, 121, 136)); // ピンク
+			paint.setColor(Color.argb(155, DIRECTION_CENTER_COLOR[0], DIRECTION_CENTER_COLOR[1], DIRECTION_CENTER_COLOR[2])); // ピンク
 			paint.setStrokeWidth(DIRECTION_WIDHT_PX);
 			paint.setStyle(Paint.Style.STROKE);
 			paint.setAntiAlias(true);
@@ -196,8 +204,8 @@ public class PlayerMng {
 				getIndicatorXY(i, players.get(i).startTouchX, players.get(i).startTouchY, players.get(i).nowTouchX, players.get(i).nowTouchY);
 				// ユーザーの位置を登録
 				if (players.get(i).status == STATUS_NORMAL) {
-					players.get(i).nowPositionX = players.get(i).nowPositionX - (players.get(i).indicatorDiff[0] / PLEYER_SPEED);
-					players.get(i).nowPositionY = players.get(i).nowPositionY - (players.get(i).indicatorDiff[1] / PLEYER_SPEED);
+					players.get(i).nowPositionX = players.get(i).nowPositionX + (players.get(i).indicatorDiff[0] / PLEYER_SPEED);
+					players.get(i).nowPositionY = players.get(i).nowPositionY + (players.get(i).indicatorDiff[1] / PLEYER_SPEED);
 				}
 //			}
 		}
@@ -357,20 +365,17 @@ public class PlayerMng {
 					
 					paint.setColor(Color.argb(255, PlayerMng.players.get(i).colorR, PlayerMng.players.get(i).colorG, PlayerMng.players.get(i).colorB));
 
-					canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX + sabun1, center_y - PlayerMng.players.get(i).nowPositionY, PLAYER_RADIUS_PX / 2, paint);
-					canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX - sabun1, center_y - PlayerMng.players.get(i).nowPositionY, PLAYER_RADIUS_PX / 2, paint);
-					canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX, center_y - PlayerMng.players.get(i).nowPositionY + sabun1, PLAYER_RADIUS_PX / 2, paint);
-					canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX, center_y - PlayerMng.players.get(i).nowPositionY - sabun1, PLAYER_RADIUS_PX / 2, paint);
+					canvas.drawCircle(center_x + PlayerMng.players.get(i).nowPositionX + sabun1, center_y + PlayerMng.players.get(i).nowPositionY, PLAYER_RADIUS_PX / 2, paint);
+					canvas.drawCircle(center_x + PlayerMng.players.get(i).nowPositionX - sabun1, center_y + PlayerMng.players.get(i).nowPositionY, PLAYER_RADIUS_PX / 2, paint);
+					canvas.drawCircle(center_x + PlayerMng.players.get(i).nowPositionX, center_y + PlayerMng.players.get(i).nowPositionY + sabun1, PLAYER_RADIUS_PX / 2, paint);
+					canvas.drawCircle(center_x + PlayerMng.players.get(i).nowPositionX, center_y + PlayerMng.players.get(i).nowPositionY - sabun1, PLAYER_RADIUS_PX / 2, paint);
 
-					canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX + sabun2, center_y - PlayerMng.players.get(i).nowPositionY + sabun2, PLAYER_RADIUS_PX / 2, paint);
-					canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX + sabun2, center_y - PlayerMng.players.get(i).nowPositionY - sabun2, PLAYER_RADIUS_PX / 2, paint);
-					canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX - sabun2, center_y - PlayerMng.players.get(i).nowPositionY + sabun2, PLAYER_RADIUS_PX / 2, paint);
-					canvas.drawCircle(center_x - PlayerMng.players.get(i).nowPositionX - sabun2, center_y - PlayerMng.players.get(i).nowPositionY - sabun2, PLAYER_RADIUS_PX / 2, paint);
+					canvas.drawCircle(center_x + PlayerMng.players.get(i).nowPositionX + sabun2, center_y + PlayerMng.players.get(i).nowPositionY + sabun2, PLAYER_RADIUS_PX / 2, paint);
+					canvas.drawCircle(center_x + PlayerMng.players.get(i).nowPositionX + sabun2, center_y + PlayerMng.players.get(i).nowPositionY - sabun2, PLAYER_RADIUS_PX / 2, paint);
+					canvas.drawCircle(center_x + PlayerMng.players.get(i).nowPositionX - sabun2, center_y + PlayerMng.players.get(i).nowPositionY + sabun2, PLAYER_RADIUS_PX / 2, paint);
+					canvas.drawCircle(center_x + PlayerMng.players.get(i).nowPositionX - sabun2, center_y + PlayerMng.players.get(i).nowPositionY - sabun2, PLAYER_RADIUS_PX / 2, paint);
 				}
 			}
-
-
-
 		}
 	}
 }

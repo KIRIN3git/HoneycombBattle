@@ -136,7 +136,7 @@ public class FieldMng {
 				// すでにペイント済み、枠内に中心点が入ったら
 				// 一旦、円で計算
 				for( int i = 0; i < PlayerMng.sPlayerNum; i++ ){
-					if( ((add_x + PlayerMng.players.get(i).nowPositionX) * (add_x + PlayerMng.players.get(i).nowPositionX) + (add_y + PlayerMng.players.get(i).nowPositionY) * (add_y + PlayerMng.players.get(i).nowPositionY)) < Math.pow(HEX_LENGTH_PX, 2) ){
+					if( ((add_x - PlayerMng.players.get(i).nowPositionX) * (add_x - PlayerMng.players.get(i).nowPositionX) + (add_y - PlayerMng.players.get(i).nowPositionY) * (add_y - PlayerMng.players.get(i).nowPositionY)) < Math.pow(HEX_LENGTH_PX, 2) ){
 
 						//現在位置(col,row)を記録
 						PlayerMng.players.get(i).nowPositionCol = col;
@@ -144,7 +144,7 @@ public class FieldMng {
 
 						// 初期エリア色塗り
 						if( PlayerMng.players.get(i).erea_flg == false ){
-							SetRoundColoer(i,col,row);
+							SetRoundColoer(i,col,row,1);
 						}
 
 						// 壁にぶつかったら
@@ -217,9 +217,9 @@ public class FieldMng {
 		}
 	}
 
-	public static void SetRoundColoer( int user_no,int col,int row ){
+	public static void SetRoundColoer( int user_no,int col,int row,int distance ){
 		List<List<Integer>> connect;
-		connect = GetConnect(col,row);
+		connect = GetConnect(col,row,2);
 
 		hex_color_num[col][row]  = changeIntADigit( hex_color_num[col][row], PlayerMng.players.get(user_no).no);
 		PlayerMng.players.get(user_no).score++;
@@ -232,43 +232,116 @@ public class FieldMng {
 		PlayerMng.players.get(user_no).erea_flg = true;
 	}
 
-	public static List<List<Integer>> GetConnect(int col,int row) {
+	public static List<List<Integer>> GetConnect(int col,int row,int distance) {
 
 		List<List<Integer>> list = new ArrayList<>();
 
 		// 左端でなければ
-		if (col != 0) {
+		if (col >= 1) {
 			list.add(Arrays.asList(col - 1, row));
-
 		}
 		// 右端でなければ
-		if (col != hex_color_num[0].length - 1) {
+		if (col <= hex_color_num[0].length - 2) {
 			list.add(Arrays.asList(col + 1, row));
 		}
 		// 上端でなければ
-		if (row != 0) {
+		if (row >= 1) {
 			list.add(Arrays.asList(col, row - 1));
 		}
-		// 上端でなければ
-		if (row != hex_color_num.length - 1) {
+		// 下端でなければ
+		if (row <= hex_color_num.length - 2) {
 			list.add(Arrays.asList(col, row + 1));
 		}
 
-		if (col != 0 && row % 2 == 0) {
-			if (col != 0) {
+		if (row % 2 == 0) {
+			if (col >= 1 && row >= 1) {
 				list.add(Arrays.asList(col + 1, row - 1));
 			}
-			if (col != hex_color_num[0].length - 1) {
+			if (col <= hex_color_num[0].length - 2 && row <= hex_color_num.length - 2) {
 				list.add(Arrays.asList(col + 1, row + 1));
 			}
-		} else if (col != hex_color_num[0].length - 1 && row % 2 == 1) {
-			if (col != 0) {
+		} else{
+			if (col >= 1 && row >= 1) {
 				list.add(Arrays.asList(col - 1, row - 1));
 			}
-			if (col != hex_color_num[0].length - 1) {
+			if (col <= hex_color_num[0].length - 2 && row <= hex_color_num.length - 2) {
 				list.add(Arrays.asList(col - 1, row + 1));
 			}
 		}
+
+		if( distance >= 2 ){
+			// 左端でなければ
+			if (col >= 2) {
+				list.add(Arrays.asList(col - 2, row));
+			}
+			// 右端でなければ
+			if (col <= hex_color_num[0].length - 3) {
+				list.add(Arrays.asList(col + 2, row));
+			}
+			// 上端でなければ
+			if (row >= 2) {
+				list.add(Arrays.asList(col, row - 2));
+			}
+			// 下端でなければ
+			if (row <= hex_color_num.length - 3) {
+				list.add(Arrays.asList(col, row + 2));
+			}
+
+			if (row % 2 == 0) {
+				if (col <= hex_color_num[0].length - 3 && row >= 1) {
+					list.add(Arrays.asList(col + 2, row - 1));
+				}
+				if (col <= hex_color_num[0].length - 3 && row <= hex_color_num.length - 2) {
+					list.add(Arrays.asList(col + 2, row + 1));
+				}
+				if (col <= hex_color_num[0].length - 2 && row >= 2) {
+					list.add(Arrays.asList(col + 1, row - 2));
+				}
+				if (col <= hex_color_num[0].length - 2 && row <= hex_color_num.length - 3) {
+					list.add(Arrays.asList(col + 1, row + 2));
+				}
+				if (col >= 1 && row >= 1) {
+					list.add(Arrays.asList(col - 1, row - 1));
+				}
+				if (col >= 1 && row <= hex_color_num.length - 2) {
+					list.add(Arrays.asList(col - 1, row + 1));
+				}
+				if (col >= 1 && row >= 2) {
+					list.add(Arrays.asList(col - 1, row - 2));
+				}
+				if (col >= 1 && row <= hex_color_num.length - 3) {
+					list.add(Arrays.asList(col - 1, row + 2));
+				}
+			} else{
+				if (col >= 2 && row >= 1) {
+					list.add(Arrays.asList(col - 2, row - 1));
+				}
+				if (col >= 2 && row <= hex_color_num.length - 2) {
+					list.add(Arrays.asList(col - 2, row + 1));
+				}
+				if (col >= 1 && row >= 2) {
+					list.add(Arrays.asList(col - 1, row - 2));
+				}
+				if (col >= 1 && row <= hex_color_num.length - 3) {
+					list.add(Arrays.asList(col - 1, row + 2));
+				}
+				if (col <= hex_color_num[0].length - 2 && row >= 1) {
+					list.add(Arrays.asList(col + 1, row - 1));
+				}
+				if (col <= hex_color_num[0].length - 2 && row <= hex_color_num.length - 2) {
+					list.add(Arrays.asList(col + 1, row + 1));
+				}
+				if (col <= hex_color_num[0].length - 2 && row >= 2) {
+					list.add(Arrays.asList(col + 1, row - 2));
+				}
+				if (col <= hex_color_num[0].length - 2 && row <= hex_color_num.length - 3) {
+					list.add(Arrays.asList(col + 1, row + 2));
+				}
+			}
+
+		}
+
+
 		return list;
 	}
 

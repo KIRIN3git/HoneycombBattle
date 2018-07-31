@@ -44,6 +44,10 @@ public class ItemMng {
             {0,0,255},
             {255,0,255}};
 
+    // ステータス
+    final static public int STATUS_NORMAL = 0;
+    final static public int STATUS_USED = 1;
+
     // アイテムデータ
     public static ArrayList<ItemStatus> items = new ArrayList<ItemStatus>();
 
@@ -109,10 +113,17 @@ public class ItemMng {
         paint.reset();
 
         for(int i = 0; i < sItemNum; i++ ) {
-if(i != 0 ) continue;
-            // 描画範囲から出たものは非表示
-            if( ItemMng.items.get(i).nowPositionX < 0 || ItemMng.items.get(i).nowPositionX > max_x  || ItemMng.items.get(i).nowPositionY < 0 || ItemMng.items.get(i).nowPositionY > max_y )
+            // 利用済みは非表示
+            if( ItemMng.items.get(i).status != STATUS_NORMAL ){
                 continue;
+            }
+
+            // 描画範囲から出たものは非表示
+            if( ItemMng.items.get(i).nowPositionX < 0 || ItemMng.items.get(i).nowPositionX > max_x  || ItemMng.items.get(i).nowPositionY < 0 || ItemMng.items.get(i).nowPositionY > max_y ){
+                ItemMng.items.get(i).status = STATUS_USED;
+                continue;
+            }
+
 
             paint.setStrokeWidth(1);
             paint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -129,36 +140,20 @@ if(i != 0 ) continue;
             // アイテムとプレイヤーの重なりをチェック
             // プレイヤー同士の円の重なりをチェック
             for (int j = 0; j < PlayerMng.sPlayerNum; j++) {
-if(j != 0 ) continue;
                 if( PlayerMng.players.get(j).status == PlayerMng.STATUS_DEAD ) continue;
                 if( PlayerMng.players.get(j).status == PlayerMng.STATUS_GAMEOVER ) continue;
 
-                Log.w( "DEBUG_DATA99", "ItemMng.items.get(i).nowPositionX " + ItemMng.items.get(i).nowPositionX );
-                Log.w( "DEBUG_DATA99", "(max_x / 2) " + (max_x / 2) );
-                Log.w( "DEBUG_DATA991", "PlayerMng.players.get(j).nowPositionX " + (PlayerMng.players.get(j).nowPositionX) );
-                Log.w( "DEBUG_DATA99", "PlayerMng.players.get(j).nowPositionX + (max_x / 2) " + (PlayerMng.players.get(j).nowPositionX + (max_x / 2)) );
-                Log.w( "DEBUG_DATA99", "ItemMng.items.get(i).nowPositionY " + ItemMng.items.get(i).nowPositionY );
-                Log.w( "DEBUG_DATA99", "(max_y / 2) " + (max_y / 2) );
-                Log.w( "DEBUG_DATA992", "PlayerMng.players.get(j).nowPositionY " + (PlayerMng.players.get(j).nowPositionY) );
-                Log.w( "DEBUG_DATA99", "PlayerMng.players.get(j).nowPositionY + (max_y / 2) " + (PlayerMng.players.get(j).nowPositionY + (max_y / 2)) );
-                Log.w( "DEBUG_DATA99", "ITEM_RADIUS_PX " + ITEM_RADIUS_PX );
-                Log.w( "DEBUG_DATA99", "PlayerMng.PLAYER_RADIUS_PX " + PlayerMng.PLAYER_RADIUS_PX );
-
                 // 三平方の定理で接しているか調べる（プレイヤー座標は中心座標を基準にしているので注意）
-                if( Math.pow((ItemMng.items.get(i).nowPositionX - ( (max_x / 2) - PlayerMng.players.get(j).nowPositionX )),2) + Math.pow((ItemMng.items.get(i).nowPositionY - ( (max_y / 2) - PlayerMng.players.get(j).nowPositionY  )),2)
+                if( Math.pow((ItemMng.items.get(i).nowPositionX - ( (max_x / 2) + PlayerMng.players.get(j).nowPositionX )),2) + Math.pow((ItemMng.items.get(i).nowPositionY - ( (max_y / 2) + PlayerMng.players.get(j).nowPositionY  )),2)
                         <= Math.pow(ITEM_RADIUS_PX + PlayerMng.PLAYER_RADIUS_PX, 2)  ){
 
-                    Log.w( "DEBUG_DATA99", "HITTTTTTTTTTTTTTTT" );
+                    ItemMng.items.get(i).status = STATUS_USED;
 
                 }
             }
 
-
-ItemMng.items.get(i).nowPositionX = 700;
-ItemMng.items.get(i).nowPositionY = 800;
-
-//            ItemMng.items.get(i).nowPositionX = ItemMng.items.get(i).nowPositionX + ItemMng.items.get(i).x_direction;
-//            ItemMng.items.get(i).nowPositionY = ItemMng.items.get(i).nowPositionY + ItemMng.items.get(i).y_direction;
+            ItemMng.items.get(i).nowPositionX = ItemMng.items.get(i).nowPositionX + ItemMng.items.get(i).x_direction;
+            ItemMng.items.get(i).nowPositionY = ItemMng.items.get(i).nowPositionY + ItemMng.items.get(i).y_direction;
 
         }
     }

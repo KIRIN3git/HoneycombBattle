@@ -8,10 +8,10 @@ public class PlayerStatus {
 
 	// プレイヤーナンバー
 	public int no;
-	// プレイヤーの開始位置 （注意）中心座標基準、左上がプラス方向
+	// プレイヤーの開始位置 （注意）中心座標基準、右下がプラス方向
 	public int startPositionX, startPositionY;
 
-	// プレイヤーの現在位置(x,y) （注意）中心座標基準、左上がプラス方向
+	// プレイヤーの現在位置(x,y) （注意）中心座標基準、右下がプラス方向
 	public int nowPositionX, nowPositionY;
 
 	// プレイヤーの現在位置(row,col)

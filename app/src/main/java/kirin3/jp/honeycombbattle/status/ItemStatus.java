@@ -1,5 +1,7 @@
 package kirin3.jp.honeycombbattle.status;
 
+import kirin3.jp.honeycombbattle.mng.ItemMng;
+
 /**
  * Created by shinji on 2017/06/07.
  */
@@ -9,10 +11,10 @@ public class ItemStatus {
 	// プレイヤーナンバー
 	public int no;
 
-	// プレイヤーの開始位置 （注意）左上座標基準
+	// プレイヤーの開始位置 （注意）左上座標基準、右下がプラス方向
 	public int startPositionX, startPositionY;
 
-	// プレイヤーの現在位置(x,y) （注意）左上座標基準
+	// プレイヤーの現在位置(x,y) （注意）左上座標基準、右下がプラス方向
 	public int nowPositionX, nowPositionY;
 
 	// テキスト
@@ -28,8 +30,8 @@ public class ItemStatus {
 	public int x_direction,y_direction;
 
 	// プレイヤーの状態
-	// 0:通常,1:死,2:ゲームオーバー
-	public int status = 0;
+	// 0:通常,1:利用済み
+	public int status;
 
 	public int score;
 
@@ -52,5 +54,7 @@ public class ItemStatus {
 		y_direction = y_dire;
 
 		text = _text;
+
+		status = ItemMng.STATUS_NORMAL;
 	}
 }
