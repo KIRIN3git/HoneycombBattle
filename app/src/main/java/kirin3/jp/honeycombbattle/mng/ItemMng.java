@@ -62,7 +62,7 @@ public class ItemMng {
     public static ArrayList<ItemStatus> items = new ArrayList<ItemStatus>();
 
     // スピードアップ時間（ミリ秒）
-    final static int SPEEDUP_TIME = 3 * 1000;
+    final static int SPEEDUP_TIME = 5 * 1000;
 
     // 無敵時間（ミリ秒）
     final static int UNRIVALE_TIME = 5 * 1000;

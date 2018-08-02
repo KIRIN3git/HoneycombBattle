@@ -119,11 +119,17 @@ public class PlayerMng {
 */
 			}
 			else{
-				if(PlayerMng.players.get(i).unrivaledFlg) paint.setColor(Color.argb(255, UNRIVAL_COLOR[0], UNRIVAL_COLOR[1], UNRIVAL_COLOR[2]));
-				else paint.setColor(Color.argb(255, PlayerMng.players.get(i).colorR, PlayerMng.players.get(i).colorG, PlayerMng.players.get(i).colorB));
+
+				paint.setColor(Color.argb(255, PlayerMng.players.get(i).colorR, PlayerMng.players.get(i).colorG, PlayerMng.players.get(i).colorB));
 
 				// (x1,y1,r,paint) 中心x1座標, 中心y1座標, r半径
 				canvas.drawCircle(center_x + PlayerMng.players.get(i).nowPositionX, center_y + PlayerMng.players.get(i).nowPositionY, PLAYER_RADIUS_PX, paint);
+
+				// 無敵の時の記載
+				if(PlayerMng.players.get(i).unrivaledFlg){
+					paint.setColor(Color.argb(255, UNRIVAL_COLOR[0], UNRIVAL_COLOR[1], UNRIVAL_COLOR[2]));
+					canvas.drawCircle(center_x + PlayerMng.players.get(i).nowPositionX, center_y + PlayerMng.players.get(i).nowPositionY, PLAYER_RADIUS_PX / 2, paint);
+				}
 
 
 				// プレイヤー同士の円の重なりをチェック
