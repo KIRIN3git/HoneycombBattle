@@ -198,7 +198,6 @@ public class FieldMng {
 				path.close();
 				canvas.drawPath(path, paint);
 
-				Log.w( "DEBUG_DATA", "col " + col + "row " + row + "hex_color_num[col][row] " + hex_color_num[col][row]);
 
 				// タワーを表示
 				if( hex_color_num[col][row] / 10 >= 1 ){
@@ -207,14 +206,11 @@ public class FieldMng {
 					paint.setStrokeWidth(TOWER_WIDHT_PX);
 					canvas.drawCircle(center_x + add_x, center_y + add_y, TOWER_RADIUS_PX, paint);
 
-
 					// タワーの所有者を保存
 					towerCheck[tower_num] = hex_color_num[col][row] % 10;
 					tower_num++;
 
 					if(towerCheck.length == tower_num){
-
-						Log.w( "DEBUG_DATA", "CLEARRRRRRRRRRR 1111111111111111111111" );
 
 						for(int i = 0; i < tower_num; i++){
 
@@ -228,7 +224,6 @@ public class FieldMng {
 							}
 						}
 					}
-
 					/*
 					for( int i = 1; i <= PlayerMng.sPlayerNum; i++ ){
 						if( hex_color_num[col][row] / 10 == i ){
@@ -242,7 +237,6 @@ public class FieldMng {
 					}
 					*/
 				}
-				else Log.w( "DEBUG_DATA", "CLEARRRRRRRRRRR 2222222222222222" );
 			}
 		}
 	}
