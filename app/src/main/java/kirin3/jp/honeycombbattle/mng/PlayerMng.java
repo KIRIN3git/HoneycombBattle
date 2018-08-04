@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -64,7 +63,8 @@ public class PlayerMng {
 	static float DIRECTION_WIDHT_PX;
 
 	// スピード
-	final static int PLEYER_SPEED = 15;
+	static int sSpeedCandidate[] = {25,20,15,10,5};
+	static int sPlayerStartSpeed;
 
 	// ライフ
 	final static int LIFE_NUMBER = 3;
@@ -86,11 +86,13 @@ public class PlayerMng {
 	// プライヤーデータ
 	public static ArrayList<PlayerStatus> players = new ArrayList<PlayerStatus>();
 
-	public static void playerInit(Context context,int num){
+	public static void playerInit(Context context,int num,int speedNo){
 
 		PLAYER_RADIUS_PX = dpToPx(PLAYER_RADIUS_DP,context.getResources());
 		DIRECTION_RADIUS_PX = dpToPx(DIRECTION_RADIUS_DP,context.getResources());
 		DIRECTION_WIDHT_PX = dpToPx(DIRECTION_WIDHT_DP,context.getResources());
+
+		sPlayerStartSpeed = sSpeedCandidate[speedNo];
 
 		PlayerStatus player;
 		sPlayerNum = num;
@@ -211,8 +213,8 @@ public class PlayerMng {
 				// ユーザーの位置を登録
 				if (players.get(i).status == STATUS_NORMAL) {
 
-					players.get(i).nowPositionX = players.get(i).nowPositionX + (players.get(i).indicatorDiff[0] / PLEYER_SPEED);
-					players.get(i).nowPositionY = players.get(i).nowPositionY + (players.get(i).indicatorDiff[1] / PLEYER_SPEED);
+					players.get(i).nowPositionX = players.get(i).nowPositionX + (players.get(i).indicatorDiff[0] / sPlayerStartSpeed);
+					players.get(i).nowPositionY = players.get(i).nowPositionY + (players.get(i).indicatorDiff[1] / sPlayerStartSpeed);
 				}
 //			}
 		}

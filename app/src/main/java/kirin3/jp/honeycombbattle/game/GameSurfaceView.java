@@ -1,14 +1,18 @@
 package kirin3.jp.honeycombbattle.game;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import kirin3.jp.honeycombbattle.R;
+import kirin3.jp.honeycombbattle.main.MainActivity;
 import kirin3.jp.honeycombbattle.mng.FieldMng;
 import kirin3.jp.honeycombbattle.mng.ItemMng;
 import kirin3.jp.honeycombbattle.mng.PlayerMng;
@@ -38,18 +42,28 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 	SurfaceHolder surfaceHolder;
 	Thread thread;
 
+	// intentで送られてくるユーザーが選択した５段階のゲーム設定
+	public static int sItemQuantityNo;
+	public static int sPlayerSpeedNo;
+
 
 	public GameSurfaceView(Context context){
 		super(context);
 
 		mContext = context;
 
+
+		setIntentData();
+
+		Log.w( "DEBUG_DATA", "sItemQuantityNo " + sItemQuantityNo);
+		Log.w( "DEBUG_DATA", "sPlayerSpeedNo " + sPlayerSpeedNo);
+
 		// 時間情報の初期化
 		TimeMng.timeInit(context);
 		// フィールド情報の初期化
 		FieldMng.fieldInit(context);
 		// プレイヤー情報の初期化
-		PlayerMng.playerInit(context,PlayerMng.sPlayerNum);
+		PlayerMng.playerInit(context,PlayerMng.sPlayerNum,sPlayerSpeedNo);
 
 
 		scoreFlg = false;
@@ -58,6 +72,61 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		surfaceHolder.addCallback(this);
 
 //		hex_color_num = new int[SQUARE_NUM][SQUARE_NUM];
+	}
+
+
+	public void setIntentData(){
+
+
+		Bundle extras = ((Activity)mContext).getIntent().getExtras();
+		String item_quantity = extras.getString(MainActivity.INTENT_ITEM_QUANTITY);
+		String player_speed = extras.getString(MainActivity.INTENT_PLAYER_SPEED);
+
+		Log.w( "DEBUG_DATA", "item_quantity " + item_quantity);
+		Log.w( "DEBUG_DATA", "getResources().getString(R.string.quantity_1) " + getResources().getString(R.string.quantity_1));
+
+
+		if( item_quantity.equals(getResources().getString(R.string.quantity_1)) ){
+			sItemQuantityNo = 0;
+		}
+		else if( item_quantity.equals(getResources().getString(R.string.quantity_2)) ){
+			sItemQuantityNo = 1;
+		}
+		else if( item_quantity.equals(getResources().getString(R.string.quantity_3)) ){
+			sItemQuantityNo = 2;
+		}
+		else if( item_quantity.equals(getResources().getString(R.string.quantity_4)) ){
+			sItemQuantityNo = 3;
+		}
+		else if( item_quantity.equals(getResources().getString(R.string.quantity_5)) ){
+			sItemQuantityNo = 4;
+		}
+		else{
+			sItemQuantityNo = 2;
+		}
+
+
+		if( player_speed.equals(getResources().getString(R.string.speed_1)) ){
+			sPlayerSpeedNo = 0;
+		}
+		else if( player_speed.equals(getResources().getString(R.string.speed_2)) ){
+			sPlayerSpeedNo = 1;
+		}
+		else if( player_speed.equals(getResources().getString(R.string.speed_3)) ){
+			sPlayerSpeedNo = 2;
+		}
+		else if( player_speed.equals(getResources().getString(R.string.speed_4)) ){
+			sPlayerSpeedNo = 3;
+		}
+		else if( player_speed.equals(getResources().getString(R.string.speed_5)) ){
+			sPlayerSpeedNo = 4;
+		}
+		else{
+			sPlayerSpeedNo = 2;
+		}
+
+
+
 	}
 
 	@Override

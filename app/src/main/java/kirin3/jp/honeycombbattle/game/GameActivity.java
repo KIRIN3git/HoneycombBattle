@@ -2,7 +2,10 @@ package kirin3.jp.honeycombbattle.game;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+
+import kirin3.jp.honeycombbattle.main.MainActivity;
 
 public class GameActivity extends AppCompatActivity {
 	GameSurfaceView surfaceView;
@@ -10,6 +13,12 @@ public class GameActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		/*
+		Bundle extras = getIntent().getExtras();
+		String data = extras.getString("INTENT_ITEM_QUANTITY");
+		Log.w(MainActivity.INTENT_ITEM_QUANTITY, "data " + data);
+		*/
 
 		surfaceView = new GameSurfaceView(this);
 		setContentView(surfaceView);

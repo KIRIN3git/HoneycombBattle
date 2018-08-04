@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">HoneycombBattle</string>
+    <string name="quantity_1">少ない</string>
+    <string name="quantity_2">少なめ</string>
+    <string name="quantity_3">普通</string>
+    <string name="quantity_4">多め</string>
+    <string name="quantity_5">多い</string>
+    <string name="speed_1">遅い</string>
+    <string name="speed_2">遅め</string>
+    <string name="speed_3">普通</string>
+    <string name="speed_4">早め</string>
+    <string name="speed_5">早い</string>
 </resources>

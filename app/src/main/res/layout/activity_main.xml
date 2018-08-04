@@ -10,10 +10,165 @@
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:orientation="vertical"
+        android:gravity="center"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true">
+
+        <TextView
+            android:id="@+id/item"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="ITEM"
+            android:layout_above="@+id/linearLayout1"
+            android:layout_marginBottom="10dp">
+        </TextView>
+
+        <RadioGroup
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/RadioGroupItemQuantity"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal">
+            <RadioButton
+                android:text="少ない"
+                android:id="@+id/RadioItemQuantity1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_radio_left"
+                android:textColor="@drawable/btn_radio_textcolor"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center">
+            </RadioButton>
+            <RadioButton
+                android:text="少なめ"
+                android:id="@+id/RadioItemQuantity2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_radio_center"
+                android:textColor="@drawable/btn_radio_textcolor"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center">
+            </RadioButton>
+            <RadioButton
+                android:text="普通"
+                android:checked="true"
+                android:id="@+id/RadioItemQuantity3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_radio_center"
+                android:textColor="@drawable/btn_radio_textcolor"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center">
+            </RadioButton>
+            <RadioButton
+                android:text="多め"
+                android:id="@+id/RadioItemQuantity4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_radio_center"
+                android:textColor="@drawable/btn_radio_textcolor"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center">
+            </RadioButton>
+            <RadioButton
+                android:text="多い"
+                android:id="@+id/RadioItemQuantity5"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_radio_right"
+                android:textColor="@drawable/btn_radio_textcolor"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center">
+            </RadioButton>
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/speed"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="SPEED"
+            android:layout_above="@+id/linearLayout1"
+            android:layout_marginBottom="10dp">
+        </TextView>
+
+        <RadioGroup
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/RadioGroupPlayerSpeed"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal">
+            <RadioButton
+                android:text="遅い"
+                android:id="@+id/RadioPlayerSpeed1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_radio_left"
+                android:textColor="@drawable/btn_radio_textcolor"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center">
+            </RadioButton>
+            <RadioButton
+                android:text="やや遅い"
+                android:id="@+id/RadioPlayerSpeed2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_radio_center"
+                android:textColor="@drawable/btn_radio_textcolor"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center">
+            </RadioButton>
+            <RadioButton
+                android:text="普通"
+                android:checked="true"
+                android:id="@+id/RadioPlayerSpeed3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_radio_center"
+                android:textColor="@drawable/btn_radio_textcolor"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center">
+            </RadioButton>
+            <RadioButton
+                android:text="やや早い"
+                android:id="@+id/RadioPlayerSpeed4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_radio_center"
+                android:textColor="@drawable/btn_radio_textcolor"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center">
+            </RadioButton>
+            <RadioButton
+                android:text="早い"
+                android:id="@+id/RadioPlayerSpeed5"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_radio_right"
+                android:textColor="@drawable/btn_radio_textcolor"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center">
+            </RadioButton>
+        </RadioGroup>
+
+        <!--
         <TextView
             android:id="@+id/textView1"
             android:layout_height="wrap_content"
@@ -23,6 +178,7 @@
             android:layout_above="@+id/linearLayout1"
             android:layout_marginBottom="10dp">
         </TextView>
+        -->
         <Button
             android:id="@+id/game_start"
             android:layout_height="wrap_content"
