@@ -36,10 +36,11 @@ public class ItemMng {
     static int type;
 
     // アイテムベースTEXT
-    static String ITEM_BASE_TEXT[] ={"B","L","W","D"};
+    static String ITEM_BASE_TEXT[] ={"B","L","W","S","U"};
 
     // アイテムベースカラー
     static int ITEM_BASE_COLOR[][] = {
+            {0,0,0},
             {0,0,0},
             {0,0,0},
             {0,0,0},
@@ -50,6 +51,7 @@ public class ItemMng {
             {255,0,0},
             {0,255,0},
             {140,140,200},
+            {255,0,255},
             {255,0,255}};
 
     // ステータス
@@ -58,6 +60,13 @@ public class ItemMng {
 
     // アイテムデータ
     public static ArrayList<ItemStatus> items = new ArrayList<ItemStatus>();
+
+    // スピードアップ時間（ミリ秒）
+    final static int SPEEDUP_TIME = 5 * 1000;
+
+    // 無敵時間（ミリ秒）
+    final static int UNRIVALE_TIME = 5 * 1000;
+
 
 
     public static void createItem(Context context,Canvas canvas){
@@ -145,12 +154,12 @@ public class ItemMng {
             height = (paint.getFontMetrics().leading - paint.getFontMetrics().ascent) / 1.5f;
             canvas.drawText(ItemMng.items.get(i).text, ItemMng.items.get(i).nowPositionX - (widht / 2), ItemMng.items.get(i).nowPositionY + (height / 2), paint);
 
-            // アイテムとプレイヤーの重なりをチェック
+            // プレイヤーのアイテム取得チェック
             for (int j = 0; j < PlayerMng.sPlayerNum; j++) {
                 if( PlayerMng.players.get(j).status == PlayerMng.STATUS_DEAD ) continue;
                 if( PlayerMng.players.get(j).status == PlayerMng.STATUS_GAMEOVER ) continue;
 
-                // 三平方の定理で接しているか調べる（プレイヤー座標は中心座標を基準にしているので注意）
+                // アイテムに重なっているか判定（三平方の定理）（プレイヤー座標は中心座標を基準にしているので注意）
                 if( Math.pow((ItemMng.items.get(i).nowPositionX - ( (max_x / 2) + PlayerMng.players.get(j).nowPositionX )),2) + Math.pow((ItemMng.items.get(i).nowPositionY - ( (max_y / 2) + PlayerMng.players.get(j).nowPositionY  )),2)
                         <= Math.pow(ITEM_RADIUS_PX + PlayerMng.PLAYER_RADIUS_PX, 2)  ){
 
@@ -158,7 +167,9 @@ public class ItemMng {
 
                     if(ItemMng.items.get(i).type == 0) setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,0,2);
                     else if(ItemMng.items.get(i).type == 1) setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,1,2);
-                    else setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,2,2);
+                    else if(ItemMng.items.get(i).type == 2) setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,2,2);
+                    else if(ItemMng.items.get(i).type == 3) setSpeedUp(j);
+                    else setUnrivale(j);
 
                 }
             }
@@ -334,10 +345,31 @@ public class ItemMng {
 
     public static void setSpeedUp(int user_id){
         PlayerMng.players.get(user_id).speedUpTime = TimeUtils.getCurrentTime();
+        PlayerMng.players.get(user_id).speedUpFlg = true;
+    }
+
+    public static void setUnrivale(int user_id){
+        PlayerMng.players.get(user_id).unrivaledTime = TimeUtils.getCurrentTime();
+        PlayerMng.players.get(user_id).unrivaledFlg = true;
     }
 
     public static void checkItemEffect(){
+        long currentTime = TimeUtils.getCurrentTime();
+
         for(int i = 0; i < PlayerMng.sPlayerNum; i++){
+            if( PlayerMng.players.get(i).speedUpFlg ){
+                if( currentTime > PlayerMng.players.get(i).speedUpTime + SPEEDUP_TIME ){
+                    PlayerMng.players.get(i).speedUpTime = 0;
+                    PlayerMng.players.get(i).speedUpFlg = false;
+                }
+            }
+
+            if( PlayerMng.players.get(i).unrivaledFlg ){
+                if( currentTime > PlayerMng.players.get(i).unrivaledTime + UNRIVALE_TIME ){
+                    PlayerMng.players.get(i).unrivaledTime = 0;
+                    PlayerMng.players.get(i).unrivaledFlg = false;
+                }
+            }
 
         }
     }

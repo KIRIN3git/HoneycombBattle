@@ -36,8 +36,14 @@ public class PlayerStatus {
 	// スピードアップ開始時間
 	public long speedUpTime = 0;
 
+	// スピードアップ中フラグ
+	public boolean speedUpFlg = false;
+
 	// 無敵開始時間
 	public long unrivaledTime = 0;
+
+	// 無敵中フラグ
+	public boolean unrivaledFlg = false;
 
 
 

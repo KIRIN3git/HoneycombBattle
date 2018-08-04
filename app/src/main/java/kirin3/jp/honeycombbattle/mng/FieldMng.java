@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.util.Log;
 
 import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 
@@ -43,6 +44,10 @@ public class FieldMng {
 	// タワーの色
 	static int TOWER_COLOR_RGB[] = {129,129,129};
 
+	// タワーの所有者(カラー番号)
+	static int towerCheck[] = {0,0,0,0};
+
+
 	// １桁目
 	final static int CLCOUNTEAN_NO = 0; // 白
 	final static int COUNT_NO = 7;
@@ -72,6 +77,8 @@ public class FieldMng {
 			{129,129,129},
 			{129,129,129}
 	};
+
+
 
 
 	public static void fieldInit(Context context){
@@ -114,6 +121,9 @@ public class FieldMng {
 		// Canvas 中心点
 		float center_x = canvas.getWidth() / 2;
 		float center_y = canvas.getHeight() / 2;
+
+		int tower_num = 0;
+
 		// パスを設定
 		Path path = new Path();
 
@@ -189,11 +199,31 @@ public class FieldMng {
 				canvas.drawPath(path, paint);
 
 
+				// タワーを表示
 				if( hex_color_num[col][row] / 10 >= 1 ){
 					paint.setStyle(Paint.Style.STROKE);
 					paint.setColor(Color.argb(255, TOWER_COLOR_RGB[0], TOWER_COLOR_RGB[1], TOWER_COLOR_RGB[2]));
 					paint.setStrokeWidth(TOWER_WIDHT_PX);
 					canvas.drawCircle(center_x + add_x, center_y + add_y, TOWER_RADIUS_PX, paint);
+
+					// タワーの所有者を保存
+					towerCheck[tower_num] = hex_color_num[col][row] % 10;
+					tower_num++;
+
+					if(towerCheck.length == tower_num){
+
+						for(int i = 0; i < tower_num; i++){
+
+							if( towerCheck[i] == 0 ) break;
+							if(i != 0){
+								if(towerCheck[i] != towerCheck[i-1]) break;
+							}
+
+							if( i == tower_num - 1 ){
+								Log.w( "DEBUG_DATA", "CLEARRRRRRRRRRR aaaaaaaaaaaaa" );
+							}
+						}
+					}
 					/*
 					for( int i = 1; i <= PlayerMng.sPlayerNum; i++ ){
 						if( hex_color_num[col][row] / 10 == i ){

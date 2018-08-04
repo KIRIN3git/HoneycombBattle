@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -42,8 +43,7 @@ public class PlayerMng {
 			{50,205,50},
 			{255,227,80}};
 
-	// プレイヤーデッドカラー
-	static int PLAYER_DEAD_COLOR[] = {170, 170, 170};
+	static int UNRIVAL_COLOR[] = {230,180,34};
 
 	// プレイヤーの半径
 	static float PLAYER_RADIUS_DP = 10.0f;
@@ -62,6 +62,11 @@ public class PlayerMng {
 	static float DIRECTION_WIDHT_DP = 5.0f;
 	static float DIRECTION_WIDHT_PX;
 
+	// スピード（低いほうが早い）
+	final static int PLEYER_SPEED = 15;
+
+	// スピードアップの値
+	final static int SPEEDUP_VALUE = 10;
 	// スピード
 	static int sSpeedCandidate[] = {25,20,15,10,5};
 	static int sPlayerStartSpeed;
@@ -129,24 +134,26 @@ public class PlayerMng {
 				// (x1,y1,r,paint) 中心x1座標, 中心y1座標, r半径
 				canvas.drawCircle(center_x + PlayerMng.players.get(i).nowPositionX, center_y + PlayerMng.players.get(i).nowPositionY, PLAYER_RADIUS_PX, paint);
 
-				/*
+				// 無敵の時の記載
+				if(PlayerMng.players.get(i).unrivaledFlg){
+					paint.setColor(Color.argb(255, UNRIVAL_COLOR[0], UNRIVAL_COLOR[1], UNRIVAL_COLOR[2]));
+					canvas.drawCircle(center_x + PlayerMng.players.get(i).nowPositionX, center_y + PlayerMng.players.get(i).nowPositionY, PLAYER_RADIUS_PX / 2, paint);
+				}
+
+
 				// プレイヤー同士の円の重なりをチェック
 				for (int j = 0; j < sPlayerNum; j++) {
+					if( PlayerMng.players.get(i).unrivaledFlg == false ) continue;
+					if( PlayerMng.players.get(j).unrivaledFlg == true ) continue;
 					if (i == j) continue;
 					if( PlayerMng.players.get(i).status == STATUS_DEAD || PlayerMng.players.get(j).status == STATUS_DEAD ) continue;
 					if( PlayerMng.players.get(i).status == STATUS_GAMEOVER || PlayerMng.players.get(j).status == STATUS_GAMEOVER ) continue;
 
 					if( ((PlayerMng.players.get(i).nowPositionX - PlayerMng.players.get(j).nowPositionX) * (PlayerMng.players.get(i).nowPositionX - PlayerMng.players.get(j).nowPositionX)
 							+ (PlayerMng.players.get(i).nowPositionY - PlayerMng.players.get(j).nowPositionY) * (PlayerMng.players.get(i).nowPositionY - PlayerMng.players.get(j).nowPositionY)) < Math.pow(PLAYER_RADIUS_PX * 2, 2) ){
-						if( PlayerMng.players.get(i).score > PlayerMng.players.get(j).score ) deadPlayer(i);
-						else if( PlayerMng.players.get(i).score < PlayerMng.players.get(j).score ) deadPlayer(j);
-						else{
-							deadPlayer(i);
 							deadPlayer(j);
-						}
 					}
 				}
-				*/
 			}
 		}
 	}
@@ -205,6 +212,8 @@ public class PlayerMng {
 	 */
 	public static void getMoveXY(){
 
+		int speed;
+
 		for(int i = 0; i < sPlayerNum; i++ ){
 //			if( players.get(i).touchFlg) {
 				// タップ移動比率xyと指示マーカーのxyを取得
@@ -212,9 +221,11 @@ public class PlayerMng {
 				getIndicatorXY(i, players.get(i).startTouchX, players.get(i).startTouchY, players.get(i).nowTouchX, players.get(i).nowTouchY);
 				// ユーザーの位置を登録
 				if (players.get(i).status == STATUS_NORMAL) {
+					if(players.get(i).speedUpFlg) speed = PLEYER_SPEED - SPEEDUP_VALUE;
+					else speed = PLEYER_SPEED;
 
-					players.get(i).nowPositionX = players.get(i).nowPositionX + (players.get(i).indicatorDiff[0] / sPlayerStartSpeed);
-					players.get(i).nowPositionY = players.get(i).nowPositionY + (players.get(i).indicatorDiff[1] / sPlayerStartSpeed);
+					players.get(i).nowPositionX = players.get(i).nowPositionX + (players.get(i).indicatorDiff[0] / speed);
+					players.get(i).nowPositionY = players.get(i).nowPositionY + (players.get(i).indicatorDiff[1] / speed);
 				}
 //			}
 		}
