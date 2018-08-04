@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">HoneycombBattle</string>
+
+    <string name="number_1">２人</string>
+    <string name="number_2">３人</string>
+    <string name="number_3">４人</string>
     <string name="quantity_1">少ない</string>
     <string name="quantity_2">少なめ</string>
     <string name="quantity_3">普通</string>

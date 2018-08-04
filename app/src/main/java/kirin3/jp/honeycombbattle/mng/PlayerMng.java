@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -26,9 +25,15 @@ import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 public class PlayerMng {
 
 	// プレイヤー人数
-	public static int sPlayerNum = 4;
+    public static int sPlayerNumberCandidate[] = {2,3,4};
+    public static int sPlayerNumber;
 
-	// プレイヤースタート位置
+    // スピード
+    static int sPlayerSpeedCandidate[] = {20,16,12,8,4};
+    static int sPlayerSpeed;
+
+
+    // プレイヤースタート位置
 	static float sPlayerDpXY[][] = {{-92,116},{-92,-116},{92,116},{92,-116}};
 //	static float sPlayerDpXY[][] = {{-72,106},{-82,-116},{65,150},{92,-116}};
 
@@ -62,15 +67,6 @@ public class PlayerMng {
 	static float DIRECTION_WIDHT_DP = 5.0f;
 	static float DIRECTION_WIDHT_PX;
 
-	// スピード（低いほうが早い）
-	final static int PLEYER_SPEED = 15;
-
-	// スピードアップの値
-	final static int SPEEDUP_VALUE = 10;
-	// スピード
-	static int sSpeedCandidate[] = {25,20,15,10,5};
-	static int sPlayerStartSpeed;
-
 	// ライフ
 	final static int LIFE_NUMBER = 3;
 
@@ -91,18 +87,18 @@ public class PlayerMng {
 	// プライヤーデータ
 	public static ArrayList<PlayerStatus> players = new ArrayList<PlayerStatus>();
 
-	public static void playerInit(Context context,int num,int speedNo){
+	public static void playerInit(Context context,int numberNo,int speedNo){
 
 		PLAYER_RADIUS_PX = dpToPx(PLAYER_RADIUS_DP,context.getResources());
 		DIRECTION_RADIUS_PX = dpToPx(DIRECTION_RADIUS_DP,context.getResources());
 		DIRECTION_WIDHT_PX = dpToPx(DIRECTION_WIDHT_DP,context.getResources());
 
-		sPlayerStartSpeed = sSpeedCandidate[speedNo];
+		sPlayerSpeed = sPlayerSpeedCandidate[speedNo];
 
 		PlayerStatus player;
-		sPlayerNum = num;
+		sPlayerNumber = sPlayerNumberCandidate[numberNo];;
 		players.clear();
-		for(int i = 0; i < sPlayerNum; i++ ){
+		for(int i = 0; i < sPlayerNumber; i++ ){
 			player = new PlayerStatus( i+1, (int)dpToPx(sPlayerDpXY[i][0],context.getResources()),(int)dpToPx(sPlayerDpXY[i][1],context.getResources()), PLAYER_COLOR[i],LIFE_NUMBER );
 			players.add(player);
 		}
@@ -118,7 +114,7 @@ public class PlayerMng {
 //		paint.setAntiAlias(true);
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);
 
-		for(int i = 0; i < sPlayerNum; i++ ) {
+		for(int i = 0; i < sPlayerNumber; i++ ) {
 			if( PlayerMng.players.get(i).status == STATUS_GAMEOVER ) {
 				//NOOP
 			}
@@ -142,7 +138,7 @@ public class PlayerMng {
 
 
 				// プレイヤー同士の円の重なりをチェック
-				for (int j = 0; j < sPlayerNum; j++) {
+				for (int j = 0; j < sPlayerNumber; j++) {
 					if( PlayerMng.players.get(i).unrivaledFlg == false ) continue;
 					if( PlayerMng.players.get(j).unrivaledFlg == true ) continue;
 					if (i == j) continue;
@@ -163,7 +159,7 @@ public class PlayerMng {
 		int start_touch_x = 0,start_touch_y = 0;
 		int indicatorXY[] = {0,0};
 
-		for(int i = 0; i < sPlayerNum; i++ ){
+		for(int i = 0; i < sPlayerNumber; i++ ){
 			if(!players.get(i).touchFlg) continue;
 			start_touch_x = players.get(i).startTouchX;
 			start_touch_y = players.get(i).startTouchY;
@@ -214,15 +210,15 @@ public class PlayerMng {
 
 		int speed;
 
-		for(int i = 0; i < sPlayerNum; i++ ){
+		for(int i = 0; i < sPlayerNumber; i++ ){
 //			if( players.get(i).touchFlg) {
 				// タップ移動比率xyと指示マーカーのxyを取得
 //				getIndicatorXY(i,players.get(i).startTouchX, players.get(i).startTouchY, players.get(i).nowTouchX, players.get(i).nowTouchY, players.get(i).indicatorDiff, players.get(i).indicatorXY);
 				getIndicatorXY(i, players.get(i).startTouchX, players.get(i).startTouchY, players.get(i).nowTouchX, players.get(i).nowTouchY);
 				// ユーザーの位置を登録
 				if (players.get(i).status == STATUS_NORMAL) {
-					if(players.get(i).speedUpFlg) speed = PLEYER_SPEED - SPEEDUP_VALUE;
-					else speed = PLEYER_SPEED;
+					if(players.get(i).speedUpFlg) speed = sPlayerSpeed - (sPlayerSpeed / 2);
+					else speed = sPlayerSpeed;
 
 					players.get(i).nowPositionX = players.get(i).nowPositionX + (players.get(i).indicatorDiff[0] / speed);
 					players.get(i).nowPositionY = players.get(i).nowPositionY + (players.get(i).indicatorDiff[1] / speed);
@@ -299,7 +295,7 @@ public class PlayerMng {
 	public static int checkWinner(){
 		int win_user_id = -1;
 		int win_score = -1;
-		for(int i = 0; i < sPlayerNum; i++ ){
+		for(int i = 0; i < sPlayerNumber; i++ ){
 			if( win_score == players.get(i).score ){
 				win_user_id = 99; //ドロー
 			}
@@ -322,7 +318,7 @@ public class PlayerMng {
 //		paint.setAntiAlias(true);
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);
 
-		for (int i = 0; i < sPlayerNum; i++) {
+		for (int i = 0; i < sPlayerNumber; i++) {
 			paint.setColor(Color.argb(255, PlayerMng.players.get(i).colorR, PlayerMng.players.get(i).colorG, PlayerMng.players.get(i).colorB));
 			sa_x = 0;
 			for (int j = 0; j < PlayerMng.players.get(i).lifeNum; j++) {
@@ -374,7 +370,7 @@ public class PlayerMng {
 		paint.reset();
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);
 
-		for (int i = 0; i < sPlayerNum; i++) {
+		for (int i = 0; i < sPlayerNumber; i++) {
 
 			if( PlayerMng.players.get(i).status == PlayerMng.STATUS_DEAD ){
 				if( PlayerMng.players.get(i).deadTime + REVIVAL_TIME <= getCurrentTime() ){

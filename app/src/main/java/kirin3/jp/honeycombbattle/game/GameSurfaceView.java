@@ -43,8 +43,9 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 	Thread thread;
 
 	// intentで送られてくるユーザーが選択した５段階のゲーム設定
-	public static int sItemQuantityNo;
+	public static int sPlayerNumberNo;
 	public static int sPlayerSpeedNo;
+	public static int sItemQuantityNo;
 
 
 	public GameSurfaceView(Context context){
@@ -55,16 +56,18 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 		setIntentData();
 
-		Log.w( "DEBUG_DATA", "sItemQuantityNo " + sItemQuantityNo);
+
 		Log.w( "DEBUG_DATA", "sPlayerSpeedNo " + sPlayerSpeedNo);
+		Log.w( "DEBUG_DATA", "sItemQuantityNo " + sItemQuantityNo);
 
 		// 時間情報の初期化
 		TimeMng.timeInit(context);
 		// フィールド情報の初期化
 		FieldMng.fieldInit(context);
 		// プレイヤー情報の初期化
-		PlayerMng.playerInit(context,PlayerMng.sPlayerNum,sPlayerSpeedNo);
-
+		PlayerMng.playerInit(context,sPlayerNumberNo,sPlayerSpeedNo);
+		// アイテム情報の初期化
+		ItemMng.itemInit(sItemQuantityNo);
 
 		scoreFlg = false;
 
@@ -79,30 +82,25 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 
 		Bundle extras = ((Activity)mContext).getIntent().getExtras();
-		String item_quantity = extras.getString(MainActivity.INTENT_ITEM_QUANTITY);
+		String player_number = extras.getString(MainActivity.INTENT_PLAYER_NUMBER);
 		String player_speed = extras.getString(MainActivity.INTENT_PLAYER_SPEED);
+		String item_quantity = extras.getString(MainActivity.INTENT_ITEM_QUANTITY);
 
 		Log.w( "DEBUG_DATA", "item_quantity " + item_quantity);
 		Log.w( "DEBUG_DATA", "getResources().getString(R.string.quantity_1) " + getResources().getString(R.string.quantity_1));
 
 
-		if( item_quantity.equals(getResources().getString(R.string.quantity_1)) ){
-			sItemQuantityNo = 0;
+		if( player_number.equals(getResources().getString(R.string.number_1)) ){
+			sPlayerNumberNo = 0;
 		}
-		else if( item_quantity.equals(getResources().getString(R.string.quantity_2)) ){
-			sItemQuantityNo = 1;
+		else if( player_number.equals(getResources().getString(R.string.number_2)) ){
+			sPlayerNumberNo = 1;
 		}
-		else if( item_quantity.equals(getResources().getString(R.string.quantity_3)) ){
-			sItemQuantityNo = 2;
-		}
-		else if( item_quantity.equals(getResources().getString(R.string.quantity_4)) ){
-			sItemQuantityNo = 3;
-		}
-		else if( item_quantity.equals(getResources().getString(R.string.quantity_5)) ){
-			sItemQuantityNo = 4;
+		else if( player_number.equals(getResources().getString(R.string.number_3)) ){
+			sPlayerNumberNo = 2;
 		}
 		else{
-			sItemQuantityNo = 2;
+			sPlayerNumberNo = 0;
 		}
 
 
@@ -123,6 +121,26 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		}
 		else{
 			sPlayerSpeedNo = 2;
+		}
+
+
+		if( item_quantity.equals(getResources().getString(R.string.quantity_1)) ){
+			sItemQuantityNo = 0;
+		}
+		else if( item_quantity.equals(getResources().getString(R.string.quantity_2)) ){
+			sItemQuantityNo = 1;
+		}
+		else if( item_quantity.equals(getResources().getString(R.string.quantity_3)) ){
+			sItemQuantityNo = 2;
+		}
+		else if( item_quantity.equals(getResources().getString(R.string.quantity_4)) ){
+			sItemQuantityNo = 3;
+		}
+		else if( item_quantity.equals(getResources().getString(R.string.quantity_5)) ){
+			sItemQuantityNo = 4;
+		}
+		else{
+			sItemQuantityNo = 2;
 		}
 
 
@@ -236,12 +254,12 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 			case MotionEvent.ACTION_POINTER_DOWN:
 
 				//2人プレイなら
-				if(PlayerMng.sPlayerNum == 2){
+				if(PlayerMng.sPlayerNumber == 2){
 					//フィールド下半分が1P
 					if( screen_height / 2 < y ) user_i = 0;
 					else user_i = 1;
 				}
-				else if(PlayerMng.sPlayerNum == 3){
+				else if(PlayerMng.sPlayerNumber == 3){
 					//フィールド下半分が1P
 					if( screen_height / 2 < y ){
 						if( screen_width / 2 > x) user_i = 0;
@@ -251,7 +269,7 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 						user_i = 1;
 					}
 				}
-				else if(PlayerMng.sPlayerNum == 4){
+				else if(PlayerMng.sPlayerNumber == 4){
 					//フィールド下半分が1P
 					if( screen_height / 2 < y ){
 						if( screen_width / 2 > x) user_i = 0;
@@ -280,11 +298,11 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 			// 最後じゃない指を上げる
 			case MotionEvent.ACTION_POINTER_UP:
 
-				for( user_i = 0; user_i < PlayerMng.sPlayerNum; user_i++ ){
+				for( user_i = 0; user_i < PlayerMng.sPlayerNumber; user_i++ ){
 					if( PlayerMng.players.get(user_i).pointId == point_id ) break;
 				}
 				// ユーザー一致せず
-				if( user_i == PlayerMng.sPlayerNum ) break;
+				if( user_i == PlayerMng.sPlayerNumber ) break;
 
 				PlayerMng.players.get(user_i).touchFlg = false;
 				PlayerMng.players.get(user_i).pointId = -1;
@@ -306,7 +324,7 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 			if (point_id == -1) continue;
 
-			for( user_i = 0; user_i < PlayerMng.sPlayerNum; user_i++ ){
+			for( user_i = 0; user_i < PlayerMng.sPlayerNumber; user_i++ ){
 				if(point_id == PlayerMng.players.get(user_i).pointId){
 					// タッチしている位置取得
 					PlayerMng.players.get(user_i).nowTouchX = (int)x;

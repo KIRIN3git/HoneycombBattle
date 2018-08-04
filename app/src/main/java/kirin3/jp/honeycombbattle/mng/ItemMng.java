@@ -58,6 +58,11 @@ public class ItemMng {
     final static public int STATUS_NORMAL = 0;
     final static public int STATUS_USED = 1;
 
+    // アイテム出現量
+    static int sQuantityCandidate[] = {200,150,100,80,60};
+    static int sItemQuantity;
+
+
     // アイテムデータ
     public static ArrayList<ItemStatus> items = new ArrayList<ItemStatus>();
 
@@ -67,7 +72,9 @@ public class ItemMng {
     // 無敵時間（ミリ秒）
     final static int UNRIVALE_TIME = 5 * 1000;
 
-
+    public static void itemInit(int quantityNo){
+        sItemQuantity = sQuantityCandidate[quantityNo];
+    }
 
     public static void createItem(Context context,Canvas canvas){
 
@@ -76,7 +83,7 @@ public class ItemMng {
         ItemStatus item;
 
         Random r = new Random();
-        throw_random = r.nextInt(100);
+        throw_random = r.nextInt(sItemQuantity);
 
         if( throw_random == 0 ){
             sItemNum++;
@@ -155,7 +162,7 @@ public class ItemMng {
             canvas.drawText(ItemMng.items.get(i).text, ItemMng.items.get(i).nowPositionX - (widht / 2), ItemMng.items.get(i).nowPositionY + (height / 2), paint);
 
             // プレイヤーのアイテム取得チェック
-            for (int j = 0; j < PlayerMng.sPlayerNum; j++) {
+            for (int j = 0; j < PlayerMng.sPlayerNumber; j++) {
                 if( PlayerMng.players.get(j).status == PlayerMng.STATUS_DEAD ) continue;
                 if( PlayerMng.players.get(j).status == PlayerMng.STATUS_GAMEOVER ) continue;
 
@@ -196,7 +203,7 @@ public class ItemMng {
             hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] = changeIntADigit( hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)], PlayerMng.players.get(user_id).no);
             PlayerMng.players.get(user_id).score++;
             // 爆破範囲内のキャラは死亡
-            for(int j = 0; j < PlayerMng.sPlayerNum; j++){
+            for(int j = 0; j < PlayerMng.sPlayerNumber; j++){
 
                 // 自分は平気
                 if( j == user_id ) continue;
@@ -356,7 +363,7 @@ public class ItemMng {
     public static void checkItemEffect(){
         long currentTime = TimeUtils.getCurrentTime();
 
-        for(int i = 0; i < PlayerMng.sPlayerNum; i++){
+        for(int i = 0; i < PlayerMng.sPlayerNumber; i++){
             if( PlayerMng.players.get(i).speedUpFlg ){
                 if( currentTime > PlayerMng.players.get(i).speedUpTime + SPEEDUP_TIME ){
                     PlayerMng.players.get(i).speedUpTime = 0;

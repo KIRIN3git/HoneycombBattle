@@ -19,22 +19,32 @@ import kirin3.jp.honeycombbattle.game.GameActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    static RadioGroup sRadioGroupItemQuantity;
-    static RadioGroup sRadioGroupPlayerSpeed;
 
-    static RadioButton sRadioIButtonItemQuantity;
+    static RadioGroup sRadioGroupPlayerNumber;
+    static RadioGroup sRadioGroupPlayerSpeed;
+    static RadioGroup sRadioGroupItemQuantity;
+
+    static RadioButton sRadioIButtonPlayerNumber;
     static RadioButton sRadioIButtonPlayerSpeed;
 
-    public static final String INTENT_ITEM_QUANTITY = "INTENT_ITEM_QUANTITY";
+    static RadioButton sRadioIButtonItemQuantity;
+
+
+
+
     public static final String INTENT_PLAYER_SPEED = "INTENT_PLAYER_SPEED";
+    public static final String INTENT_PLAYER_NUMBER = "INTENT_PLAYER_NUMBER";
+    public static final String INTENT_ITEM_QUANTITY = "INTENT_ITEM_QUANTITY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sRadioGroupItemQuantity = (RadioGroup) findViewById(R.id.RadioGroupItemQuantity);
+
+        sRadioGroupPlayerNumber = (RadioGroup) findViewById(R.id.RadioGroupPlayerNumber);
         sRadioGroupPlayerSpeed = (RadioGroup) findViewById(R.id.RadioGroupPlayerSpeed);
+        sRadioGroupItemQuantity = (RadioGroup) findViewById(R.id.RadioGroupItemQuantity);
 
 
         sRadioGroupItemQuantity.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -50,15 +60,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                sRadioIButtonItemQuantity = (RadioButton) findViewById(sRadioGroupItemQuantity.getCheckedRadioButtonId());
+                sRadioIButtonPlayerNumber = (RadioButton) findViewById(sRadioGroupPlayerNumber.getCheckedRadioButtonId());
                 sRadioIButtonPlayerSpeed = (RadioButton) findViewById(sRadioGroupPlayerSpeed.getCheckedRadioButtonId());
+                sRadioIButtonItemQuantity = (RadioButton) findViewById(sRadioGroupItemQuantity.getCheckedRadioButtonId());
 
                 Log.w( "DEBUG_DATA", "sRadioIButtonItemQuantity.getId()" + sRadioIButtonItemQuantity.getText());
 
                 // インテントのインスタンス生成
                 Intent intent = new Intent(MainActivity.this, GameActivity.class);
-                intent.putExtra(INTENT_ITEM_QUANTITY,sRadioIButtonItemQuantity.getText());
+                intent.putExtra(INTENT_PLAYER_NUMBER,sRadioIButtonPlayerNumber.getText());
                 intent.putExtra(INTENT_PLAYER_SPEED,sRadioIButtonPlayerSpeed.getText());
+                intent.putExtra(INTENT_ITEM_QUANTITY,sRadioIButtonItemQuantity.getText());
                 // ゲーム画面の起動
                 startActivity(intent);
 

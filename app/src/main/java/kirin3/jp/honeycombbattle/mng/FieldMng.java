@@ -139,7 +139,7 @@ public class FieldMng {
 
 				// すでにペイント済み、枠内に中心点が入ったら
 				// 一旦、円で計算
-				for( int i = 0; i < PlayerMng.sPlayerNum; i++ ){
+				for(int i = 0; i < PlayerMng.sPlayerNumber; i++ ){
 					if( ((add_x - PlayerMng.players.get(i).nowPositionX) * (add_x - PlayerMng.players.get(i).nowPositionX) + (add_y - PlayerMng.players.get(i).nowPositionY) * (add_y - PlayerMng.players.get(i).nowPositionY)) < Math.pow(HEX_LENGTH_PX, 2) ){
 
 						//現在位置(col,row)を記録
@@ -225,7 +225,7 @@ public class FieldMng {
 						}
 					}
 					/*
-					for( int i = 1; i <= PlayerMng.sPlayerNum; i++ ){
+					for( int i = 1; i <= PlayerMng.sPlayerNumber; i++ ){
 						if( hex_color_num[col][row] / 10 == i ){
 
 							PlayerMng.players.get(i-1).nowPositionX = (int)center_x + (int)add_x;
@@ -269,7 +269,7 @@ public class FieldMng {
 			for( int row = 0; row < HEX_NUM_ROW; row++ ){
 
 				if( col_check == col && row_check == row ){
-					for( int user_i = 0; user_i < PlayerMng.sPlayerNum; user_i++ ){
+					for(int user_i = 0; user_i < PlayerMng.sPlayerNumber; user_i++ ){
 						if( hex_color_num[col][row] == PlayerMng.players.get(user_i).no ){
 							hex_color_num[col][row] = COUNT_NO;
 							countHitFlg = true;
