@@ -19,19 +19,17 @@ import kirin3.jp.honeycombbattle.game.GameActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    static RadioGroup sRadioGroupBattleTime;
     static RadioGroup sRadioGroupPlayerNumber;
     static RadioGroup sRadioGroupPlayerSpeed;
     static RadioGroup sRadioGroupItemQuantity;
 
+    static RadioButton sRadioIButtonBattleTime;
     static RadioButton sRadioIButtonPlayerNumber;
     static RadioButton sRadioIButtonPlayerSpeed;
-
     static RadioButton sRadioIButtonItemQuantity;
 
-
-
-
+    public static final String INTENT_BATTLE_TIME = "INTENT_BATTLE_TIME";
     public static final String INTENT_PLAYER_SPEED = "INTENT_PLAYER_SPEED";
     public static final String INTENT_PLAYER_NUMBER = "INTENT_PLAYER_NUMBER";
     public static final String INTENT_ITEM_QUANTITY = "INTENT_ITEM_QUANTITY";
@@ -41,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        sRadioGroupBattleTime = (RadioGroup) findViewById(R.id.RadioGroupBattleTime);
         sRadioGroupPlayerNumber = (RadioGroup) findViewById(R.id.RadioGroupPlayerNumber);
         sRadioGroupPlayerSpeed = (RadioGroup) findViewById(R.id.RadioGroupPlayerSpeed);
         sRadioGroupItemQuantity = (RadioGroup) findViewById(R.id.RadioGroupItemQuantity);
@@ -60,14 +58,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                sRadioIButtonBattleTime = (RadioButton) findViewById(sRadioGroupPlayerNumber.getCheckedRadioButtonId());
                 sRadioIButtonPlayerNumber = (RadioButton) findViewById(sRadioGroupPlayerNumber.getCheckedRadioButtonId());
                 sRadioIButtonPlayerSpeed = (RadioButton) findViewById(sRadioGroupPlayerSpeed.getCheckedRadioButtonId());
                 sRadioIButtonItemQuantity = (RadioButton) findViewById(sRadioGroupItemQuantity.getCheckedRadioButtonId());
 
-                Log.w( "DEBUG_DATA", "sRadioIButtonItemQuantity.getId()" + sRadioIButtonItemQuantity.getText());
-
                 // インテントのインスタンス生成
                 Intent intent = new Intent(MainActivity.this, GameActivity.class);
+                intent.putExtra(INTENT_BATTLE_TIME,sRadioIButtonBattleTime.getText());
                 intent.putExtra(INTENT_PLAYER_NUMBER,sRadioIButtonPlayerNumber.getText());
                 intent.putExtra(INTENT_PLAYER_SPEED,sRadioIButtonPlayerSpeed.getText());
                 intent.putExtra(INTENT_ITEM_QUANTITY,sRadioIButtonItemQuantity.getText());

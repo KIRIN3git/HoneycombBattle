@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">HoneycombBattle</string>
 
+    <string name="time_1">３０秒</string>
+    <string name="time_2">６０秒</string>
+    <string name="time_3">１２０秒</string>
     <string name="number_1">２人</string>
     <string name="number_2">３人</string>
     <string name="number_3">４人</string>

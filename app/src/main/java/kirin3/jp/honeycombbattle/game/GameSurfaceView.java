@@ -2,6 +2,7 @@ package kirin3.jp.honeycombbattle.game;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -17,6 +18,7 @@ import kirin3.jp.honeycombbattle.mng.FieldMng;
 import kirin3.jp.honeycombbattle.mng.ItemMng;
 import kirin3.jp.honeycombbattle.mng.PlayerMng;
 import kirin3.jp.honeycombbattle.mng.TimeMng;
+import kirin3.jp.honeycombbattle.result.ResultActivity;
 
 /**
  * Created by shinji on 2017/04/06.
@@ -37,39 +39,34 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 	final static int BACK_G = 200 ;
 	final static int BACK_B = 200 ;
 
-	boolean scoreFlg;
-
 	SurfaceHolder surfaceHolder;
 	Thread thread;
 
-	// intentで送られてくるユーザーが選択した５段階のゲーム設定
+	// intentで送られてくるゲーム設定
+	public static int sBattleTimeNo;
 	public static int sPlayerNumberNo;
 	public static int sPlayerSpeedNo;
 	public static int sItemQuantityNo;
 
+	public static int winnerNo = -1;
+
+	public static final String INTENT_WINNER_NO = "INTENT_WINNER_NO";
 
 	public GameSurfaceView(Context context){
 		super(context);
 
 		mContext = context;
 
-
 		setIntentData();
 
-
-		Log.w( "DEBUG_DATA", "sPlayerSpeedNo " + sPlayerSpeedNo);
-		Log.w( "DEBUG_DATA", "sItemQuantityNo " + sItemQuantityNo);
-
 		// 時間情報の初期化
-		TimeMng.timeInit(context);
+		TimeMng.timeInit(context,sBattleTimeNo);
 		// フィールド情報の初期化
 		FieldMng.fieldInit(context);
 		// プレイヤー情報の初期化
 		PlayerMng.playerInit(context,sPlayerNumberNo,sPlayerSpeedNo);
 		// アイテム情報の初期化
 		ItemMng.itemInit(sItemQuantityNo);
-
-		scoreFlg = false;
 
 		surfaceHolder = getHolder();
 		surfaceHolder.addCallback(this);
@@ -80,15 +77,24 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 	public void setIntentData(){
 
-
 		Bundle extras = ((Activity)mContext).getIntent().getExtras();
+		String game_time = extras.getString(MainActivity.INTENT_BATTLE_TIME);
 		String player_number = extras.getString(MainActivity.INTENT_PLAYER_NUMBER);
 		String player_speed = extras.getString(MainActivity.INTENT_PLAYER_SPEED);
 		String item_quantity = extras.getString(MainActivity.INTENT_ITEM_QUANTITY);
 
-		Log.w( "DEBUG_DATA", "item_quantity " + item_quantity);
-		Log.w( "DEBUG_DATA", "getResources().getString(R.string.quantity_1) " + getResources().getString(R.string.quantity_1));
-
+		if( player_number.equals(getResources().getString(R.string.time_1)) ){
+			sBattleTimeNo = 0;
+		}
+		else if( player_number.equals(getResources().getString(R.string.time_2)) ){
+			sBattleTimeNo = 1;
+		}
+		else if( player_number.equals(getResources().getString(R.string.time_3)) ){
+			sBattleTimeNo = 2;
+		}
+		else{
+			sBattleTimeNo = 1;
+		}
 
 		if( player_number.equals(getResources().getString(R.string.number_1)) ){
 			sPlayerNumberNo = 0;
@@ -164,9 +170,11 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 		while(thread != null){
 			try{
+
 				TimeMng.fpsStart();
 
 				canvas = surfaceHolder.lockCanvas();
+
 				canvas.drawRect( 0, 0, screen_width, screen_height, bgPaint);
 
 				// 基本六角形
@@ -208,16 +216,12 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 					TimeMng.drawLimitTime(mContext,paint, canvas);
 				}
 				else if( TimeMng.getSituation() == TimeMng.SITUATION_GAMEOVER ){
-					TimeMng.sleepGameOver();
+
 
 					// スコア画面の起動
-					if(!scoreFlg){
-						/* ☆
-						Intent intent = new Intent(getContext(), ResultActivity.class);
-						getContext().startActivity(intent);
-						scoreFlg = true;
-						*/
-					}
+					PlayerMng.checkWinner();
+
+					processGameOver(winnerNo);
 				}
 
 				// 描画
@@ -225,7 +229,13 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 				// fps
 				TimeMng.fpsEnd();
-
+/*
+				Log.w( "DEBUG_DATA check", "end");
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+				}
+*/
 
 			} catch(Exception e){}
 		}
@@ -336,7 +346,6 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		invalidate();
 
 		return true;
-
 	}
 
 	// 変更時に呼び出される
@@ -355,9 +364,30 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 	// 破棄時に呼び出される
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
+		Log.w( "DEBUG_DATA check", "surfaceDestroyed");
 
-		thread = null;
+		endThread();
 	}
 
+	public void processGameOver(int winner_no){
+
+		TimeMng.sleepGameOver();
+
+		endThread();
+
+		Intent intent = new Intent(getContext(), ResultActivity.class);
+		intent.putExtra(INTENT_WINNER_NO,winner_no);
+		getContext().startActivity(intent);
+	}
+
+	public void endThread(){
+		thread = null; // スレッド停止要請
+
+		// スレッド停止まで0.1秒待つ
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+		}
+	}
 }
 

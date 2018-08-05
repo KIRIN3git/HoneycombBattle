@@ -94,9 +94,9 @@ public class PlayerMng {
 		DIRECTION_WIDHT_PX = dpToPx(DIRECTION_WIDHT_DP,context.getResources());
 
 		sPlayerSpeed = sPlayerSpeedCandidate[speedNo];
+		sPlayerNumber = sPlayerNumberCandidate[numberNo];;
 
 		PlayerStatus player;
-		sPlayerNumber = sPlayerNumberCandidate[numberNo];;
 		players.clear();
 		for(int i = 0; i < sPlayerNumber; i++ ){
 			player = new PlayerStatus( i+1, (int)dpToPx(sPlayerDpXY[i][0],context.getResources()),(int)dpToPx(sPlayerDpXY[i][1],context.getResources()), PLAYER_COLOR[i],LIFE_NUMBER );
@@ -401,6 +401,30 @@ public class PlayerMng {
 					canvas.drawCircle(center_x + PlayerMng.players.get(i).nowPositionX - sabun2, center_y + PlayerMng.players.get(i).nowPositionY - sabun2, PLAYER_RADIUS_PX / 2, paint);
 				}
 			}
+		}
+	}
+
+	/*
+	 * 生存者が１人か確認
+	 */
+	public void checkOnlyOneUser(){
+		// 生存者数
+		int lifeUserNum = 0;
+		for (int i = 0; i < sPlayerNumber; i++) {
+			if( PlayerMng.players.get(i).lifeNum == 0 ) lifeUserNum++;
+		}
+		if( lifeUserNum == sPlayerNumber - 1 ){
+
+			for (int i = 0; i < sPlayerNumber; i++) {
+				if( PlayerMng.players.get(i).lifeNum != 0 ){
+
+				}
+			}
+
+
+		}
+		else if( lifeUserNum == sPlayerNumber ){
+
 		}
 	}
 }

@@ -7,6 +7,9 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.Log;
 
+import kirin3.jp.honeycombbattle.game.GameActivity;
+import kirin3.jp.honeycombbattle.game.GameSurfaceView;
+
 import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 
 /**
@@ -220,7 +223,9 @@ public class FieldMng {
 							}
 
 							if( i == tower_num - 1 ){
-								Log.w( "DEBUG_DATA", "CLEARRRRRRRRRRR aaaaaaaaaaaaa" );
+								Log.w( "DEBUG_DATA", "CLEARRRRRRRRRRR aaaaaaaaaaaaa " + towerCheck[i] );
+								TimeMng.setSituation(TimeMng.SITUATION_GAMEOVER);
+								GameSurfaceView.winnerNo = towerCheck[i];
 							}
 						}
 					}

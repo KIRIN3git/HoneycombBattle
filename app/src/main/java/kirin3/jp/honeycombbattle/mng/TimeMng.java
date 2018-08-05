@@ -19,6 +19,11 @@ import static kirin3.jp.honeycombbattle.util.ViewUtils.mirrorDrowText;
  */
 
 public class TimeMng {
+
+	// バトル時間ミリ秒
+	public static int sBattleTimeCandidate[] = {30,60,120};
+	static long sBattleTime;
+
 	// カウントダウンテキストサイズ
 	static float COUNTDONW_TEXT_SIZE_DP = 60.0f;
 	static float COUNTDONW_TEXT_SIZE_PX;
@@ -29,8 +34,6 @@ public class TimeMng {
 
 	// カウントダウンミリ秒
 	static long COUNT_DONW_MS = 1 * 1000;
-	// バトル時間ミリ秒
-	static long BATTLE_MS = 600 * 1000;
 	// ゲームオーバー時間ミリ秒
 	static long GAMEOVER_MS = 2 * 1000;
 	// カウントダウン開始時間保存
@@ -53,13 +56,20 @@ public class TimeMng {
 	static long sFps = Config.FPS;
 	static long sRunStartTime = 0, sRunEndTime = 0;
 
-	public static void timeInit(Context context){
+	public static void timeInit(Context context,int timeNo){
+
+		sBattleTime = sBattleTimeCandidate[timeNo] * 1000;
+
 		COUNTDONW_TEXT_SIZE_PX = dpToPx(COUNTDONW_TEXT_SIZE_DP,context.getResources());
 		LIMIT_TEXT_SIZE_PX = dpToPx(LIMIT_TEXT_SIZE_DP,context.getResources());
 	}
 
 	public static int getSituation(){
 		return sSituation;
+	}
+
+	public static void setSituation(int situ){
+		sSituation = situ;
 	}
 
 	public static void countDownStart(Context context){
@@ -105,10 +115,10 @@ public class TimeMng {
 	}
 
 	public static long getBattleLimitTImeS(){
-		return ( ( BATTLE_MS - (getCurrentTime() - sStartBattleMS) ) / 1000 ) + 1;
+		return ( ( sBattleTime - (getCurrentTime() - sStartBattleMS) ) / 1000 ) + 1;
 	}
 	public static long getBattleLimitTImeMS(){
-		return ( BATTLE_MS - (System.currentTimeMillis() - sStartBattleMS) ) - ( getBattleLimitTImeS() * 1000 ) + 1000;
+		return ( sBattleTime - (System.currentTimeMillis() - sStartBattleMS) ) - ( getBattleLimitTImeS() * 1000 ) + 1000;
 	}
 
 
