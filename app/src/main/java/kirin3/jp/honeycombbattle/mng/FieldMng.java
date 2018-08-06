@@ -221,10 +221,10 @@ public class FieldMng {
 							if(i != 0){
 								if(towerCheck[i] != towerCheck[i-1]) break;
 							}
-
+							// 全てのタワーを一人が所有したら
 							if( i == tower_num - 1 ){
 								Log.w( "DEBUG_DATA", "CLEARRRRRRRRRRR aaaaaaaaaaaaa " + towerCheck[i] );
-								TimeMng.setSituation(TimeMng.SITUATION_GAMEOVER);
+								TimeMng.setSituation(TimeMng.SITUATION_GAMEOVER); // ゲーム終了
 								GameSurfaceView.winnerNo = towerCheck[i];
 							}
 						}

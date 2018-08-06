@@ -216,12 +216,7 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 					TimeMng.drawLimitTime(mContext,paint, canvas);
 				}
 				else if( TimeMng.getSituation() == TimeMng.SITUATION_GAMEOVER ){
-
-
-					// スコア画面の起動
-					PlayerMng.checkWinner();
-
-					processGameOver(winnerNo);
+					processGameOver(canvas,winnerNo);
 				}
 
 				// 描画
@@ -369,17 +364,6 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		endThread();
 	}
 
-	public void processGameOver(int winner_no){
-
-		TimeMng.sleepGameOver();
-
-		endThread();
-
-		Intent intent = new Intent(getContext(), ResultActivity.class);
-		intent.putExtra(INTENT_WINNER_NO,winner_no);
-		getContext().startActivity(intent);
-	}
-
 	public void endThread(){
 		thread = null; // スレッド停止要請
 
@@ -389,5 +373,19 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		} catch (InterruptedException e) {
 		}
 	}
+
+	public void processGameOver(Canvas canvas,int winner_no){
+
+		TimeMng.sleepGameOver();
+
+		// 描画
+		surfaceHolder.unlockCanvasAndPost(canvas);
+		thread = null; // スレッド停止要請
+
+		Intent intent = new Intent(getContext(), ResultActivity.class);
+		intent.putExtra(INTENT_WINNER_NO,winner_no);
+		getContext().startActivity(intent);
+	}
+
 }
 

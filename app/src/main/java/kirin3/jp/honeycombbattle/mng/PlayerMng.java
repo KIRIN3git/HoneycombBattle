@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import java.util.ArrayList;
 
 
+import kirin3.jp.honeycombbattle.game.GameSurfaceView;
 import kirin3.jp.honeycombbattle.status.PlayerStatus;
 
 import static java.lang.Math.abs;
@@ -29,7 +30,7 @@ public class PlayerMng {
     public static int sPlayerNumber;
 
     // スピード
-    static int sPlayerSpeedCandidate[] = {20,16,12,8,4};
+    static int sPlayerSpeedCandidate[] = {30,16,12,8,4};
     static int sPlayerSpeed;
 
 
@@ -348,18 +349,8 @@ public class PlayerMng {
 		PlayerMng.players.get(user_id).nowTouchX = 0;
 		PlayerMng.players.get(user_id).nowTouchY = 0;
 
-		/*
-		PlayerMng.players.get(user_id).lifeNum--;
-		if( PlayerMng.players.get(user_id).lifeNum <= 0 ){
-			PlayerMng.players.get(user_id).status = PlayerMng.STATUS_GAMEOVER;
-		}
-		else {
-			PlayerMng.players.get(user_id).status = PlayerMng.STATUS_DEAD;
-			PlayerMng.players.get(user_id).deadTime = getCurrentTime();
-			PlayerMng.players.get(user_id).nowPositionX = PlayerMng.players.get(user_id).startPositionX;
-			PlayerMng.players.get(user_id).nowPositionY = PlayerMng.players.get(user_id).startPositionY;
-		}
-		*/
+		// 生存者が１人か確認
+		checkOnlyOneUser();
 	}
 
 	public static void revivalPlayer(Paint paint, Canvas canvas){
@@ -407,24 +398,25 @@ public class PlayerMng {
 	/*
 	 * 生存者が１人か確認
 	 */
-	public void checkOnlyOneUser(){
+	public static void checkOnlyOneUser(){
 		// 生存者数
 		int lifeUserNum = 0;
-		for (int i = 0; i < sPlayerNumber; i++) {
-			if( PlayerMng.players.get(i).lifeNum == 0 ) lifeUserNum++;
-		}
-		if( lifeUserNum == sPlayerNumber - 1 ){
+		// 生存者番号
+		int lifeUserNo = 0;
 
+		for (int i = 0; i < sPlayerNumber; i++) {
+			if( PlayerMng.players.get(i).lifeNum == 0 ){
+				lifeUserNum++;
+				lifeUserNo = i;
+			}
+		}
+		if( lifeUserNum == 1 ){
 			for (int i = 0; i < sPlayerNumber; i++) {
 				if( PlayerMng.players.get(i).lifeNum != 0 ){
-
+					TimeMng.setSituation(TimeMng.SITUATION_GAMEOVER); // ゲーム終了
+					GameSurfaceView.winnerNo = lifeUserNo;
 				}
 			}
-
-
-		}
-		else if( lifeUserNum == sPlayerNumber ){
-
 		}
 	}
 }
