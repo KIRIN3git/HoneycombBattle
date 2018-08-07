@@ -22,6 +22,12 @@
             android:name=".game.GameActivity"
             android:theme="@style/AppFullScreenTheme">
         </activity>
+
+        <activity
+            android:name=".result.ResultActivity"
+            android:theme="@style/AppFullScreenTheme">
+        </activity>
+
     </application>
 
 

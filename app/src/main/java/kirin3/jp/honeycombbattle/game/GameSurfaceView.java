@@ -50,7 +50,10 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 	public static int winnerNo = -1;
 
-	public static final String INTENT_WINNER_NO = "INTENT_WINNER_NO";
+	public static final String INTENT_BATTLE_TIME = "INTENT_BATTLE_TIME";
+	public static final String INTENT_PLAYER_SPEED = "INTENT_PLAYER_SPEED";
+	public static final String INTENT_PLAYER_NUMBER = "INTENT_PLAYER_NUMBER";
+	public static final String INTENT_ITEM_QUANTITY = "INTENT_ITEM_QUANTITY";
 
 	public GameSurfaceView(Context context){
 		super(context);
@@ -68,6 +71,7 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		// アイテム情報の初期化
 		ItemMng.itemInit(sItemQuantityNo);
 
+
 		surfaceHolder = getHolder();
 		surfaceHolder.addCallback(this);
 
@@ -78,18 +82,18 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 	public void setIntentData(){
 
 		Bundle extras = ((Activity)mContext).getIntent().getExtras();
-		String game_time = extras.getString(MainActivity.INTENT_BATTLE_TIME);
-		String player_number = extras.getString(MainActivity.INTENT_PLAYER_NUMBER);
-		String player_speed = extras.getString(MainActivity.INTENT_PLAYER_SPEED);
-		String item_quantity = extras.getString(MainActivity.INTENT_ITEM_QUANTITY);
+		String battle_time = extras.getString(INTENT_BATTLE_TIME);
+		String player_number = extras.getString(INTENT_PLAYER_NUMBER);
+		String player_speed = extras.getString(INTENT_PLAYER_SPEED);
+		String item_quantity = extras.getString(INTENT_ITEM_QUANTITY);
 
-		if( player_number.equals(getResources().getString(R.string.time_1)) ){
+		if( battle_time.equals(getResources().getString(R.string.time_1)) ){
 			sBattleTimeNo = 0;
 		}
-		else if( player_number.equals(getResources().getString(R.string.time_2)) ){
+		else if( battle_time.equals(getResources().getString(R.string.time_2)) ){
 			sBattleTimeNo = 1;
 		}
-		else if( player_number.equals(getResources().getString(R.string.time_3)) ){
+		else if( battle_time.equals(getResources().getString(R.string.time_3)) ){
 			sBattleTimeNo = 2;
 		}
 		else{
@@ -148,9 +152,6 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		else{
 			sItemQuantityNo = 2;
 		}
-
-
-
 	}
 
 	@Override
@@ -359,8 +360,6 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 	// 破棄時に呼び出される
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		Log.w( "DEBUG_DATA check", "surfaceDestroyed");
-
 		endThread();
 	}
 
@@ -382,10 +381,13 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		surfaceHolder.unlockCanvasAndPost(canvas);
 		thread = null; // スレッド停止要請
 
-		Intent intent = new Intent(getContext(), ResultActivity.class);
-		intent.putExtra(INTENT_WINNER_NO,winner_no);
-		getContext().startActivity(intent);
+		Log.w( "DEBUG_DATA", "winner_no " + winner_no );
+
+		Intent intent = new Intent(mContext, ResultActivity.class);
+		intent.putExtra(ResultActivity.INTENT_WINNER_NO,winner_no);
+		mContext.startActivity(intent);
 	}
+
 
 }
 

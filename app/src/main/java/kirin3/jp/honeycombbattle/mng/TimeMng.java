@@ -21,7 +21,7 @@ import static kirin3.jp.honeycombbattle.util.ViewUtils.mirrorDrowText;
 public class TimeMng {
 
 	// バトル時間ミリ秒
-	public static int sBattleTimeCandidate[] = {30,60,120};
+	public static int sBattleTimeCandidate[] = {5,60,120};
 	static long sBattleTime;
 
 	// カウントダウンテキストサイズ

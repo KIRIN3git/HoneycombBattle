@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 
 import kirin3.jp.honeycombbattle.R;
 import kirin3.jp.honeycombbattle.game.GameActivity;
+import kirin3.jp.honeycombbattle.game.GameSurfaceView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,10 +30,7 @@ public class MainActivity extends AppCompatActivity {
     static RadioButton sRadioIButtonPlayerSpeed;
     static RadioButton sRadioIButtonItemQuantity;
 
-    public static final String INTENT_BATTLE_TIME = "INTENT_BATTLE_TIME";
-    public static final String INTENT_PLAYER_SPEED = "INTENT_PLAYER_SPEED";
-    public static final String INTENT_PLAYER_NUMBER = "INTENT_PLAYER_NUMBER";
-    public static final String INTENT_ITEM_QUANTITY = "INTENT_ITEM_QUANTITY";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,17 +56,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                sRadioIButtonBattleTime = (RadioButton) findViewById(sRadioGroupPlayerNumber.getCheckedRadioButtonId());
+                sRadioIButtonBattleTime = (RadioButton) findViewById(sRadioGroupBattleTime.getCheckedRadioButtonId());
                 sRadioIButtonPlayerNumber = (RadioButton) findViewById(sRadioGroupPlayerNumber.getCheckedRadioButtonId());
                 sRadioIButtonPlayerSpeed = (RadioButton) findViewById(sRadioGroupPlayerSpeed.getCheckedRadioButtonId());
                 sRadioIButtonItemQuantity = (RadioButton) findViewById(sRadioGroupItemQuantity.getCheckedRadioButtonId());
 
                 // インテントのインスタンス生成
                 Intent intent = new Intent(MainActivity.this, GameActivity.class);
-                intent.putExtra(INTENT_BATTLE_TIME,sRadioIButtonBattleTime.getText());
-                intent.putExtra(INTENT_PLAYER_NUMBER,sRadioIButtonPlayerNumber.getText());
-                intent.putExtra(INTENT_PLAYER_SPEED,sRadioIButtonPlayerSpeed.getText());
-                intent.putExtra(INTENT_ITEM_QUANTITY,sRadioIButtonItemQuantity.getText());
+                intent.putExtra(GameSurfaceView.INTENT_BATTLE_TIME,sRadioIButtonBattleTime.getText());
+                intent.putExtra(GameSurfaceView.INTENT_PLAYER_NUMBER,sRadioIButtonPlayerNumber.getText());
+                intent.putExtra(GameSurfaceView.INTENT_PLAYER_SPEED,sRadioIButtonPlayerSpeed.getText());
+                intent.putExtra(GameSurfaceView.INTENT_ITEM_QUANTITY,sRadioIButtonItemQuantity.getText());
                 // ゲーム画面の起動
                 startActivity(intent);
 

@@ -319,10 +319,10 @@ public class PlayerMng {
 //		paint.setAntiAlias(true);
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);
 
-		for (int i = 0; i < sPlayerNumber; i++) {
+		for (int i = 0; i < sPlayerNumber ; i++) {
 			paint.setColor(Color.argb(255, PlayerMng.players.get(i).colorR, PlayerMng.players.get(i).colorG, PlayerMng.players.get(i).colorB));
 			sa_x = 0;
-			for (int j = 0; j < PlayerMng.players.get(i).lifeNum; j++) {
+			for (int j = 0; j < PlayerMng.players.get(i).lifeNum - 1; j++) {
 				// (x1,y1,r,paint) 中心x1座標, 中心y1座標, r半径
 				canvas.drawCircle(center_x - dpToPx(PlayerMng.sLifeDpXY[i][0], context.getResources())  - sa_x, center_y - dpToPx(PlayerMng.sLifeDpXY[i][1], context.getResources()), PLAYER_RADIUS_PX, paint);
 				if( i == 0 || i== 1 ) sa_x -= ( ( PLAYER_RADIUS_PX * 2 ) + dpToPx(3, context.getResources()) );
@@ -349,8 +349,7 @@ public class PlayerMng {
 		PlayerMng.players.get(user_id).nowTouchX = 0;
 		PlayerMng.players.get(user_id).nowTouchY = 0;
 
-		// 生存者が１人か確認
-		checkOnlyOneUser();
+
 	}
 
 	public static void revivalPlayer(Paint paint, Canvas canvas){
@@ -372,6 +371,8 @@ public class PlayerMng {
 					PlayerMng.players.get(i).lifeNum--;
 					if( PlayerMng.players.get(i).lifeNum <= 0 ){
 						PlayerMng.players.get(i).status = PlayerMng.STATUS_GAMEOVER;
+						// 生存者が１人か確認して、１人ならゲーム終了
+						checkOnlyOneUser();
 					}
 					else PlayerMng.players.get(i).status = PlayerMng.STATUS_NORMAL;
 				}
@@ -405,7 +406,7 @@ public class PlayerMng {
 		int lifeUserNo = 0;
 
 		for (int i = 0; i < sPlayerNumber; i++) {
-			if( PlayerMng.players.get(i).lifeNum == 0 ){
+			if( PlayerMng.players.get(i).lifeNum != 0 ){
 				lifeUserNum++;
 				lifeUserNo = i;
 			}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
@@ -11,12 +11,93 @@
         android:id="@+id/linearLayout1"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true">
 
+        <LinearLayout
+            android:id="@+id/layoutWin1"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_gravity="center">
 
+            <TextView
+                android:id="@+id/textWinRank1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="１位" />
 
+            <TextView
+                android:id="@+id/textWinUser1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutWin2"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/textWinRank2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="２位" />
+
+            <TextView
+                android:id="@+id/textWinUser2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutWin3"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/textWinRank3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="３位" />
+
+            <TextView
+                android:id="@+id/textWinUser3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutWin4"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/textWinRank4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="４位" />
+
+            <TextView
+                android:id="@+id/textWinUser4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>
