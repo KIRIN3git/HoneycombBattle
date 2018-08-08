@@ -225,7 +225,7 @@ public class FieldMng {
 							if( i == tower_num - 1 ){
 								Log.w( "DEBUG_DATA", "CLEARRRRRRRRRRR aaaaaaaaaaaaa " + towerCheck[i] );
 								TimeMng.setSituation(TimeMng.SITUATION_GAMEOVER); // ゲーム終了
-								GameSurfaceView.winnerNo = towerCheck[i];
+								GameSurfaceView.winnerNo = towerCheck[i] - 1;
 							}
 						}
 					}
