@@ -339,17 +339,6 @@ public class PlayerMng {
 
 		PlayerMng.players.get(user_id).status = PlayerMng.STATUS_DEAD;
 		PlayerMng.players.get(user_id).deadTime = getCurrentTime();
-
-		PlayerMng.players.get(user_id).indicatorDiff[0] = 0;
-		PlayerMng.players.get(user_id).indicatorDiff[1] = 0;
-		PlayerMng.players.get(user_id).indicatorXY[0] = 0;
-		PlayerMng.players.get(user_id).indicatorXY[1] = 0;
-		PlayerMng.players.get(user_id).startTouchX = 0;
-		PlayerMng.players.get(user_id).startTouchY = 0;
-		PlayerMng.players.get(user_id).nowTouchX = 0;
-		PlayerMng.players.get(user_id).nowTouchY = 0;
-
-
 	}
 
 	public static void revivalPlayer(Paint paint, Canvas canvas){
@@ -374,7 +363,18 @@ public class PlayerMng {
 						// 生存者が１人か確認して、１人ならゲーム終了
 						checkOnlyOneUser();
 					}
-					else PlayerMng.players.get(i).status = PlayerMng.STATUS_NORMAL;
+					else{
+						PlayerMng.players.get(i).status = PlayerMng.STATUS_NORMAL;
+
+						PlayerMng.players.get(i).indicatorDiff[0] = 0;
+						PlayerMng.players.get(i).indicatorDiff[1] = 0;
+						PlayerMng.players.get(i).indicatorXY[0] = 0;
+						PlayerMng.players.get(i).indicatorXY[1] = 0;
+//		PlayerMng.players.get(i).startTouchX = 0;
+//		PlayerMng.players.get(i).startTouchY = 0;
+						PlayerMng.players.get(i).nowTouchX = PlayerMng.players.get(i).startTouchX;
+						PlayerMng.players.get(i).nowTouchY = PlayerMng.players.get(i).startTouchY;
+					}
 				}
 				else {
 					long sabun1 = ( getCurrentTime() - PlayerMng.players.get(i).deadTime ) / 7;

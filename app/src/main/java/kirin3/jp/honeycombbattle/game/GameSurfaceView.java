@@ -186,19 +186,14 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 				// アイテムの効果チェック
 				ItemMng.checkItemEffect();
-
 				// プレイヤーの表示
 				PlayerMng.drawPlayer(mContext, paint, canvas);
-
 				// プレイヤーのライフ表示
 				PlayerMng.drawLife(mContext, paint, canvas);
-
 				// アイテムの作成
 				ItemMng.createItem(mContext, canvas);
-
 				// アイテムの表示
 				ItemMng.drawItem(mContext, paint, canvas);
-
 
 				// カウントダウン中
 				if( TimeMng.getSituation() == TimeMng.SITUATION_COUNTDOWN ){
@@ -209,10 +204,8 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 				else if( TimeMng.getSituation() == TimeMng.SITUATION_BATTLE ){
 					// タップ移動比率xyと指示マーカーのxyを取得
 					PlayerMng.getMoveXY();
-
 					// 指示器の表示
 					PlayerMng.drawIndicator(paint, canvas);
-
 					// リミット時間の表示
 					TimeMng.drawLimitTime(mContext,paint, canvas);
 				}
@@ -222,9 +215,9 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 				// 描画
 				surfaceHolder.unlockCanvasAndPost(canvas);
-
 				// fps
 				TimeMng.fpsEnd();
+
 /*
 				Log.w( "DEBUG_DATA check", "end");
 				try {

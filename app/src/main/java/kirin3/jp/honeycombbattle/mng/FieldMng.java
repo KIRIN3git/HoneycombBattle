@@ -160,6 +160,7 @@ public class FieldMng {
 							PlayerMng.deadPlayer(i);
 
 						}
+
 						// ステータスノーマルで、自分の領域でなかったら
 						else if( PlayerMng.players.get(i).status == PlayerMng.STATUS_NORMAL && hex_color_num[col][row] % 10 != PlayerMng.players.get(i).no ){
 
@@ -223,24 +224,11 @@ public class FieldMng {
 							}
 							// 全てのタワーを一人が所有したら
 							if( i == tower_num - 1 ){
-								Log.w( "DEBUG_DATA", "CLEARRRRRRRRRRR aaaaaaaaaaaaa " + towerCheck[i] );
 								TimeMng.setSituation(TimeMng.SITUATION_GAMEOVER); // ゲーム終了
 								GameSurfaceView.winnerNo = towerCheck[i] - 1;
 							}
 						}
 					}
-					/*
-					for( int i = 1; i <= PlayerMng.sPlayerNumber; i++ ){
-						if( hex_color_num[col][row] / 10 == i ){
-
-							PlayerMng.players.get(i-1).nowPositionX = (int)center_x + (int)add_x;
-							PlayerMng.players.get(i-1).nowPositionY = (int)center_x + (int)add_y;
-
-							Log.w( "DEBUG_DATA", "PlayerMng.players.get(i-1).nowPositionX " + PlayerMng.players.get(i-1).nowPositionX );
-							Log.w( "DEBUG_DATA", "PlayerMng.players.get(i-1).nowPositionY " + PlayerMng.players.get(i-1).nowPositionY );
-						}
-					}
-					*/
 				}
 			}
 		}

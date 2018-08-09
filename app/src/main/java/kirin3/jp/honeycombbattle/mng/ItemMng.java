@@ -194,14 +194,20 @@ public class ItemMng {
         else if(mode == 1) cr = GetColLine(row);
         else cr = GetRowLine(col);
 
-        hex_color_num[col][row]  = changeIntADigit( hex_color_num[col][row], PlayerMng.players.get(user_id).no);
-        PlayerMng.players.get(user_id).score++;
+        if( hex_color_num[col][row] % 10 != PlayerMng.players.get(user_id).no ) {
+            if( hex_color_num[col][row] % 10 != 0 ) PlayerMng.players.get((hex_color_num[col][row] % 10) - 1).score--;
+            hex_color_num[col][row] = changeIntADigit(hex_color_num[col][row], PlayerMng.players.get(user_id).no);
+            PlayerMng.players.get(user_id).score++;
+        }
 
         for(int i = 0; i < cr.size(); i++){
             // 壁等は色を塗れない
             if( hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] == WALL_NO || hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] == DALETE_NO) continue;
-            hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] = changeIntADigit( hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)], PlayerMng.players.get(user_id).no);
-            PlayerMng.players.get(user_id).score++;
+            if( hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] % 10 != PlayerMng.players.get(user_id).no ) {
+                if( hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] % 10 != 0 ) PlayerMng.players.get((hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] % 10) - 1).score--;
+                hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] = changeIntADigit(hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)], PlayerMng.players.get(user_id).no);
+                PlayerMng.players.get(user_id).score++;
+            }
             // 爆破範囲内のキャラは死亡
             for(int j = 0; j < PlayerMng.sPlayerNumber; j++){
 
