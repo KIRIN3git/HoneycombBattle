@@ -47,6 +47,8 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 	public static int sPlayerNumberNo;
 	public static int sPlayerSpeedNo;
 	public static int sItemQuantityNo;
+	public static float sFieldSizeMagnification;
+
 
 	public static int winnerNo = -1;
 
@@ -54,6 +56,7 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 	public static final String INTENT_PLAYER_SPEED = "INTENT_PLAYER_SPEED";
 	public static final String INTENT_PLAYER_NUMBER = "INTENT_PLAYER_NUMBER";
 	public static final String INTENT_ITEM_QUANTITY = "INTENT_ITEM_QUANTITY";
+	public static final String INTENT_FIELD_SIZE = "INTENT_FIELD_SIZE";
 
 	public GameSurfaceView(Context context){
 		super(context);
@@ -65,11 +68,11 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		// 時間情報の初期化
 		TimeMng.timeInit(context,sBattleTimeNo);
 		// フィールド情報の初期化
-		FieldMng.fieldInit(context);
+		FieldMng.fieldInit(context,sFieldSizeMagnification);
 		// プレイヤー情報の初期化
-		PlayerMng.playerInit(context,sPlayerNumberNo,sPlayerSpeedNo);
+		PlayerMng.playerInit(context,sPlayerNumberNo,sPlayerSpeedNo,sFieldSizeMagnification);
 		// アイテム情報の初期化
-		ItemMng.itemInit(sItemQuantityNo);
+		ItemMng.itemInit(sItemQuantityNo,sFieldSizeMagnification);
 
 
 		surfaceHolder = getHolder();
@@ -86,6 +89,7 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		String player_number = extras.getString(INTENT_PLAYER_NUMBER);
 		String player_speed = extras.getString(INTENT_PLAYER_SPEED);
 		String item_quantity = extras.getString(INTENT_ITEM_QUANTITY);
+		String field_size = extras.getString(INTENT_FIELD_SIZE);
 
 		if( battle_time.equals(getResources().getString(R.string.time_1)) ){
 			sBattleTimeNo = 0;
@@ -152,6 +156,25 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		else{
 			sItemQuantityNo = 2;
 		}
+
+		if( field_size.equals(getResources().getString(R.string.size_1)) ){
+			sFieldSizeMagnification = 0.5f;
+		}
+		else if( field_size.equals(getResources().getString(R.string.size_2)) ){
+			sFieldSizeMagnification = 0.8f;
+		}
+		else if( field_size.equals(getResources().getString(R.string.size_3)) ){
+			sFieldSizeMagnification = 1.0f;
+		}
+		else if( field_size.equals(getResources().getString(R.string.size_4)) ){
+			sFieldSizeMagnification = 1.2f;
+		}
+		else if( field_size.equals(getResources().getString(R.string.size_5)) ){
+			sFieldSizeMagnification = 1.5f;
+		}
+		else{
+			sFieldSizeMagnification = 1.0f;
+		}
 	}
 
 	@Override
@@ -175,6 +198,7 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 				TimeMng.fpsStart();
 
 				canvas = surfaceHolder.lockCanvas();
+//				Log.w( "DEBUG_DATA", "lockCanvas" );
 
 				canvas.drawRect( 0, 0, screen_width, screen_height, bgPaint);
 
@@ -215,16 +239,20 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 				// 描画
 				surfaceHolder.unlockCanvasAndPost(canvas);
+
+//				Log.w( "DEBUG_DATA", "unlockCanvasAndPost" );
 				// fps
 				TimeMng.fpsEnd();
 
-/*
-				Log.w( "DEBUG_DATA check", "end");
+
+//				Log.w( "DEBUG_DATA check", "end");
+
 				try {
-					Thread.sleep(3000);
+					Thread.sleep(1);
 				} catch (InterruptedException e) {
 				}
-*/
+
+
 
 			} catch(Exception e){}
 		}
@@ -353,6 +381,8 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 	// 破棄時に呼び出される
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
+
+		Log.w( "DEBUG_DATA", "surfaceDestroyed" );
 		endThread();
 	}
 
@@ -361,7 +391,7 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 		// スレッド停止まで0.1秒待つ
 		try {
-			Thread.sleep(100);
+			Thread.sleep(300);
 		} catch (InterruptedException e) {
 		}
 	}

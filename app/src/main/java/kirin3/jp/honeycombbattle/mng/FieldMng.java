@@ -18,6 +18,9 @@ import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 
 public class FieldMng {
 
+	// 長さ倍率
+	static float sSizeMagnification;
+
 	// 六角形の半径の長さ
 	static float HEX_LENGTH_DP = 12.0f;
 	static float HEX_LENGTH_PX;
@@ -84,13 +87,15 @@ public class FieldMng {
 
 
 
-	public static void fieldInit(Context context){
+	public static void fieldInit(Context context,float sizeMagnification){
+
+		sSizeMagnification = sizeMagnification;
 
 		// dp→px変換
-		HEX_LENGTH_PX = dpToPx(HEX_LENGTH_DP,context.getResources());
-		HEX_WIDHT_PX = dpToPx(HEX_WIDHT_DP,context.getResources());
-		TOWER_RADIUS_PX = dpToPx(TOWER_RADIUS_DP,context.getResources());
-		TOWER_WIDHT_PX = dpToPx(TOWER_WIDHT_DP,context.getResources());
+		HEX_LENGTH_PX = dpToPx(HEX_LENGTH_DP,context.getResources()) * sSizeMagnification;
+		HEX_WIDHT_PX = dpToPx(HEX_WIDHT_DP,context.getResources()) * sSizeMagnification;
+		TOWER_RADIUS_PX = dpToPx(TOWER_RADIUS_DP,context.getResources()) * sSizeMagnification;
+		TOWER_WIDHT_PX = dpToPx(TOWER_WIDHT_DP,context.getResources()) * sSizeMagnification;
 
 //		//六角形1 19 20
 		hex_color_num = new int[][]{

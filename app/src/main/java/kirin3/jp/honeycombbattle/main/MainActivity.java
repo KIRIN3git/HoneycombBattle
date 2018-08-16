@@ -17,6 +17,7 @@ import java.lang.reflect.Method;
 import kirin3.jp.honeycombbattle.R;
 import kirin3.jp.honeycombbattle.game.GameActivity;
 import kirin3.jp.honeycombbattle.game.GameSurfaceView;
+import kirin3.jp.honeycombbattle.util.ViewUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,12 +25,13 @@ public class MainActivity extends AppCompatActivity {
     static RadioGroup sRadioGroupPlayerNumber;
     static RadioGroup sRadioGroupPlayerSpeed;
     static RadioGroup sRadioGroupItemQuantity;
+    static RadioGroup sRadioGroupFieldSize;
 
     static RadioButton sRadioIButtonBattleTime;
     static RadioButton sRadioIButtonPlayerNumber;
     static RadioButton sRadioIButtonPlayerSpeed;
     static RadioButton sRadioIButtonItemQuantity;
-
+    static RadioButton sRadioButtonFieldSize;
 
 
     @Override
@@ -41,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         sRadioGroupPlayerNumber = (RadioGroup) findViewById(R.id.RadioGroupPlayerNumber);
         sRadioGroupPlayerSpeed = (RadioGroup) findViewById(R.id.RadioGroupPlayerSpeed);
         sRadioGroupItemQuantity = (RadioGroup) findViewById(R.id.RadioGroupItemQuantity);
-
+        sRadioGroupFieldSize = (RadioGroup) findViewById(R.id.RadioGroupFieldSize);
 
         sRadioGroupItemQuantity.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             // ラジオグループのチェック状態が変更された時に呼び出されます
@@ -50,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
                 RadioButton radioButton = (RadioButton) findViewById(checkedId);
             }
         });
+
+        Log.w( "DEBUG_DATA", "getXDpi " + ViewUtils.getXDpi(getApplicationContext().getResources()) );
+        Log.w( "DEBUG_DATA", "getDisplayMagnification " + ViewUtils.getDisplayMagnification(getApplicationContext().getResources()) );
 
         Button btn = (Button)findViewById(R.id.game_start);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
                 sRadioIButtonPlayerNumber = (RadioButton) findViewById(sRadioGroupPlayerNumber.getCheckedRadioButtonId());
                 sRadioIButtonPlayerSpeed = (RadioButton) findViewById(sRadioGroupPlayerSpeed.getCheckedRadioButtonId());
                 sRadioIButtonItemQuantity = (RadioButton) findViewById(sRadioGroupItemQuantity.getCheckedRadioButtonId());
+                sRadioButtonFieldSize = (RadioButton) findViewById(sRadioGroupFieldSize.getCheckedRadioButtonId());
+
 
                 // インテントのインスタンス生成
                 Intent intent = new Intent(MainActivity.this, GameActivity.class);
@@ -67,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(GameSurfaceView.INTENT_PLAYER_NUMBER,sRadioIButtonPlayerNumber.getText());
                 intent.putExtra(GameSurfaceView.INTENT_PLAYER_SPEED,sRadioIButtonPlayerSpeed.getText());
                 intent.putExtra(GameSurfaceView.INTENT_ITEM_QUANTITY,sRadioIButtonItemQuantity.getText());
+                intent.putExtra(GameSurfaceView.INTENT_FIELD_SIZE,sRadioButtonFieldSize.getText());
                 // ゲーム画面の起動
                 startActivity(intent);
 

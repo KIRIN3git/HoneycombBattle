@@ -32,6 +32,50 @@ public class ViewUtils {
         return resources.getDisplayMetrics().density;
     }
 
+    /*
+     * 画像密度倍率を取得
+     */
+    public static float getDisplayMagnification(Resources resources){
+        float dpi = getDensityDpi(resources);
+        if(dpi <= 120 ) return 0.75f;
+        else if(dpi <= 160 ) return 1.0f;
+        else if(dpi <= 240 ) return 1.5f;
+        else if(dpi <= 320 ) return 2.0f;
+        else if(dpi <= 480 ) return 3.0f;
+        else if(dpi <= 640 ) return 4.0f;
+        else return 4.0f;
+    }
+
+
+    /*
+     * densityDpi(スクリーン密度取得)
+     */
+    public static float getDensityDpi(Resources resources){
+        return resources.getDisplayMetrics().densityDpi;
+    }
+
+    /*
+     * 画像の横幅倍率を取得(100を基準)
+     */
+    public static float getXDisplayMagnification(Resources resources){
+        return getYDpi(resources) / 100;
+    }
+
+    /*
+     * xdpi
+     */
+    public static float getXDpi(Resources resources){
+        return resources.getDisplayMetrics().xdpi;
+    }
+
+    /*
+     * ydpi
+     */
+    public static float getYDpi(Resources resources){
+        return resources.getDisplayMetrics().ydpi;
+    }
+
+
     // テキストビューの反転表示
     // 後々canvasサイズはこちらで保持？
     public static void mirrorDrowText(Canvas canvas, Paint paint, float x, float y, String text){

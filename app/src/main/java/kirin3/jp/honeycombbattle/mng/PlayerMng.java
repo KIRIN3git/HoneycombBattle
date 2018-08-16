@@ -25,6 +25,9 @@ import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 
 public class PlayerMng {
 
+	// 長さ倍率
+	static float sSizeMagnification;
+
 	// プレイヤー人数
     public static int sPlayerNumberCandidate[] = {2,3,4};
     public static int sPlayerNumber;
@@ -88,11 +91,13 @@ public class PlayerMng {
 	// プライヤーデータ
 	public static ArrayList<PlayerStatus> players = new ArrayList<PlayerStatus>();
 
-	public static void playerInit(Context context,int numberNo,int speedNo){
+	public static void playerInit(Context context,int numberNo,int speedNo,float sizeMagnification){
 
-		PLAYER_RADIUS_PX = dpToPx(PLAYER_RADIUS_DP,context.getResources());
-		DIRECTION_RADIUS_PX = dpToPx(DIRECTION_RADIUS_DP,context.getResources());
-		DIRECTION_WIDHT_PX = dpToPx(DIRECTION_WIDHT_DP,context.getResources());
+		sSizeMagnification = sizeMagnification;
+
+		PLAYER_RADIUS_PX = dpToPx(PLAYER_RADIUS_DP,context.getResources()) * sSizeMagnification;
+		DIRECTION_RADIUS_PX = dpToPx(DIRECTION_RADIUS_DP,context.getResources()) * sSizeMagnification;
+		DIRECTION_WIDHT_PX = dpToPx(DIRECTION_WIDHT_DP,context.getResources()) * sSizeMagnification;
 
 		sPlayerSpeed = sPlayerSpeedCandidate[speedNo];
 		sPlayerNumber = sPlayerNumberCandidate[numberNo];;
@@ -100,7 +105,7 @@ public class PlayerMng {
 		PlayerStatus player;
 		players.clear();
 		for(int i = 0; i < sPlayerNumber; i++ ){
-			player = new PlayerStatus( i+1, (int)dpToPx(sPlayerDpXY[i][0],context.getResources()),(int)dpToPx(sPlayerDpXY[i][1],context.getResources()), PLAYER_COLOR[i],LIFE_NUMBER );
+			player = new PlayerStatus( i+1, (int)(dpToPx(sPlayerDpXY[i][0],context.getResources()) * sSizeMagnification),(int)(dpToPx(sPlayerDpXY[i][1],context.getResources()) * sSizeMagnification), PLAYER_COLOR[i],LIFE_NUMBER );
 			players.add(player);
 		}
 	}
@@ -324,9 +329,9 @@ public class PlayerMng {
 			sa_x = 0;
 			for (int j = 0; j < PlayerMng.players.get(i).lifeNum - 1; j++) {
 				// (x1,y1,r,paint) 中心x1座標, 中心y1座標, r半径
-				canvas.drawCircle(center_x - dpToPx(PlayerMng.sLifeDpXY[i][0], context.getResources())  - sa_x, center_y - dpToPx(PlayerMng.sLifeDpXY[i][1], context.getResources()), PLAYER_RADIUS_PX, paint);
-				if( i == 0 || i== 1 ) sa_x -= ( ( PLAYER_RADIUS_PX * 2 ) + dpToPx(3, context.getResources()) );
-				else sa_x += ( ( PLAYER_RADIUS_PX * 2 ) + dpToPx(3, context.getResources()) );
+				canvas.drawCircle(center_x - dpToPx(PlayerMng.sLifeDpXY[i][0], context.getResources()) * sSizeMagnification  - sa_x, center_y - dpToPx(PlayerMng.sLifeDpXY[i][1], context.getResources()) * sSizeMagnification, PLAYER_RADIUS_PX, paint);
+				if( i == 0 || i== 1 ) sa_x -= ( ( PLAYER_RADIUS_PX * 2 ) + dpToPx(3, context.getResources()) * sSizeMagnification );
+				else sa_x += ( ( PLAYER_RADIUS_PX * 2 ) + dpToPx(3, context.getResources()) * sSizeMagnification );
 			}
 		}
 	}

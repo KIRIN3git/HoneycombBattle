@@ -21,6 +21,9 @@ import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 
 public class ItemMng {
 
+    // 長さ倍率
+    static float sSizeMagnification;
+
     // アイテムの半径
     static float ITEM_RADIUS_DP = 14.0f;
     static float ITEM_RADIUS_PX;
@@ -72,7 +75,10 @@ public class ItemMng {
     // 無敵時間（ミリ秒）
     final static int UNRIVALE_TIME = 5 * 1000;
 
-    public static void itemInit(int quantityNo){
+    public static void itemInit(int quantityNo,float sizeMagnification){
+
+        sSizeMagnification = sizeMagnification;
+
         sItemQuantity = sQuantityCandidate[quantityNo];
     }
 
@@ -132,8 +138,8 @@ public class ItemMng {
         max_x = canvas.getWidth();
         max_y = canvas.getHeight();
 
-        ITEM_RADIUS_PX = dpToPx(ITEM_RADIUS_DP,context.getResources());
-        ITEM_TEXT_PX = dpToPx(ITEM_TEXT_DP,context.getResources());
+        ITEM_RADIUS_PX = dpToPx(ITEM_RADIUS_DP,context.getResources()) * sSizeMagnification;
+        ITEM_TEXT_PX = dpToPx(ITEM_TEXT_DP,context.getResources()) * sSizeMagnification;
         paint.reset();
 
         for(int i = 0; i < sItemNum; i++ ) {

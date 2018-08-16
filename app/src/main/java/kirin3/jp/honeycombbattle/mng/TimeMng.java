@@ -4,9 +4,12 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
+
 import java.util.Locale;
 
 import kirin3.jp.honeycombbattle.Config;
+import kirin3.jp.honeycombbattle.util.LogUtils;
 
 import static kirin3.jp.honeycombbattle.util.TimeUtils.getCurrentTime;
 import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
@@ -52,11 +55,17 @@ public class TimeMng {
 	public static final int SITUATION_GAMEOVER = 3;
 	public static int sSituation = SITUATION_NOTHING;
 
+	public static int coutnta = 0;
+	public static int alla = 0;
+
+
 	// FPS
 	static long sFps = Config.FPS;
 	static long sRunStartTime = 0, sRunEndTime = 0;
 
 	public static void timeInit(Context context,int timeNo){
+
+		String cname = LogUtils.makeLogTag(TimeMng.class);
 
 		sBattleTime = sBattleTimeCandidate[timeNo] * 1000;
 
@@ -164,8 +173,13 @@ public class TimeMng {
 
 	// 処理が速い場合は若干のスリープ
 	public static void fpsEnd(){
+
+
+
 		sRunEndTime = System.currentTimeMillis();
-//                Log.w( "sFps", String.valueOf( 1000 / (sRunEndTime - sRunStartTime) ) );
+
+//		Log.w( "DEBUG_DATA", "time[" + (sRunEndTime - sRunStartTime)  + "]" );
+
 		if(sRunEndTime - sRunStartTime < getsFpsMsec()){ // 1000 / 60 = 16.6666
 			try {
 				Thread.sleep(getsFpsMsec() - (sRunEndTime - sRunStartTime));
