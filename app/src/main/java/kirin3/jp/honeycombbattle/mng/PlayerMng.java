@@ -46,7 +46,7 @@ public class PlayerMng {
 
 	//    static int sPlayerDpXY[][];
 	// プレイヤーカラー
-	static int PLAYER_COLOR[][] = {
+	public static int PLAYER_COLOR[][] = {
             {255,127,127},
 			{127,127,255},
 			{50,205,50},
@@ -424,5 +424,17 @@ public class PlayerMng {
 				}
 			}
 		}
+	}
+
+	// 生存者数を取得
+	public static int getLifeUserNum(){
+		int num = 0;
+
+		for (int i = 0; i < sPlayerNumber; i++) {
+			if( PlayerMng.players.get(i).lifeNum != 0 ){
+				num++;
+			}
+		}
+		return num;
 	}
 }

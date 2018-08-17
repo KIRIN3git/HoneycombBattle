@@ -9,4 +9,7 @@
     <color name="orange">#f76f49</color>
     <color name="purple">#3104B4</color>
     <color name="light_purple">#9F81F7</color>
+    <color name="gold">#DAA520</color>
+    <color name="silver">#C0C0C0</color>
+    <color name="bronze">#C47222</color>
 </resources>
