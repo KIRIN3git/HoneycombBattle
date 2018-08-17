@@ -54,7 +54,7 @@ public class ItemMng {
             {255,0,0},
             {0,255,0},
             {140,140,200},
-            {255,0,255},
+            {255,255,100},
             {255,0,255}};
 
     // ステータス
@@ -62,7 +62,7 @@ public class ItemMng {
     final static public int STATUS_USED = 1;
 
     // アイテム出現量
-    static int sQuantityCandidate[] = {200,150,100,80,60};
+    static int sQuantityCandidate[] = {200,150,100,80,20};
     static int sItemQuantity;
 
 

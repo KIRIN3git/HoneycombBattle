@@ -150,12 +150,6 @@ public class TimeMng {
 		}
 		else{
 //			canvas.drawText("STOP", 0, canvas.getHeight(), paint);
-			printText = "試合終了";
-			// Canvas 中心点
-			printX = canvas.getWidth() / 2;
-			printY = canvas.getHeight() * 3 / 4;
-			mirrorDrowText(canvas,paint,printX,printY,printText);
-
 			// 試合終了
 			sSituation = SITUATION_GAMEOVER;
 		}

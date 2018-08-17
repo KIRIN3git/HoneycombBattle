@@ -19,6 +19,9 @@ import kirin3.jp.honeycombbattle.mng.ItemMng;
 import kirin3.jp.honeycombbattle.mng.PlayerMng;
 import kirin3.jp.honeycombbattle.mng.TimeMng;
 import kirin3.jp.honeycombbattle.result.ResultActivity;
+import kirin3.jp.honeycombbattle.util.ViewUtils;
+
+import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 
 /**
  * Created by shinji on 2017/04/06.
@@ -58,12 +61,19 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 	public static final String INTENT_ITEM_QUANTITY = "INTENT_ITEM_QUANTITY";
 	public static final String INTENT_FIELD_SIZE = "INTENT_FIELD_SIZE";
 
+    // リミットテキストサイズ
+    static float GAMEOVER_TEXT_SIZE_DP = 40.0f;
+    static float GAMEOVER_TEXT_SIZE_PX;
+
 	public GameSurfaceView(Context context){
 		super(context);
 
 		mContext = context;
 
 		setIntentData();
+
+        GAMEOVER_TEXT_SIZE_PX = dpToPx(GAMEOVER_TEXT_SIZE_DP,context.getResources());
+
 
 		// 時間情報の初期化
 		TimeMng.timeInit(context,sBattleTimeNo);
@@ -234,7 +244,8 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 					TimeMng.drawLimitTime(mContext,paint, canvas);
 				}
 				else if( TimeMng.getSituation() == TimeMng.SITUATION_GAMEOVER ){
-					processGameOver(canvas,winnerNo);
+
+					processGameOver(paint, canvas,winnerNo);
 				}
 
 				// 描画
@@ -396,13 +407,27 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		}
 	}
 
-	public void processGameOver(Canvas canvas,int winner_no){
+	public void processGameOver(Paint paint,Canvas canvas,int winner_no){
 
-		TimeMng.sleepGameOver();
+		String printText;
+		float printX,printY;
+
+        paint.reset();
+        paint.setTextSize(GAMEOVER_TEXT_SIZE_PX);
+        paint.setColor(Color.RED);
+
+		printText = "試合終了";
+		// Canvas 中心点
+		printX = canvas.getWidth() / 2;
+		printY = canvas.getHeight() * 3 / 4;
+		ViewUtils.mirrorDrowText(canvas,paint,printX,printY,printText);
+
 
 		// 描画
 		surfaceHolder.unlockCanvasAndPost(canvas);
 		thread = null; // スレッド停止要請
+
+		TimeMng.sleepGameOver();
 
 		Log.w( "DEBUG_DATA", "winner_no " + winner_no );
 

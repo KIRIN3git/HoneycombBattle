@@ -26,6 +26,13 @@
             android:layout_weight="1"
             android:orientation="vertical"
             android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/imgRank1"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"/>
+
             <TextView
                 android:gravity="center"
                 android:id="@+id/textPlayerColor1"
@@ -33,33 +40,23 @@
                 android:layout_height="wrap_content"
                 android:textSize="40sp"
                 android:text="●" />
+
+            <!--
             <TextView
                 android:gravity="center"
+                android:textSize="30sp"
                 android:id="@+id/textPlayerName1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="プレイヤー１" />
+                android:text="１P" />
+            -->
 
             <TextView
                 android:gravity="center"
-                android:height="40dp"
-                android:id="@+id/textPlayerRank1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:gravity="center"
+                android:textSize="30sp"
                 android:id="@+id/textPlayerScore1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-
-
-            <TextView
-                android:gravity="center"
-                android:id="@+id/textPlayerLife1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
 
         </LinearLayout>
 
@@ -70,6 +67,13 @@
             android:layout_weight="1"
             android:orientation="vertical"
             android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/imgRank2"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"/>
+
             <TextView
                 android:gravity="center"
                 android:id="@+id/textPlayerColor2"
@@ -77,32 +81,15 @@
                 android:layout_height="wrap_content"
                 android:textSize="40sp"
                 android:text="●" />
-            <TextView
-                android:gravity="center"
-                android:id="@+id/textPlayerName2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="プレイヤー２" />
 
-            <TextView
-                android:gravity="center"
-                android:id="@+id/textPlayerRank2"
-                android:height="40dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
 
             <TextView
                 android:gravity="center"
                 android:id="@+id/textPlayerScore2"
+                android:textSize="30sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-
-            <TextView
-                android:gravity="center"
-                android:id="@+id/textPlayerLife2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
 
         </LinearLayout>
 
@@ -114,6 +101,13 @@
             android:visibility="gone"
             android:orientation="vertical"
             android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/imgRank3"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"/>
+
             <TextView
                 android:gravity="center"
                 android:id="@+id/textPlayerColor3"
@@ -121,31 +115,11 @@
                 android:layout_height="wrap_content"
                 android:textSize="40sp"
                 android:text="●" />
-            <TextView
-                android:gravity="center"
-                android:id="@+id/textPlayerName3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="プレイヤー３" />
-
-            <TextView
-                android:gravity="center"
-                android:height="40dp"
-                android:id="@+id/textPlayerRank3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
 
             <TextView
                 android:gravity="center"
                 android:id="@+id/textPlayerScore3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-
-            <TextView
-                android:gravity="center"
-                android:id="@+id/textPlayerLife3"
+                android:textSize="30sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -159,6 +133,14 @@
             android:visibility="gone"
             android:orientation="vertical"
             android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/imgRank4"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"/>
+
+
             <TextView
                 android:gravity="center"
                 android:id="@+id/textPlayerColor4"
@@ -166,29 +148,11 @@
                 android:layout_height="wrap_content"
                 android:textSize="40sp"
                 android:text="●" />
-            <TextView
-                android:gravity="center"
-                android:id="@+id/textPlayerName4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="プレイヤー４" />
-
-            <TextView
-                android:gravity="center"
-                android:height="40dp"
-                android:id="@+id/textPlayerRank4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
 
             <TextView
                 android:gravity="center"
                 android:id="@+id/textPlayerScore4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:gravity="center"
-                android:id="@+id/textPlayerLife4"
+                android:textSize="30sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
