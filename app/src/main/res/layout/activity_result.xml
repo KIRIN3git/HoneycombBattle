@@ -42,6 +42,7 @@
 
             <TextView
                 android:gravity="center"
+                android:height="40dp"
                 android:id="@+id/textPlayerRank1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -52,11 +53,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+
             <TextView
                 android:gravity="center"
                 android:id="@+id/textPlayerLife1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
 
         </LinearLayout>
 
@@ -84,12 +87,20 @@
             <TextView
                 android:gravity="center"
                 android:id="@+id/textPlayerRank2"
+                android:height="40dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
             <TextView
                 android:gravity="center"
                 android:id="@+id/textPlayerScore2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+            <TextView
+                android:gravity="center"
+                android:id="@+id/textPlayerLife2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -119,6 +130,7 @@
 
             <TextView
                 android:gravity="center"
+                android:height="40dp"
                 android:id="@+id/textPlayerRank3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -127,6 +139,13 @@
             <TextView
                 android:gravity="center"
                 android:id="@+id/textPlayerScore3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+            <TextView
+                android:gravity="center"
+                android:id="@+id/textPlayerLife3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -156,6 +175,7 @@
 
             <TextView
                 android:gravity="center"
+                android:height="40dp"
                 android:id="@+id/textPlayerRank4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -163,6 +183,12 @@
             <TextView
                 android:gravity="center"
                 android:id="@+id/textPlayerScore4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:gravity="center"
+                android:id="@+id/textPlayerLife4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
