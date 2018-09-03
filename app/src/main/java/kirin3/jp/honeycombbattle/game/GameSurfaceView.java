@@ -263,8 +263,6 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 				} catch (InterruptedException e) {
 				}
 
-
-
 			} catch(Exception e){}
 		}
 	}
