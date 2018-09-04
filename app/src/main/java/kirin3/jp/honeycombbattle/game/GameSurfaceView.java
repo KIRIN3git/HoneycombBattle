@@ -52,7 +52,6 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 	public static int sItemQuantityNo;
 	public static float sFieldSizeMagnification;
 
-
 	public static int winnerNo = -1;
 
 	public static final String INTENT_BATTLE_TIME = "INTENT_BATTLE_TIME";
@@ -242,6 +241,8 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 					PlayerMng.drawIndicator(paint, canvas);
 					// リミット時間の表示
 					TimeMng.drawLimitTime(mContext,paint, canvas);
+					// FPSの表示
+					TimeMng.drawFps(mContext,paint, canvas);
 				}
 				else if( TimeMng.getSituation() == TimeMng.SITUATION_GAMEOVER ){
 
@@ -254,9 +255,6 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 //				Log.w( "DEBUG_DATA", "unlockCanvasAndPost" );
 				// fps
 				TimeMng.fpsEnd();
-
-
-//				Log.w( "DEBUG_DATA check", "end");
 
 				try {
 					Thread.sleep(1);
