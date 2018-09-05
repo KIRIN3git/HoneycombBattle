@@ -33,7 +33,7 @@ public class PlayerMng {
     public static int sPlayerNumber;
 
     // スピード
-    static int sPlayerSpeedCandidate[] = {30,16,12,8,4};
+    static int sPlayerSpeedCandidate[] = {28,22,16,10,4};
     static int sPlayerSpeed;
 
 
