@@ -19,6 +19,9 @@ import kirin3.jp.honeycombbattle.mng.ItemMng;
 import kirin3.jp.honeycombbattle.mng.PlayerMng;
 import kirin3.jp.honeycombbattle.mng.TimeMng;
 import kirin3.jp.honeycombbattle.result.ResultActivity;
+import kirin3.jp.honeycombbattle.util.ViewUtils;
+
+import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 
 /**
  * Created by shinji on 2017/04/06.
@@ -47,6 +50,7 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 	public static int sPlayerNumberNo;
 	public static int sPlayerSpeedNo;
 	public static int sItemQuantityNo;
+	public static float sFieldSizeMagnification;
 
 	public static int winnerNo = -1;
 
@@ -54,6 +58,11 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 	public static final String INTENT_PLAYER_SPEED = "INTENT_PLAYER_SPEED";
 	public static final String INTENT_PLAYER_NUMBER = "INTENT_PLAYER_NUMBER";
 	public static final String INTENT_ITEM_QUANTITY = "INTENT_ITEM_QUANTITY";
+	public static final String INTENT_FIELD_SIZE = "INTENT_FIELD_SIZE";
+
+    // リミットテキストサイズ
+    static float GAMEOVER_TEXT_SIZE_DP = 40.0f;
+    static float GAMEOVER_TEXT_SIZE_PX;
 
 	public GameSurfaceView(Context context){
 		super(context);
@@ -62,14 +71,17 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 		setIntentData();
 
+        GAMEOVER_TEXT_SIZE_PX = dpToPx(GAMEOVER_TEXT_SIZE_DP,context.getResources());
+
+
 		// 時間情報の初期化
 		TimeMng.timeInit(context,sBattleTimeNo);
 		// フィールド情報の初期化
-		FieldMng.fieldInit(context);
+		FieldMng.fieldInit(context,sFieldSizeMagnification);
 		// プレイヤー情報の初期化
-		PlayerMng.playerInit(context,sPlayerNumberNo,sPlayerSpeedNo);
+		PlayerMng.playerInit(context,sPlayerNumberNo,sPlayerSpeedNo,sFieldSizeMagnification);
 		// アイテム情報の初期化
-		ItemMng.itemInit(sItemQuantityNo);
+		ItemMng.itemInit(sItemQuantityNo,sFieldSizeMagnification);
 
 
 		surfaceHolder = getHolder();
@@ -86,6 +98,7 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		String player_number = extras.getString(INTENT_PLAYER_NUMBER);
 		String player_speed = extras.getString(INTENT_PLAYER_SPEED);
 		String item_quantity = extras.getString(INTENT_ITEM_QUANTITY);
+		String field_size = extras.getString(INTENT_FIELD_SIZE);
 
 		if( battle_time.equals(getResources().getString(R.string.time_1)) ){
 			sBattleTimeNo = 0;
@@ -152,6 +165,25 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		else{
 			sItemQuantityNo = 2;
 		}
+
+		if( field_size.equals(getResources().getString(R.string.size_1)) ){
+			sFieldSizeMagnification = 0.5f;
+		}
+		else if( field_size.equals(getResources().getString(R.string.size_2)) ){
+			sFieldSizeMagnification = 0.8f;
+		}
+		else if( field_size.equals(getResources().getString(R.string.size_3)) ){
+			sFieldSizeMagnification = 1.0f;
+		}
+		else if( field_size.equals(getResources().getString(R.string.size_4)) ){
+			sFieldSizeMagnification = 1.2f;
+		}
+		else if( field_size.equals(getResources().getString(R.string.size_5)) ){
+			sFieldSizeMagnification = 1.5f;
+		}
+		else{
+			sFieldSizeMagnification = 1.0f;
+		}
 	}
 
 	@Override
@@ -175,6 +207,7 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 				TimeMng.fpsStart();
 
 				canvas = surfaceHolder.lockCanvas();
+//				Log.w( "DEBUG_DATA", "lockCanvas" );
 
 				canvas.drawRect( 0, 0, screen_width, screen_height, bgPaint);
 
@@ -186,19 +219,14 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 				// アイテムの効果チェック
 				ItemMng.checkItemEffect();
-
 				// プレイヤーの表示
 				PlayerMng.drawPlayer(mContext, paint, canvas);
-
 				// プレイヤーのライフ表示
 				PlayerMng.drawLife(mContext, paint, canvas);
-
 				// アイテムの作成
 				ItemMng.createItem(mContext, canvas);
-
 				// アイテムの表示
 				ItemMng.drawItem(mContext, paint, canvas);
-
 
 				// カウントダウン中
 				if( TimeMng.getSituation() == TimeMng.SITUATION_COUNTDOWN ){
@@ -209,29 +237,29 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 				else if( TimeMng.getSituation() == TimeMng.SITUATION_BATTLE ){
 					// タップ移動比率xyと指示マーカーのxyを取得
 					PlayerMng.getMoveXY();
-
 					// 指示器の表示
 					PlayerMng.drawIndicator(paint, canvas);
-
 					// リミット時間の表示
 					TimeMng.drawLimitTime(mContext,paint, canvas);
+					// FPSの表示
+					TimeMng.drawFps(mContext,paint, canvas);
 				}
 				else if( TimeMng.getSituation() == TimeMng.SITUATION_GAMEOVER ){
-					processGameOver(canvas,winnerNo);
+
+					processGameOver(paint, canvas,winnerNo);
 				}
 
 				// 描画
 				surfaceHolder.unlockCanvasAndPost(canvas);
 
+//				Log.w( "DEBUG_DATA", "unlockCanvasAndPost" );
 				// fps
 				TimeMng.fpsEnd();
-/*
-				Log.w( "DEBUG_DATA check", "end");
+
 				try {
-					Thread.sleep(3000);
+					Thread.sleep(1);
 				} catch (InterruptedException e) {
 				}
-*/
 
 			} catch(Exception e){}
 		}
@@ -360,6 +388,8 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 	// 破棄時に呼び出される
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
+
+		Log.w( "DEBUG_DATA", "surfaceDestroyed" );
 		endThread();
 	}
 
@@ -368,18 +398,32 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 		// スレッド停止まで0.1秒待つ
 		try {
-			Thread.sleep(100);
+			Thread.sleep(300);
 		} catch (InterruptedException e) {
 		}
 	}
 
-	public void processGameOver(Canvas canvas,int winner_no){
+	public void processGameOver(Paint paint,Canvas canvas,int winner_no){
 
-		TimeMng.sleepGameOver();
+		String printText;
+		float printX,printY;
+
+        paint.reset();
+        paint.setTextSize(GAMEOVER_TEXT_SIZE_PX);
+        paint.setColor(Color.RED);
+
+		printText = "試合終了";
+		// Canvas 中心点
+		printX = canvas.getWidth() / 2;
+		printY = canvas.getHeight() * 3 / 4;
+		ViewUtils.mirrorDrowText(canvas,paint,printX,printY,printText);
+
 
 		// 描画
 		surfaceHolder.unlockCanvasAndPost(canvas);
 		thread = null; // スレッド停止要請
+
+		TimeMng.sleepGameOver();
 
 		Log.w( "DEBUG_DATA", "winner_no " + winner_no );
 

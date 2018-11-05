@@ -17,4 +17,9 @@
     <string name="speed_3">普通</string>
     <string name="speed_4">早め</string>
     <string name="speed_5">早い</string>
+    <string name="size_1">小さい</string>
+    <string name="size_2">小さめ</string>
+    <string name="size_3">普通</string>
+    <string name="size_4">大きめ</string>
+    <string name="size_5">大きい</string>
 </resources>

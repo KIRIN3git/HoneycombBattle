@@ -4,9 +4,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+
 import java.util.Locale;
 
 import kirin3.jp.honeycombbattle.Config;
+import kirin3.jp.honeycombbattle.util.LogUtils;
 
 import static kirin3.jp.honeycombbattle.util.TimeUtils.getCurrentTime;
 import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
@@ -52,11 +54,20 @@ public class TimeMng {
 	public static final int SITUATION_GAMEOVER = 3;
 	public static int sSituation = SITUATION_NOTHING;
 
+	public static int coutnta = 0;
+	public static int alla = 0;
+
+
 	// FPS
 	static long sFps = Config.FPS;
 	static long sRunStartTime = 0, sRunEndTime = 0;
+	static long sNowFps = 0;
+
+	static String sCname;
 
 	public static void timeInit(Context context,int timeNo){
+
+		sCname = LogUtils.makeLogTag(TimeMng.class);
 
 		sBattleTime = sBattleTimeCandidate[timeNo] * 1000;
 
@@ -114,11 +125,11 @@ public class TimeMng {
 		}
 	}
 
-	public static long getBattleLimitTImeS(){
+	public static long getBattleLimitTimeS(){
 		return ( ( sBattleTime - (getCurrentTime() - sStartBattleMS) ) / 1000 ) + 1;
 	}
 	public static long getBattleLimitTImeMS(){
-		return ( sBattleTime - (System.currentTimeMillis() - sStartBattleMS) ) - ( getBattleLimitTImeS() * 1000 ) + 1000;
+		return ( sBattleTime - (System.currentTimeMillis() - sStartBattleMS) ) - ( getBattleLimitTimeS() * 1000 ) + 1000;
 	}
 
 
@@ -127,35 +138,46 @@ public class TimeMng {
 		String printText;
 		float printX,printY;
 
-		if( getBattleLimitTImeS() < 0 ) timeOverFlg = true;
+		if( getBattleLimitTimeS() < 0 ) timeOverFlg = true;
 
 		paint.reset();
 		paint.setTextSize(LIMIT_TEXT_SIZE_PX);
 		paint.setColor(Color.RED);
 		if( !timeOverFlg ){
 			// 反転表示
-			printText = String.format(Locale.JAPAN, "%02d", getBattleLimitTImeS());
-			printX = paint.measureText(printText) / 2;
+			printText = String.format(Locale.JAPAN, "%02d", getBattleLimitTimeS());
+			printX = ( canvas.getWidth() / 2 );
 			printY = canvas.getHeight()  + ((paint.descent() + paint.ascent()) / 2);
 			mirrorDrowText(canvas,paint,printX,printY,printText);
 		}
 		else{
 //			canvas.drawText("STOP", 0, canvas.getHeight(), paint);
-			printText = "試合終了";
-			// Canvas 中心点
-			printX = canvas.getWidth() / 2;
-			printY = canvas.getHeight() * 3 / 4;
-			mirrorDrowText(canvas,paint,printX,printY,printText);
-
 			// 試合終了
 			sSituation = SITUATION_GAMEOVER;
 		}
+	}
+
+	public static void drawFps(Context context,Paint paint, Canvas canvas){
+		String printText;
+		float printX,printY;
+
+		paint.reset();
+		paint.setTextSize(LIMIT_TEXT_SIZE_PX);
+		paint.setColor(Color.GREEN);
+		// 反転表示
+		printText = String.format(Locale.JAPAN, "%d", sNowFps);
+		printX = paint.measureText(printText) / 2;
+		printY = canvas.getHeight()  + ((paint.descent() + paint.ascent()) / 2);
+		mirrorDrowText(canvas,paint,printX,printY,printText);
 	}
 
 	public static long getsFpsMsec(){
 		return 1000 / sFps;
 	}
 
+	public static long getsMsecFps(long msec){
+		return 1000 / msec;
+	}
 
 	public static void fpsStart(){
 		// FPSのためにwhileの起動時間保存
@@ -164,9 +186,21 @@ public class TimeMng {
 
 	// 処理が速い場合は若干のスリープ
 	public static void fpsEnd(){
+
 		sRunEndTime = System.currentTimeMillis();
-//                Log.w( "sFps", String.valueOf( 1000 / (sRunEndTime - sRunStartTime) ) );
-		if(sRunEndTime - sRunStartTime < getsFpsMsec()){ // 1000 / 60 = 16.6666
+
+//		Log.w( "DEBUG_DATA", "time[" + (sRunEndTime - sRunStartTime)  + "]" );
+		// 15で高速　40で低速
+		sNowFps =  getsMsecFps(sRunEndTime - sRunStartTime);
+		LogUtils.LOGW(sCname,"FPS[" +sNowFps + "]");
+		LogUtils.LOGW(sCname,"time[" + (sRunEndTime - sRunStartTime)  + "]");
+		LogUtils.LOGW(sCname,"getsFpsMsec()[" + getsFpsMsec()  + "]");
+
+		// FPS制限
+		// 基本引っ掛からない
+		// 60fpsは1000 / 60 = 16.6666
+		// 1フレームに16.7ミリ秒かけられる
+		if(sRunEndTime - sRunStartTime < getsFpsMsec()){
 			try {
 				Thread.sleep(getsFpsMsec() - (sRunEndTime - sRunStartTime));
 			} catch (InterruptedException e) {

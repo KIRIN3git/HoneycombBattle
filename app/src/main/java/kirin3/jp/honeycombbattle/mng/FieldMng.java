@@ -18,6 +18,9 @@ import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 
 public class FieldMng {
 
+	// 長さ倍率
+	static float sSizeMagnification;
+
 	// 六角形の半径の長さ
 	static float HEX_LENGTH_DP = 12.0f;
 	static float HEX_LENGTH_PX;
@@ -48,7 +51,7 @@ public class FieldMng {
 	static int TOWER_COLOR_RGB[] = {129,129,129};
 
 	// タワーの所有者(カラー番号)
-	static int towerCheck[] = {0,0,0,0};
+	static int towerCheck[] = {0,0,0,0,0};
 
 
 	// １桁目
@@ -67,6 +70,8 @@ public class FieldMng {
 	// 六角形の塗りつぶし確認
 	// ２桁の場合は1桁目が奪おうとするNO,１桁目が奪われようとしているNO
 	static int hex_color_num[][];
+	static int hex_tower_num[][];
+	static int hex_effect_num[][];
 
 	static int HEX_COLOR_RGB[][] = {
 			{255,255,255},
@@ -81,16 +86,31 @@ public class FieldMng {
 			{129,129,129}
 	};
 
+	static int HEX_COLOR_RGB2[][] = {
+			{255,255,255},
+			{255,100,255}, //ピンク
+			{0,255,255}, //水色
+			{50,252,50}, //薄緑色
+			{255,255,0}, //薄黄色
+			{255,255,255},
+			{129,129,129},
+			{255,193,255},
+			{129,129,129},
+			{129,129,129}
+	};
 
 
 
-	public static void fieldInit(Context context){
+
+	public static void fieldInit(Context context,float sizeMagnification){
+
+		sSizeMagnification = sizeMagnification;
 
 		// dp→px変換
-		HEX_LENGTH_PX = dpToPx(HEX_LENGTH_DP,context.getResources());
-		HEX_WIDHT_PX = dpToPx(HEX_WIDHT_DP,context.getResources());
-		TOWER_RADIUS_PX = dpToPx(TOWER_RADIUS_DP,context.getResources());
-		TOWER_WIDHT_PX = dpToPx(TOWER_WIDHT_DP,context.getResources());
+		HEX_LENGTH_PX = dpToPx(HEX_LENGTH_DP,context.getResources()) * sSizeMagnification;
+		HEX_WIDHT_PX = dpToPx(HEX_WIDHT_DP,context.getResources()) * sSizeMagnification;
+		TOWER_RADIUS_PX = dpToPx(TOWER_RADIUS_DP,context.getResources()) * sSizeMagnification;
+		TOWER_WIDHT_PX = dpToPx(TOWER_WIDHT_DP,context.getResources()) * sSizeMagnification;
 
 //		//六角形1 19 20
 		hex_color_num = new int[][]{
@@ -98,7 +118,6 @@ public class FieldMng {
 				{8,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
-				{8,0,0,0,10,0,0,0,0,0,0,0,0,0,40,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
@@ -109,13 +128,60 @@ public class FieldMng {
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
-				{8,0,0,0,20,0,0,0,0,0,0,0,0,0,30,0,0,0,8},
+				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
+				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
 				{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8},
 				{9,8,8,0,8,0,8,0,8,0,8,0,8,0,8,0,8,8,9},
 				{9,9,9,8,9,8,9,8,9,8,9,8,9,8,9,8,9,9,9}
 		};
 
+		// タワー追加時はtowerCheckも変更
+		hex_tower_num = new int[][]{
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+		};
+
+		hex_effect_num = new int[][]{
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+		};
 	}
 
 	public static void drawHex(Paint paint, Canvas canvas){
@@ -151,39 +217,49 @@ public class FieldMng {
 
 						// 初期エリア色塗り
 						if( PlayerMng.players.get(i).erea_flg == false ){
-							ItemMng.setAtackColoer(i,col,row,0,1);
+							ItemMng.setAtackColoer(i,col,row,0,1,false);
 						}
 
 						// 壁にぶつかったら
-						if( hex_color_num[col][row] % 10 == WALL_NO ){
-
+						if( hex_color_num[col][row]  == WALL_NO ){
 							PlayerMng.deadPlayer(i);
-
 						}
+
 						// ステータスノーマルで、自分の領域でなかったら
-						else if( PlayerMng.players.get(i).status == PlayerMng.STATUS_NORMAL && hex_color_num[col][row] % 10 != PlayerMng.players.get(i).no ){
+						else if( PlayerMng.players.get(i).status == PlayerMng.STATUS_NORMAL && hex_color_num[col][row] != PlayerMng.players.get(i).no ){
 
 						    // スコアの増減
-                            if( ((hex_color_num[col][row] % 10) - 1) >= 1 && ((hex_color_num[col][row] % 10) - 1) <= 4 ){
-                            	PlayerMng.players.get((hex_color_num[col][row] % 10) - 1).score--;
+                            if( ((hex_color_num[col][row] ) - 1) >= 1 && ((hex_color_num[col][row] ) - 1) <= 4 ){
+                            	PlayerMng.players.get((hex_color_num[col][row] ) - 1).score--;
 	                          }
                             PlayerMng.players.get(i).score++;
 							// 色を記録
 							// ２桁目は永続で保存
-							hex_color_num[col][row]  = changeIntADigit( hex_color_num[col][row], PlayerMng.players.get(i).no);
+							hex_color_num[col][row] = PlayerMng.players.get(i).no;
 						}
 					}
 				}
 
 				// 表示なし
-				if( hex_color_num[col][row] % 10 == DALETE_NO ) continue;
+				if( hex_color_num[col][row] == DALETE_NO ) continue;
 
 				// ○六角形の描画
 				// 色
 
-				paint.setStrokeWidth(HEX_WIDHT_PX);
+				// エフェクトを表示
+				if( hex_effect_num[col][row] >= 1 ) {
+					paint.setStrokeWidth(HEX_WIDHT_PX / 5);
+					paint.setColor(Color.argb(255, HEX_COLOR_RGB2[hex_color_num[col][row]][0], HEX_COLOR_RGB2[hex_color_num[col][row]][1], HEX_COLOR_RGB2[hex_color_num[col][row]][2]));
+					hex_effect_num[col][row]++;
+					if( hex_effect_num[col][row] == 30 ) hex_effect_num[col][row] = 0;
+				}
+				else{
+					paint.setStrokeWidth(HEX_WIDHT_PX);
+					paint.setColor(Color.argb(255, HEX_COLOR_RGB[hex_color_num[col][row]][0], HEX_COLOR_RGB[hex_color_num[col][row]][1], HEX_COLOR_RGB[hex_color_num[col][row]][2]));
+
+				}
+
 				paint.setStyle(Paint.Style.FILL_AND_STROKE);
-				paint.setColor(Color.argb(255, HEX_COLOR_RGB[hex_color_num[col][row] % 10][0], HEX_COLOR_RGB[hex_color_num[col][row] % 10][1], HEX_COLOR_RGB[hex_color_num[col][row] % 10][2]));
 
 				path.reset();
 				// 右
@@ -203,51 +279,35 @@ public class FieldMng {
 
 
 				// タワーを表示
-				if( hex_color_num[col][row] / 10 >= 1 ){
+				if( hex_tower_num[col][row] == 1 ){
+
 					paint.setStyle(Paint.Style.STROKE);
 					paint.setColor(Color.argb(255, TOWER_COLOR_RGB[0], TOWER_COLOR_RGB[1], TOWER_COLOR_RGB[2]));
 					paint.setStrokeWidth(TOWER_WIDHT_PX);
 					canvas.drawCircle(center_x + add_x, center_y + add_y, TOWER_RADIUS_PX, paint);
 
 					// タワーの所有者を保存
-					towerCheck[tower_num] = hex_color_num[col][row] % 10;
+					towerCheck[tower_num] = hex_color_num[col][row] ;
 					tower_num++;
 
 					if(towerCheck.length == tower_num){
-
 						for(int i = 0; i < tower_num; i++){
-
 							if( towerCheck[i] == 0 ) break;
 							if(i != 0){
 								if(towerCheck[i] != towerCheck[i-1]) break;
 							}
 							// 全てのタワーを一人が所有したら
 							if( i == tower_num - 1 ){
-								Log.w( "DEBUG_DATA", "CLEARRRRRRRRRRR aaaaaaaaaaaaa " + towerCheck[i] );
 								TimeMng.setSituation(TimeMng.SITUATION_GAMEOVER); // ゲーム終了
 								GameSurfaceView.winnerNo = towerCheck[i] - 1;
 							}
 						}
 					}
-					/*
-					for( int i = 1; i <= PlayerMng.sPlayerNumber; i++ ){
-						if( hex_color_num[col][row] / 10 == i ){
-
-							PlayerMng.players.get(i-1).nowPositionX = (int)center_x + (int)add_x;
-							PlayerMng.players.get(i-1).nowPositionY = (int)center_x + (int)add_y;
-
-							Log.w( "DEBUG_DATA", "PlayerMng.players.get(i-1).nowPositionX " + PlayerMng.players.get(i-1).nowPositionX );
-							Log.w( "DEBUG_DATA", "PlayerMng.players.get(i-1).nowPositionY " + PlayerMng.players.get(i-1).nowPositionY );
-						}
-					}
-					*/
 				}
+
 			}
 		}
 	}
-
-
-
 
 	/*
 	 * １つの目引数の２桁目をキープして、２つ目の引数の値を１桁目に入れ替える
@@ -293,10 +353,10 @@ public class FieldMng {
 //				Log.w( "LOG1", "row[" + row + "] add_y[" + add_y + "]");
 
 				// 表示なし
-				if( hex_color_num[col][row] % 10 == DALETE_NO ) continue;
+				if( hex_color_num[col][row] == DALETE_NO ) continue;
 
 				// 六角形の描画
-				paint.setColor(Color.argb(255, HEX_COLOR_RGB[hex_color_num[col][row] % 10][0], HEX_COLOR_RGB[hex_color_num[col][row] % 10][1], HEX_COLOR_RGB[hex_color_num[col][row] % 10][2]));
+				paint.setColor(Color.argb(255, HEX_COLOR_RGB[hex_color_num[col][row]][0], HEX_COLOR_RGB[hex_color_num[col][row]][1], HEX_COLOR_RGB[hex_color_num[col][row]][2]));
 				path.reset();
 
 				// 右

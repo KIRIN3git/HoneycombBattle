@@ -17,9 +17,13 @@ import static kirin3.jp.honeycombbattle.mng.FieldMng.DALETE_NO;
 import static kirin3.jp.honeycombbattle.mng.FieldMng.WALL_NO;
 import static kirin3.jp.honeycombbattle.mng.FieldMng.changeIntADigit;
 import static kirin3.jp.honeycombbattle.mng.FieldMng.hex_color_num;
+import static kirin3.jp.honeycombbattle.mng.FieldMng.hex_effect_num;
 import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 
 public class ItemMng {
+
+    // 長さ倍率
+    static float sSizeMagnification;
 
     // アイテムの半径
     static float ITEM_RADIUS_DP = 14.0f;
@@ -28,8 +32,7 @@ public class ItemMng {
     static float ITEM_TEXT_DP = 20.0f;
     static float ITEM_TEXT_PX;
 
-    // アイテム数
-    public static int sItemNum = 0;
+
 
 
     // アイテム種類
@@ -51,7 +54,7 @@ public class ItemMng {
             {255,0,0},
             {0,255,0},
             {140,140,200},
-            {255,0,255},
+            {255,255,100},
             {255,0,255}};
 
     // ステータス
@@ -59,12 +62,14 @@ public class ItemMng {
     final static public int STATUS_USED = 1;
 
     // アイテム出現量
-    static int sQuantityCandidate[] = {200,150,100,80,60};
+    static int sQuantityCandidate[] = {200,150,100,80,20};
     static int sItemQuantity;
 
+    // アイテム数
+    public static int sItemNum = 0;
 
     // アイテムデータ
-    public static ArrayList<ItemStatus> items = new ArrayList<ItemStatus>();
+    public static ArrayList<ItemStatus> items;
 
     // スピードアップ時間（ミリ秒）
     final static int SPEEDUP_TIME = 5 * 1000;
@@ -72,7 +77,13 @@ public class ItemMng {
     // 無敵時間（ミリ秒）
     final static int UNRIVALE_TIME = 5 * 1000;
 
-    public static void itemInit(int quantityNo){
+    public static void itemInit(int quantityNo,float sizeMagnification){
+
+        sItemNum = 0;
+        items = new ArrayList<ItemStatus>();
+
+        sSizeMagnification = sizeMagnification;
+
         sItemQuantity = sQuantityCandidate[quantityNo];
     }
 
@@ -93,7 +104,7 @@ public class ItemMng {
             place_random = r.nextInt(4); // 0:左、1:右、2:上、3:下
 
             item_random = r.nextInt(ITEM_BASE_TEXT.length);
-
+            item_random = 0; //☆
             if( place_random == 0 ) {
                 start_x_random = 0;
                 start_y_random = r.nextInt(max_y) + 1;
@@ -132,8 +143,8 @@ public class ItemMng {
         max_x = canvas.getWidth();
         max_y = canvas.getHeight();
 
-        ITEM_RADIUS_PX = dpToPx(ITEM_RADIUS_DP,context.getResources());
-        ITEM_TEXT_PX = dpToPx(ITEM_TEXT_DP,context.getResources());
+        ITEM_RADIUS_PX = dpToPx(ITEM_RADIUS_DP,context.getResources()) * sSizeMagnification;
+        ITEM_TEXT_PX = dpToPx(ITEM_TEXT_DP,context.getResources()) * sSizeMagnification;
         paint.reset();
 
         for(int i = 0; i < sItemNum; i++ ) {
@@ -172,9 +183,9 @@ public class ItemMng {
 
                     ItemMng.items.get(i).status = STATUS_USED;
 
-                    if(ItemMng.items.get(i).type == 0) setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,0,2);
-                    else if(ItemMng.items.get(i).type == 1) setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,1,2);
-                    else if(ItemMng.items.get(i).type == 2) setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,2,2);
+                    if(ItemMng.items.get(i).type == 0) setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,0,4,true);
+                    else if(ItemMng.items.get(i).type == 1) setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,1,0,true);
+                    else if(ItemMng.items.get(i).type == 2) setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,2,0,true);
                     else if(ItemMng.items.get(i).type == 3) setSpeedUp(j);
                     else setUnrivale(j);
 
@@ -187,24 +198,38 @@ public class ItemMng {
         }
     }
 
-    public static void setAtackColoer(int user_id, int col, int row, int mode, int distance ){
+    /*
+     * 攻撃の表示
+     * mode:0 円、mode:1 縦線、mode:2 横線
+     * effect:効果の表示あり、なし
+     */
+    public static void setAtackColoer(int user_id, int col, int row, int mode, int distance,boolean effect ){
         List<List<Integer>> cr;
 
-        if(mode == 0) cr = GetAround(col,row,distance);
-        else if(mode == 1) cr = GetColLine(row);
-        else cr = GetRowLine(col);
+        if(mode == 0) cr = getAround(col,row,distance);
+        else if(mode == 1) cr = getColLine(row);
+        else cr = getRowLine(col);
 
-        hex_color_num[col][row]  = changeIntADigit( hex_color_num[col][row], PlayerMng.players.get(user_id).no);
-        PlayerMng.players.get(user_id).score++;
+        if( hex_color_num[col][row] != PlayerMng.players.get(user_id).no ) {
+            if( hex_color_num[col][row] != 0 ) PlayerMng.players.get((hex_color_num[col][row] ) - 1).score--;
+            hex_color_num[col][row] = PlayerMng.players.get(user_id).no;
+            PlayerMng.players.get(user_id).score++;
+        }
 
         for(int i = 0; i < cr.size(); i++){
             // 壁等は色を塗れない
             if( hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] == WALL_NO || hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] == DALETE_NO) continue;
-            hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] = changeIntADigit( hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)], PlayerMng.players.get(user_id).no);
-            PlayerMng.players.get(user_id).score++;
+            // 自分の色じゃなければ色塗り
+            if( hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] != PlayerMng.players.get(user_id).no ) {
+                if( hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] != 0 ) PlayerMng.players.get((hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] ) - 1).score--;
+                hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] = PlayerMng.players.get(user_id).no;
+                PlayerMng.players.get(user_id).score++;
+            }
+
+            if( effect ) hex_effect_num[cr.get(i).get(0)][cr.get(i).get(1)] = 1;
+
             // 爆破範囲内のキャラは死亡
             for(int j = 0; j < PlayerMng.sPlayerNumber; j++){
-
                 // 自分は平気
                 if( j == user_id ) continue;
                 if( PlayerMng.players.get(j).nowPositionCol == cr.get(i).get(0) && PlayerMng.players.get(j).nowPositionRow == cr.get(i).get(1) ){
@@ -216,9 +241,149 @@ public class ItemMng {
         PlayerMng.players.get(user_id).erea_flg = true;
     }
 
-    public static List<List<Integer>> GetAround(int col, int row, int distance) {
+    public static void addList(List<List<Integer>> list,int col, int row, int col_add,int row_add){
+
+        int c = col + col_add;
+        int r = row + row_add;
+
+
+        if( c < 0 || r < 0 || c > hex_color_num[0].length - 1 || r > hex_color_num.length - 2) return;
+
+        list.add(Arrays.asList(c, r));
+    }
+
+    public static List<List<Integer>> getAround(int col, int row, int distance) {
 
         List<List<Integer>> list = new ArrayList<>();
+
+        list.add(Arrays.asList(col, row));
+
+        addList(list,col,row,-1,0);
+        addList(list,col,row,1,0);
+        addList(list,col,row,0,-1);
+        addList(list,col,row,0,1);
+        if (row % 2 == 0) {
+            addList(list, col, row, 1, -1);
+            addList(list, col, row, 1, 1);
+        } else {
+            addList(list, col, row, -1, -1);
+            addList(list, col, row, -1, 1);
+        }
+
+        if( distance >= 2 ){
+            addList(list,col,row,-2,0);
+            addList(list,col,row,2,0);
+            addList(list,col,row,0,-2);
+            addList(list,col,row,0,2);
+            if (row % 2 == 0) {
+                addList(list, col, row, 2, -1);
+                addList(list, col, row, 2, 1);
+                addList(list, col, row, 1, -2);
+                addList(list, col, row, 1, 2);
+                addList(list, col, row, -1, -1);
+                addList(list, col, row, -1, 1);
+                addList(list, col, row, -1, -2);
+                addList(list, col, row, -1, 2);
+            } else {
+                addList(list, col, row, -2, -1);
+                addList(list, col, row, -2, 1);
+                addList(list, col, row, -1, -2);
+                addList(list, col, row, -1, 2);
+                addList(list, col, row, 1, -1);
+                addList(list, col, row, 1, 1);
+                addList(list, col, row, 1, -2);
+                addList(list, col, row, 1, 2);
+            }
+        }
+
+        if( distance >= 3 ) {
+            addList(list,col,row,-3,0);
+            addList(list,col,row,3,0);
+            addList(list,col,row,0,-3);
+            addList(list,col,row,0,3);
+            if (row % 2 == 0) {
+                addList(list, col, row, 3, -1);
+                addList(list, col, row, 3, 1);
+                addList(list, col, row, 2, -2);
+                addList(list, col, row, 2, 2);
+                addList(list, col, row, 2, -3);
+                addList(list, col, row, 2, 3);
+                addList(list, col, row, 1, -3);
+                addList(list, col, row, 1, 3);
+                addList(list, col, row, -1, -3);
+                addList(list, col, row, -1, 3);
+                addList(list, col, row, -2, -2);
+                addList(list, col, row, -2, 2);
+                addList(list, col, row, -2, -1);
+                addList(list, col, row, -2, 1);
+            } else{
+                addList(list, col, row, -3, -1);
+                addList(list, col, row, -3, 1);
+                addList(list, col, row, -2, -2);
+                addList(list, col, row, -2, 2);
+                addList(list, col, row, -2, -3);
+                addList(list, col, row, -2, 3);
+                addList(list, col, row, -1, -3);
+                addList(list, col, row, -1, 3);
+                addList(list, col, row, 1, -3);
+                addList(list, col, row, 1, 3);
+                addList(list, col, row, 2, -2);
+                addList(list, col, row, 2, 2);
+                addList(list, col, row, 2, -1);
+                addList(list, col, row, 2, 1);
+            }
+        }
+
+        if( distance >= 4 ) {
+            addList(list,col,row,-4,0);
+            addList(list,col,row,4,0);
+            addList(list,col,row,0,-4);
+            addList(list,col,row,0,4);
+            if (row % 2 == 0) {
+                addList(list, col, row, 4, -1);
+                addList(list, col, row, 4, 1);
+                addList(list, col, row, 3, -2);
+                addList(list, col, row, 3, 2);
+                addList(list, col, row, 3, -3);
+                addList(list, col, row, 3, 3);
+                addList(list, col, row, 2, -4);
+                addList(list, col, row, 2, 4);
+                addList(list, col, row, 1, -4);
+                addList(list, col, row, 1, 4);
+                addList(list, col, row, -1, -4);
+                addList(list, col, row, -1, 4);
+                addList(list, col, row, -2, -4);
+                addList(list, col, row, -2, 4);
+                addList(list, col, row, -2, -3);
+                addList(list, col, row, -2, 3);
+                addList(list, col, row, -3, -2);
+                addList(list, col, row, -3, 2);
+                addList(list, col, row, -3, -1);
+                addList(list, col, row, -3, 1);
+            } else {
+                addList(list, col, row, -4, -1);
+                addList(list, col, row, -4, 1);
+                addList(list, col, row, -3, -2);
+                addList(list, col, row, -3, 2);
+                addList(list, col, row, -3, -3);
+                addList(list, col, row, -3, 3);
+                addList(list, col, row, -2, -4);
+                addList(list, col, row, -2, 4);
+                addList(list, col, row, -1, -4);
+                addList(list, col, row, -1, 4);
+                addList(list, col, row, 1, -4);
+                addList(list, col, row, 1, 4);
+                addList(list, col, row, 2, -4);
+                addList(list, col, row, 2, 4);
+                addList(list, col, row, 2, -3);
+                addList(list, col, row, 2, 3);
+                addList(list, col, row, 3, -2);
+                addList(list, col, row, 3, 2);
+                addList(list, col, row, 3, -1);
+                addList(list, col, row, 3, 1);
+            }
+        }
+/*
 
         // 左端でなければ
         if (col >= 1) {
@@ -323,12 +488,12 @@ public class ItemMng {
                 }
             }
         }
-
+*/
 
         return list;
     }
 
-    public static List<List<Integer>> GetColLine(int row) {
+    public static List<List<Integer>> getColLine(int row) {
 
         List<List<Integer>> list = new ArrayList<>();
 
@@ -339,7 +504,7 @@ public class ItemMng {
         return list;
     }
 
-    public static List<List<Integer>> GetRowLine(int col) {
+    public static List<List<Integer>> getRowLine(int col) {
 
         List<List<Integer>> list = new ArrayList<>();
 

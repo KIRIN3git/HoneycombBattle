@@ -8,6 +8,9 @@ import kirin3.jp.honeycombbattle.Config;
 public class LogUtils {
     private static final String LOG_PREFIX = "util_";
 
+    /*
+     * String cname = LogUtils.makeLogTag(TimeMng.class);
+     */
     public static String makeLogTag(Class cls) {
         return makeLogTag(cls.getSimpleName());
     }

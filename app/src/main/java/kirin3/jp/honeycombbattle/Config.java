@@ -6,7 +6,7 @@ public class Config {
     public static final boolean IS_DOGFOOD_BUILD = true;
 
     // ゲームFPS
-    public static final long FPS = 180;
+    public static final long FPS = 60;
 
 
 }
