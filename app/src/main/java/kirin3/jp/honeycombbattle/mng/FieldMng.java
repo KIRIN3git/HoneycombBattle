@@ -38,8 +38,8 @@ public class FieldMng {
 	final static int HEX_NUM_ROW = 19;
 	final static int HEX_NUM_COL = 20;
 
-
-	// 六角形の線の太さ
+	/*
+	// タワーの線の太さ
 	static float TOWER_WIDHT_DP = 2.0f;
 	static float TOWER_WIDHT_PX;
 
@@ -52,7 +52,7 @@ public class FieldMng {
 
 	// タワーの所有者(カラー番号)
 	static int towerCheck[] = {0,0,0,0,0};
-
+	*/
 
 	// １桁目
 	final static int CLCOUNTEAN_NO = 0; // 白
@@ -70,7 +70,7 @@ public class FieldMng {
 	// 六角形の塗りつぶし確認
 	// ２桁の場合は1桁目が奪おうとするNO,１桁目が奪われようとしているNO
 	static int hex_color_num[][];
-	static int hex_tower_num[][];
+	//static int hex_tower_num[][];
 	static int hex_effect_num[][];
 
 	static int HEX_COLOR_RGB[][] = {
@@ -109,8 +109,9 @@ public class FieldMng {
 		// dp→px変換
 		HEX_LENGTH_PX = dpToPx(HEX_LENGTH_DP,context.getResources()) * sSizeMagnification;
 		HEX_WIDHT_PX = dpToPx(HEX_WIDHT_DP,context.getResources()) * sSizeMagnification;
-		TOWER_RADIUS_PX = dpToPx(TOWER_RADIUS_DP,context.getResources()) * sSizeMagnification;
-		TOWER_WIDHT_PX = dpToPx(TOWER_WIDHT_DP,context.getResources()) * sSizeMagnification;
+
+//		TOWER_RADIUS_PX = dpToPx(TOWER_RADIUS_DP,context.getResources()) * sSizeMagnification;
+//		TOWER_WIDHT_PX = dpToPx(TOWER_WIDHT_DP,context.getResources()) * sSizeMagnification;
 
 //		//六角形1 19 20
 		hex_color_num = new int[][]{
@@ -136,6 +137,7 @@ public class FieldMng {
 				{9,9,9,8,9,8,9,8,9,8,9,8,9,8,9,8,9,9,9}
 		};
 
+		/*
 		// タワー追加時はtowerCheckも変更
 		hex_tower_num = new int[][]{
 				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -159,6 +161,7 @@ public class FieldMng {
 				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 		};
+		*/
 
 		hex_effect_num = new int[][]{
 				{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -277,7 +280,7 @@ public class FieldMng {
 				path.close();
 				canvas.drawPath(path, paint);
 
-
+/*
 				// タワーを表示
 				if( hex_tower_num[col][row] == 1 ){
 
@@ -304,7 +307,7 @@ public class FieldMng {
 						}
 					}
 				}
-
+*/
 			}
 		}
 	}

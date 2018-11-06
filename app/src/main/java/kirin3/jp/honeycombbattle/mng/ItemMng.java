@@ -44,7 +44,7 @@ public class ItemMng {
     static String ITEM_BASE_TEXT[] ={"B","L","W","S","U"};
 
     // ブーストアイテムの確率
-    static Integer ITEM_BOOST_PROPORTION = 3;
+    static Integer ITEM_BOOST_PROPORTION = 5;
 
     // アイテムベースカラー
     static int ITEM_BASE_COLOR[][] = {
@@ -108,7 +108,6 @@ public class ItemMng {
 
             item_type_random = r.nextInt(ITEM_BASE_TEXT.length);
 //            item_type_random = 0; //☆
-            item_type_random = 4;
 
             if( r.nextInt(ITEM_BOOST_PROPORTION) == 0 ) item_boost_flg = true;
             else item_boost_flg = false;
