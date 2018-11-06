@@ -15,9 +15,11 @@ import kirin3.jp.honeycombbattle.util.TimeUtils;
 
 import static kirin3.jp.honeycombbattle.mng.FieldMng.DALETE_NO;
 import static kirin3.jp.honeycombbattle.mng.FieldMng.WALL_NO;
-import static kirin3.jp.honeycombbattle.mng.FieldMng.changeIntADigit;
 import static kirin3.jp.honeycombbattle.mng.FieldMng.hex_color_num;
 import static kirin3.jp.honeycombbattle.mng.FieldMng.hex_effect_num;
+import static kirin3.jp.honeycombbattle.mng.PlayerMng.PLAYER_RADIUS_BOOST_PX;
+import static kirin3.jp.honeycombbattle.mng.PlayerMng.PLAYER_RADIUS_DEFO_PX;
+import static kirin3.jp.honeycombbattle.mng.PlayerMng.PLAYER_RADIUS_PX;
 import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 
 public class ItemMng {
@@ -41,12 +43,12 @@ public class ItemMng {
     // アイテムベースTEXT
     static String ITEM_BASE_TEXT[] ={"B","L","W","S","U"};
 
+    // ブーストアイテムの確率
+    static Integer ITEM_BOOST_PROPORTION = 3;
+
     // アイテムベースカラー
     static int ITEM_BASE_COLOR[][] = {
-            {0,0,0},
-            {0,0,0},
-            {0,0,0},
-            {0,0,0},
+            {51,0,255},
             {0,0,0}};
 
     // アイテムテキストカラー
@@ -89,8 +91,9 @@ public class ItemMng {
 
     public static void createItem(Context context,Canvas canvas){
 
+        boolean item_boost_flg;
         int max_x,max_y;
-        int throw_random,place_random,start_x_random,start_y_random,item_random,x_dire_random,y_dire_random;
+        int throw_random,place_random,start_x_random,start_y_random,item_type_random,x_dire_random,y_dire_random;
         ItemStatus item;
 
         Random r = new Random();
@@ -103,8 +106,13 @@ public class ItemMng {
 
             place_random = r.nextInt(4); // 0:左、1:右、2:上、3:下
 
-            item_random = r.nextInt(ITEM_BASE_TEXT.length);
-            item_random = 0; //☆
+            item_type_random = r.nextInt(ITEM_BASE_TEXT.length);
+//            item_type_random = 0; //☆
+            item_type_random = 4;
+
+            if( r.nextInt(ITEM_BOOST_PROPORTION) == 0 ) item_boost_flg = true;
+            else item_boost_flg = false;
+
             if( place_random == 0 ) {
                 start_x_random = 0;
                 start_y_random = r.nextInt(max_y) + 1;
@@ -130,7 +138,7 @@ public class ItemMng {
                 y_dire_random = - ( r.nextInt(5) + 1 );
             }
 
-            item = new ItemStatus( sItemNum,start_x_random,start_y_random,item_random,ITEM_BASE_TEXT[item_random],ITEM_BASE_COLOR[item_random],ITEM_TEXT_COLOR[item_random],x_dire_random,y_dire_random );
+            item = new ItemStatus( sItemNum,start_x_random,start_y_random,item_type_random,ITEM_BASE_TEXT[item_type_random],ITEM_BASE_COLOR[item_boost_flg?1:0],ITEM_TEXT_COLOR[item_type_random],x_dire_random,y_dire_random,item_boost_flg );
             items.add(item);
         }
     }
@@ -179,15 +187,19 @@ public class ItemMng {
 
                 // アイテムに重なっているか判定（三平方の定理）（プレイヤー座標は中心座標を基準にしているので注意）
                 if( Math.pow((ItemMng.items.get(i).nowPositionX - ( (max_x / 2) + PlayerMng.players.get(j).nowPositionX )),2) + Math.pow((ItemMng.items.get(i).nowPositionY - ( (max_y / 2) + PlayerMng.players.get(j).nowPositionY  )),2)
-                        <= Math.pow(ITEM_RADIUS_PX + PlayerMng.PLAYER_RADIUS_PX, 2)  ){
+                        <= Math.pow(ITEM_RADIUS_PX + PLAYER_RADIUS_PX[j], 2)  ){
 
                     ItemMng.items.get(i).status = STATUS_USED;
 
-                    if(ItemMng.items.get(i).type == 0) setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,0,4,true);
-                    else if(ItemMng.items.get(i).type == 1) setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,1,0,true);
-                    else if(ItemMng.items.get(i).type == 2) setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,2,0,true);
-                    else if(ItemMng.items.get(i).type == 3) setSpeedUp(j);
-                    else setUnrivale(j);
+//                    if(ItemMng.items.get(i).type == 0) setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,0,4,true);
+                    // ボム攻撃（ブースト時範囲4）
+                    if(ItemMng.items.get(i).type == 0) setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,0,ItemMng.items.get(i).boost_flg?4:2,true);
+                    // 縦ライン攻撃
+                    else if(ItemMng.items.get(i).type == 1) setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,1,ItemMng.items.get(i).boost_flg?3:1,true);
+                    // 横ライン攻撃
+                    else if(ItemMng.items.get(i).type == 2) setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,2,ItemMng.items.get(i).boost_flg?3:1,true);
+                    else if(ItemMng.items.get(i).type == 3) setSpeedUp(j,ItemMng.items.get(i).boost_flg);
+                    else setUnrivale(j,ItemMng.items.get(i).boost_flg);
 
                 }
             }
@@ -207,8 +219,8 @@ public class ItemMng {
         List<List<Integer>> cr;
 
         if(mode == 0) cr = getAround(col,row,distance);
-        else if(mode == 1) cr = getColLine(row);
-        else cr = getRowLine(col);
+        else if(mode == 1) cr = getColLine(row,distance);
+        else cr = getRowLine(col,distance);
 
         if( hex_color_num[col][row] != PlayerMng.players.get(user_id).no ) {
             if( hex_color_num[col][row] != 0 ) PlayerMng.players.get((hex_color_num[col][row] ) - 1).score--;
@@ -383,117 +395,10 @@ public class ItemMng {
                 addList(list, col, row, 3, 1);
             }
         }
-/*
-
-        // 左端でなければ
-        if (col >= 1) {
-            list.add(Arrays.asList(col - 1, row));
-        }
-        // 右端でなければ
-        if (col <= hex_color_num[0].length - 2) {
-            list.add(Arrays.asList(col + 1, row));
-        }
-        // 上端でなければ
-        if (row >= 1) {
-            list.add(Arrays.asList(col, row - 1));
-        }
-        // 下端でなければ
-        if (row <= hex_color_num.length - 2) {
-            list.add(Arrays.asList(col, row + 1));
-        }
-
-        if (row % 2 == 0) {
-            if (col <= hex_color_num[0].length - 2 && row >= 1) {
-                list.add(Arrays.asList(col + 1, row - 1));
-            }
-            if (col <= hex_color_num[0].length - 2 && row <= hex_color_num.length - 2) {
-                list.add(Arrays.asList(col + 1, row + 1));
-            }
-        } else{
-            if (col >= 1 && row >= 1) {
-                list.add(Arrays.asList(col - 1, row - 1));
-            }
-            if (col >= 1 && row <= hex_color_num.length - 2) {
-                list.add(Arrays.asList(col - 1, row + 1));
-            }
-        }
-
-        if( distance >= 2 ){
-            // 左端でなければ
-            if (col >= 2) {
-                list.add(Arrays.asList(col - 2, row));
-            }
-            // 右端でなければ
-            if (col <= hex_color_num[0].length - 3) {
-                list.add(Arrays.asList(col + 2, row));
-            }
-            // 上端でなければ
-            if (row >= 2) {
-                list.add(Arrays.asList(col, row - 2));
-            }
-            // 下端でなければ
-            if (row <= hex_color_num.length - 3) {
-                list.add(Arrays.asList(col, row + 2));
-            }
-
-            if (row % 2 == 0) {
-                if (col <= hex_color_num[0].length - 3 && row >= 1) {
-                    list.add(Arrays.asList(col + 2, row - 1));
-                }
-                if (col <= hex_color_num[0].length - 3 && row <= hex_color_num.length - 2) {
-                    list.add(Arrays.asList(col + 2, row + 1));
-                }
-                if (col <= hex_color_num[0].length - 2 && row >= 2) {
-                    list.add(Arrays.asList(col + 1, row - 2));
-                }
-                if (col <= hex_color_num[0].length - 2 && row <= hex_color_num.length - 3) {
-                    list.add(Arrays.asList(col + 1, row + 2));
-                }
-                if (col >= 1 && row >= 1) {
-                    list.add(Arrays.asList(col - 1, row - 1));
-                }
-                if (col >= 1 && row <= hex_color_num.length - 2) {
-                    list.add(Arrays.asList(col - 1, row + 1));
-                }
-                if (col >= 1 && row >= 2) {
-                    list.add(Arrays.asList(col - 1, row - 2));
-                }
-                if (col >= 1 && row <= hex_color_num.length - 3) {
-                    list.add(Arrays.asList(col - 1, row + 2));
-                }
-            } else{
-                if (col >= 2 && row >= 1) {
-                    list.add(Arrays.asList(col - 2, row - 1));
-                }
-                if (col >= 2 && row <= hex_color_num.length - 2) {
-                    list.add(Arrays.asList(col - 2, row + 1));
-                }
-                if (col >= 1 && row >= 2) {
-                    list.add(Arrays.asList(col - 1, row - 2));
-                }
-                if (col >= 1 && row <= hex_color_num.length - 3) {
-                    list.add(Arrays.asList(col - 1, row + 2));
-                }
-                if (col <= hex_color_num[0].length - 2 && row >= 1) {
-                    list.add(Arrays.asList(col + 1, row - 1));
-                }
-                if (col <= hex_color_num[0].length - 2 && row <= hex_color_num.length - 2) {
-                    list.add(Arrays.asList(col + 1, row + 1));
-                }
-                if (col <= hex_color_num[0].length - 2 && row >= 2) {
-                    list.add(Arrays.asList(col + 1, row - 2));
-                }
-                if (col <= hex_color_num[0].length - 2 && row <= hex_color_num.length - 3) {
-                    list.add(Arrays.asList(col + 1, row + 2));
-                }
-            }
-        }
-*/
-
         return list;
     }
 
-    public static List<List<Integer>> getColLine(int row) {
+    public static List<List<Integer>> getColLine(int row, int distance) {
 
         List<List<Integer>> list = new ArrayList<>();
 
@@ -501,28 +406,49 @@ public class ItemMng {
             list.add(Arrays.asList(i, row));
         }
 
+        if( distance == 3 ){
+            for(int i = 0; i < hex_color_num.length; i++ ){
+                list.add(Arrays.asList(i, row - 1));
+            }
+            for(int i = 0; i < hex_color_num.length; i++ ){
+                list.add(Arrays.asList(i, row + 1));
+            }
+        }
+
         return list;
     }
 
-    public static List<List<Integer>> getRowLine(int col) {
+    public static List<List<Integer>> getRowLine(int col, int distance) {
 
         List<List<Integer>> list = new ArrayList<>();
 
         for(int i = 0; i < hex_color_num[0].length; i++ ){
             list.add(Arrays.asList(col, i));
         }
-
+        if( distance == 3 ){
+            for(int i = 0; i < hex_color_num[0].length; i++ ){
+                list.add(Arrays.asList(col - 1, i));
+            }
+            for(int i = 0; i < hex_color_num[0].length; i++ ){
+                list.add(Arrays.asList(col + 1, i));
+            }
+        }
         return list;
     }
 
-    public static void setSpeedUp(int user_id){
+    public static void setSpeedUp(int user_id,boolean boost_flg){
         PlayerMng.players.get(user_id).speedUpTime = TimeUtils.getCurrentTime();
         PlayerMng.players.get(user_id).speedUpFlg = true;
+        if( boost_flg ) PlayerMng.players.get(user_id).speedUpBoostFlg = true;
     }
 
-    public static void setUnrivale(int user_id){
+    public static void setUnrivale(int user_id,boolean boost_flg){
         PlayerMng.players.get(user_id).unrivaledTime = TimeUtils.getCurrentTime();
         PlayerMng.players.get(user_id).unrivaledFlg = true;
+        if( boost_flg ){
+            PLAYER_RADIUS_PX[user_id] = PLAYER_RADIUS_BOOST_PX;
+            PlayerMng.players.get(user_id).unrivaledBoostFlg = true;
+        }
     }
 
     public static void checkItemEffect(){
@@ -533,13 +459,18 @@ public class ItemMng {
                 if( currentTime > PlayerMng.players.get(i).speedUpTime + SPEEDUP_TIME ){
                     PlayerMng.players.get(i).speedUpTime = 0;
                     PlayerMng.players.get(i).speedUpFlg = false;
+                    PlayerMng.players.get(i).speedUpBoostFlg = false;
                 }
             }
 
             if( PlayerMng.players.get(i).unrivaledFlg ){
-                if( currentTime > PlayerMng.players.get(i).unrivaledTime + UNRIVALE_TIME ){
+                if( currentTime > PlayerMng.players.get(i).unrivaledTime + UNRIVALE_TIME ) {
                     PlayerMng.players.get(i).unrivaledTime = 0;
                     PlayerMng.players.get(i).unrivaledFlg = false;
+                    if (PlayerMng.players.get(i).unrivaledBoostFlg) {
+                        PlayerMng.players.get(i).unrivaledBoostFlg = false;
+                        PLAYER_RADIUS_PX[i] = PLAYER_RADIUS_DEFO_PX;
+                    }
                 }
             }
 

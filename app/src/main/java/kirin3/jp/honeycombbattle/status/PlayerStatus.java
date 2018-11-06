@@ -39,12 +39,17 @@ public class PlayerStatus {
 	// スピードアップ中フラグ
 	public boolean speedUpFlg = false;
 
+	// スピードアップブースト中フラグ
+	public boolean speedUpBoostFlg = false;
+
 	// 無敵開始時間
 	public long unrivaledTime = 0;
 
 	// 無敵中フラグ
 	public boolean unrivaledFlg = false;
 
+	// 無敵ブースト中フラグ
+	public boolean unrivaledBoostFlg = false;
 
 
 	// タッチの開始位置

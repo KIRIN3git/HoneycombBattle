@@ -32,13 +32,15 @@ public class ItemStatus {
 	// 移動方向
 	public int x_direction,y_direction;
 
+	public boolean boost_flg;
+
 	// プレイヤーの状態
 	// 0:通常,1:利用済み
 	public int status;
 
 	public int score;
 
-	public ItemStatus(int _no, int x, int y, int _type, String _text,int base_color[], int text_color[], int x_dire, int y_dire ){
+	public ItemStatus(int _no, int x, int y, int _type, String _text,int base_color[], int text_color[], int x_dire, int y_dire, boolean _boost_flg ){
 		no = _no;
 		startPositionX = x;
 		startPositionY = y;
@@ -61,5 +63,7 @@ public class ItemStatus {
 		text = _text;
 
 		status = ItemMng.STATUS_NORMAL;
+
+		boost_flg = _boost_flg;
 	}
 }
