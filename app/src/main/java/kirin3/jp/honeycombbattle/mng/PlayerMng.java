@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import kirin3.jp.honeycombbattle.game.GameSurfaceView;
 import kirin3.jp.honeycombbattle.status.PlayerStatus;
+import kirin3.jp.honeycombbattle.util.TimeUtils;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.pow;
@@ -87,11 +88,6 @@ public class PlayerMng {
 	// プレイヤー復活時間（ミリ秒）
 	final static int REVIVAL_TIME = 2 * 1000;
 
-	// スピードアップ時間（ミリ秒）
-	final static int SPEEDUP_TIME = 5 * 1000;
-
-	// 無敵時間（ミリ秒）
-	final static int UNRIVALE_TIME = 5 * 1000;
 
 	// プライヤーデータ
 	public static ArrayList<PlayerStatus> players = new ArrayList<PlayerStatus>();
@@ -390,6 +386,12 @@ public class PlayerMng {
 //		PlayerMng.players.get(i).startTouchY = 0;
 						PlayerMng.players.get(i).nowTouchX = PlayerMng.players.get(i).startTouchX;
 						PlayerMng.players.get(i).nowTouchY = PlayerMng.players.get(i).startTouchY;
+
+
+						PlayerMng.players.get(i).unrivaledTime = TimeUtils.getCurrentTime() + ItemMng.REVIVAL_UNRIVALE_TIME;
+						PlayerMng.players.get(i).unrivaledFlg = true;
+
+						//☆☆aaa
 					}
 				}
 				else {

@@ -76,8 +76,11 @@ public class ItemMng {
     // スピードアップ時間（ミリ秒）
     final static int SPEEDUP_TIME = 5 * 1000;
 
-    // 無敵時間（ミリ秒）
-    final static int UNRIVALE_TIME = 5 * 1000;
+    // アイテム無敵時間（ミリ秒）
+    final static int ITEM_UNRIVALE_TIME = 5 * 1000;
+
+    // 復活無敵時間（ミリ秒）
+    final static int REVIVAL_UNRIVALE_TIME = 1 * 1000;
 
     public static void itemInit(int quantityNo,float sizeMagnification){
 
@@ -442,7 +445,7 @@ public class ItemMng {
     }
 
     public static void setUnrivale(int user_id,boolean boost_flg){
-        PlayerMng.players.get(user_id).unrivaledTime = TimeUtils.getCurrentTime();
+        PlayerMng.players.get(user_id).unrivaledTime = TimeUtils.getCurrentTime() + ITEM_UNRIVALE_TIME;
         PlayerMng.players.get(user_id).unrivaledFlg = true;
         if( boost_flg ){
             PLAYER_RADIUS_PX[user_id] = PLAYER_RADIUS_BOOST_PX;
@@ -463,7 +466,7 @@ public class ItemMng {
             }
 
             if( PlayerMng.players.get(i).unrivaledFlg ){
-                if( currentTime > PlayerMng.players.get(i).unrivaledTime + UNRIVALE_TIME ) {
+                if( currentTime > PlayerMng.players.get(i).unrivaledTime) {
                     PlayerMng.players.get(i).unrivaledTime = 0;
                     PlayerMng.players.get(i).unrivaledFlg = false;
                     if (PlayerMng.players.get(i).unrivaledBoostFlg) {
