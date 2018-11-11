@@ -348,6 +348,8 @@ public class PlayerMng {
 
 		if( PlayerMng.players.get(user_id).status != PlayerMng.STATUS_NORMAL ) return;
 
+		// 死亡音
+		SoundMng.playSoundDead();
 
 		PlayerMng.players.get(user_id).status = PlayerMng.STATUS_DEAD;
 		PlayerMng.players.get(user_id).deadTime = getCurrentTime();
@@ -421,19 +423,19 @@ public class PlayerMng {
 		// 生存者数
 		int lifeUserNum = 0;
 		// 生存者番号
-		int lifeUserNo = 0;
+		int lifeUserId = 0;
 
 		for (int i = 0; i < sPlayerNumber; i++) {
 			if( PlayerMng.players.get(i).lifeNum != 0 ){
 				lifeUserNum++;
-				lifeUserNo = i;
+				lifeUserId = i;
 			}
 		}
 		if( lifeUserNum == 1 ){
 			for (int i = 0; i < sPlayerNumber; i++) {
 				if( PlayerMng.players.get(i).lifeNum != 0 ){
 					TimeMng.setSituation(TimeMng.SITUATION_GAMEOVER); // ゲーム終了
-					GameSurfaceView.winnerNo = lifeUserNo;
+					GameSurfaceView.winnerId = lifeUserId;
 				}
 			}
 		}

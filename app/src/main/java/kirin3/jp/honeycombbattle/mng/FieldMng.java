@@ -5,10 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.util.Log;
-
-import kirin3.jp.honeycombbattle.game.GameActivity;
-import kirin3.jp.honeycombbattle.game.GameSurfaceView;
 
 import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 
@@ -220,7 +216,7 @@ public class FieldMng {
 
 						// 初期エリア色塗り
 						if( PlayerMng.players.get(i).erea_flg == false ){
-							ItemMng.setAtackColoer(i,col,row,0,1,false);
+							ItemMng.setAtackEffect(i,col,row,0,0,false);
 						}
 
 						// 壁にぶつかったら
@@ -230,12 +226,13 @@ public class FieldMng {
 
 						// ステータスノーマルで、自分の領域でなかったら
 						else if( PlayerMng.players.get(i).status == PlayerMng.STATUS_NORMAL && hex_color_num[col][row] != PlayerMng.players.get(i).no ){
-
+/*
 						    // スコアの増減
                             if( ((hex_color_num[col][row] ) - 1) >= 1 && ((hex_color_num[col][row] ) - 1) <= 4 ){
                             	PlayerMng.players.get((hex_color_num[col][row] ) - 1).score--;
-	                          }
+	                        }
                             PlayerMng.players.get(i).score++;
+*/
 							// 色を記録
 							// ２桁目は永続で保存
 							hex_color_num[col][row] = PlayerMng.players.get(i).no;
@@ -302,7 +299,7 @@ public class FieldMng {
 							// 全てのタワーを一人が所有したら
 							if( i == tower_num - 1 ){
 								TimeMng.setSituation(TimeMng.SITUATION_GAMEOVER); // ゲーム終了
-								GameSurfaceView.winnerNo = towerCheck[i] - 1;
+								GameSurfaceView.winnerId = towerCheck[i] - 1;
 							}
 						}
 					}
@@ -341,7 +338,7 @@ public class FieldMng {
 						if( hex_color_num[col][row] == PlayerMng.players.get(user_i).no ){
 							hex_color_num[col][row] = COUNT_NO;
 							countHitFlg = true;
-							PlayerMng.players.get(user_i).score++;
+//							PlayerMng.players.get(user_i).score++;
 //☆							TimeMng.getsFpsMsec(ScoreMng.SCORE_FPS);
 						}
 					}
@@ -379,4 +376,19 @@ public class FieldMng {
 			}
 		}
 	}
+
+
+	public static void countScore(){
+
+		for (int i = 0; i < PlayerMng.sPlayerNumber; i++) {
+			PlayerMng.players.get(i).score = 0;
+
+			for (int col = 0; col < HEX_NUM_COL; col++) {
+				for (int row = 0; row < HEX_NUM_ROW; row++) {
+					if( hex_color_num[col][row] == PlayerMng.players.get(i).no ) PlayerMng.players.get(i).score++;
+				}
+			}
+		}
+	}
+
 }

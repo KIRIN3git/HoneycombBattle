@@ -15,7 +15,7 @@ import kirin3.jp.honeycombbattle.mng.PlayerMng;
 
 public class ResultActivity extends AppCompatActivity {
 
-    public static final String INTENT_WINNER_NO = "INTENT_WINNER_NO";
+    public static final String INTENT_WINNER_ID = "INTENT_WINNER_ID";
     public Context mContext;
 
     static TextView sTextPlayerColor1,sTextPlayerColor2,sTextPlayerColor3,sTextPlayerColor4;
@@ -40,25 +40,48 @@ public class ResultActivity extends AppCompatActivity {
     public void setRank(){
 
         Bundle extras = getIntent().getExtras();
-        int winner_no = extras.getInt(INTENT_WINNER_NO);
+        int winner_no = extras.getInt(INTENT_WINNER_ID);
 
-        Log.w( "DEBUG_DATA", "INTENT_WINNER_NO " + INTENT_WINNER_NO);
+        Log.w( "DEBUG_DATA", "INTENT_WINNER_ID " + INTENT_WINNER_ID);
 
-        if( winner_no == 0 ) sRankPlayer1 = 1;
-        else if( winner_no == 1 ) sRankPlayer2 = 1;
-        else if( winner_no == 2 ) sRankPlayer3 = 1;
-        else if( winner_no == 3 ) sRankPlayer4 = 1;
 
-        sRankPlayer1 = checkCostRank(0,winner_no);
-        sRankPlayer2 = checkCostRank(1,winner_no);
-        if(PlayerMng.sPlayerNumber >= 3 ) sRankPlayer3 = checkCostRank(2,winner_no);
-        if(PlayerMng.sPlayerNumber >= 4 ) sRankPlayer4 = checkCostRank(3,winner_no);
+        sRankPlayer1 = checkRank(0,winner_no);
+        sRankPlayer2 = checkRank(1,winner_no);
+        if(PlayerMng.sPlayerNumber >= 3 ) sRankPlayer3 = checkRank(2,winner_no);
+        if(PlayerMng.sPlayerNumber >= 4 ) sRankPlayer4 = checkRank(3,winner_no);
     }
 
+
+
+
+
+    public int checkRank(int user_id,int winner_id){
+
+        int rank = 1;
+
+        // 自分が勝者
+        if(winner_id == user_id) return rank;
+
+        // 他人が勝者だったら
+        if( winner_id != -1 ) rank++;
+
+
+
+         for (int i = 0; i < PlayerMng.sPlayerNumber; i++) {
+             if (i == winner_id) continue;
+             if (i == user_id) continue;
+             if (PlayerMng.players.get(i).score > PlayerMng.players.get(user_id).score) {
+                 rank++;
+             }
+         }
+         return rank;
+    }
+
+
+    /*
     public int checkCostRank(int user_id,int winner_no){
 
         if(winner_no == user_id) return 1;
-
 
         int rank = 1;
 
@@ -83,6 +106,7 @@ public class ResultActivity extends AppCompatActivity {
             return rank;
         }
     }
+    */
 
     public void outputData(){
 

@@ -13,10 +13,10 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import kirin3.jp.honeycombbattle.R;
-import kirin3.jp.honeycombbattle.main.MainActivity;
 import kirin3.jp.honeycombbattle.mng.FieldMng;
 import kirin3.jp.honeycombbattle.mng.ItemMng;
 import kirin3.jp.honeycombbattle.mng.PlayerMng;
+import kirin3.jp.honeycombbattle.mng.SoundMng;
 import kirin3.jp.honeycombbattle.mng.TimeMng;
 import kirin3.jp.honeycombbattle.result.ResultActivity;
 import kirin3.jp.honeycombbattle.util.ViewUtils;
@@ -52,7 +52,7 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 	public static int sItemQuantityNo;
 	public static float sFieldSizeMagnification;
 
-	public static int winnerNo = -1;
+	public static int winnerId = -1;
 
 	public static final String INTENT_BATTLE_TIME = "INTENT_BATTLE_TIME";
 	public static final String INTENT_PLAYER_SPEED = "INTENT_PLAYER_SPEED";
@@ -82,7 +82,8 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		PlayerMng.playerInit(context,sPlayerNumberNo,sPlayerSpeedNo,sFieldSizeMagnification);
 		// アイテム情報の初期化
 		ItemMng.itemInit(sItemQuantityNo,sFieldSizeMagnification);
-
+		// 音情報の初期化
+		SoundMng.soundInit(context);
 
 		surfaceHolder = getHolder();
 		surfaceHolder.addCallback(this);
@@ -246,7 +247,7 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 				}
 				else if( TimeMng.getSituation() == TimeMng.SITUATION_GAMEOVER ){
 
-					processGameOver(paint, canvas,winnerNo);
+					processGameOver(paint, canvas, winnerId);
 				}
 
 				// 描画
@@ -389,6 +390,7 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 
+		SoundMng.soundEnd(); // 音データ解放
 		Log.w( "DEBUG_DATA", "surfaceDestroyed" );
 		endThread();
 	}
@@ -403,6 +405,9 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		}
 	}
 
+	/*
+	 * winner_no:一人の生存者、もしくは勝利条件を満たしたもの
+	 */
 	public void processGameOver(Paint paint,Canvas canvas,int winner_no){
 
 		String printText;
@@ -427,8 +432,11 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 		Log.w( "DEBUG_DATA", "winner_no " + winner_no );
 
+		// フィールドの色をカウントして、全ユーザーのscoreに値を設定
+		FieldMng.countScore();
+
 		Intent intent = new Intent(mContext, ResultActivity.class);
-		intent.putExtra(ResultActivity.INTENT_WINNER_NO,winner_no);
+		intent.putExtra(ResultActivity.INTENT_WINNER_ID,winner_no);
 		mContext.startActivity(intent);
 	}
 

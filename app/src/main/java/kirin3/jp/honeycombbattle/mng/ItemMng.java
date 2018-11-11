@@ -193,15 +193,15 @@ public class ItemMng {
 
                     ItemMng.items.get(i).status = STATUS_USED;
 
-//                    if(ItemMng.items.get(i).type == 0) setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,0,4,true);
+//                    if(ItemMng.items.get(i).type == 0) setAtackEffect(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,0,4,true);
                     // ボム攻撃（ブースト時範囲4）
-                    if(ItemMng.items.get(i).type == 0) setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,0,ItemMng.items.get(i).boost_flg?4:2,true);
+                    if(ItemMng.items.get(i).type == 0) setAtackEffect(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,0,ItemMng.items.get(i).boost_flg?2:1,true);
                     // 縦ライン攻撃
-                    else if(ItemMng.items.get(i).type == 1) setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,1,ItemMng.items.get(i).boost_flg?3:1,true);
+                    else if(ItemMng.items.get(i).type == 1) setAtackEffect(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,1,ItemMng.items.get(i).boost_flg?2:1,true);
                     // 横ライン攻撃
-                    else if(ItemMng.items.get(i).type == 2) setAtackColoer(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,2,ItemMng.items.get(i).boost_flg?3:1,true);
-                    else if(ItemMng.items.get(i).type == 3) setSpeedUp(j,ItemMng.items.get(i).boost_flg);
-                    else setUnrivale(j,ItemMng.items.get(i).boost_flg);
+                    else if(ItemMng.items.get(i).type == 2) setAtackEffect(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,2,ItemMng.items.get(i).boost_flg?2:1,true);
+                    else if(ItemMng.items.get(i).type == 3) setSpeedUp(j,ItemMng.items.get(i).boost_flg?2:1);
+                    else setUnrivale(j,ItemMng.items.get(i).boost_flg?2:1);
 
                 }
             }
@@ -217,17 +217,17 @@ public class ItemMng {
      * mode:0 円、mode:1 縦線、mode:2 横線
      * effect:効果の表示あり、なし
      */
-    public static void setAtackColoer(int user_id, int col, int row, int mode, int distance,boolean effect ){
+    public static void setAtackEffect(int user_id, int col, int row, int mode, int level, boolean effect ){
         List<List<Integer>> cr;
 
-        if(mode == 0) cr = getAround(col,row,distance);
-        else if(mode == 1) cr = getColLine(row,distance);
-        else cr = getRowLine(col,distance);
+        if(mode == 0) cr = getAround(col,row,level);
+        else if(mode == 1) cr = getColLine(row,level);
+        else cr = getRowLine(col,level);
 
         if( hex_color_num[col][row] != PlayerMng.players.get(user_id).no ) {
-            if( hex_color_num[col][row] != 0 ) PlayerMng.players.get((hex_color_num[col][row] ) - 1).score--;
+//            if( hex_color_num[col][row] != 0 ) PlayerMng.players.get((hex_color_num[col][row] ) - 1).score--;
             hex_color_num[col][row] = PlayerMng.players.get(user_id).no;
-            PlayerMng.players.get(user_id).score++;
+//            PlayerMng.players.get(user_id).score++;
         }
 
         for(int i = 0; i < cr.size(); i++){
@@ -235,9 +235,9 @@ public class ItemMng {
             if( hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] == WALL_NO || hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] == DALETE_NO) continue;
             // 自分の色じゃなければ色塗り
             if( hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] != PlayerMng.players.get(user_id).no ) {
-                if( hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] != 0 ) PlayerMng.players.get((hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] ) - 1).score--;
+//                if( hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] != 0 ) PlayerMng.players.get((hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] ) - 1).score--;
                 hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] = PlayerMng.players.get(user_id).no;
-                PlayerMng.players.get(user_id).score++;
+//                PlayerMng.players.get(user_id).score++;
             }
 
             if( effect ) hex_effect_num[cr.get(i).get(0)][cr.get(i).get(1)] = 1;
@@ -266,7 +266,28 @@ public class ItemMng {
         list.add(Arrays.asList(c, r));
     }
 
-    public static List<List<Integer>> getAround(int col, int row, int distance) {
+    public static List<List<Integer>> getAround(int col, int row, int level) {
+
+        int distance;
+
+        // 音
+        SoundMng.playSoundBomb(level);
+
+        // 距離
+        switch (level){
+            case 0:
+                distance = 1;
+                break;
+            case 1:
+                distance = 2;
+                break;
+            case 2:
+                distance = 4;
+                break;
+            default:
+                distance = 3;
+                break;
+        }
 
         List<List<Integer>> list = new ArrayList<>();
 
@@ -400,7 +421,29 @@ public class ItemMng {
         return list;
     }
 
-    public static List<List<Integer>> getColLine(int row, int distance) {
+    // レーザーの範囲を取得し、音を鳴らす
+    public static List<List<Integer>> getColLine(int row, int level) {
+
+        int distance;
+
+        // 音
+        SoundMng.playSoundLeaser(level);
+
+        // 距離
+        switch (level){
+            case 0:
+                distance = 1;
+                break;
+            case 1:
+                distance = 1;
+                break;
+            case 2:
+                distance = 3;
+                break;
+            default:
+                distance = 3;
+                break;
+        }
 
         List<List<Integer>> list = new ArrayList<>();
 
@@ -420,7 +463,28 @@ public class ItemMng {
         return list;
     }
 
-    public static List<List<Integer>> getRowLine(int col, int distance) {
+    public static List<List<Integer>> getRowLine(int col, int level) {
+
+        int distance;
+
+        // 音
+        SoundMng.playSoundWave(level);
+
+        // 距離
+        switch (level){
+            case 0:
+                distance = 1;
+                break;
+            case 1:
+                distance = 1;
+                break;
+            case 2:
+                distance = 3;
+                break;
+            default:
+                distance = 3;
+                break;
+        }
 
         List<List<Integer>> list = new ArrayList<>();
 
@@ -438,16 +502,24 @@ public class ItemMng {
         return list;
     }
 
-    public static void setSpeedUp(int user_id,boolean boost_flg){
+    public static void setSpeedUp(int user_id,int level){
+
+        // 音
+        SoundMng.playSoundSpeedUp(level);
+
         PlayerMng.players.get(user_id).speedUpTime = TimeUtils.getCurrentTime();
         PlayerMng.players.get(user_id).speedUpFlg = true;
-        if( boost_flg ) PlayerMng.players.get(user_id).speedUpBoostFlg = true;
+        if( level == 2 ) PlayerMng.players.get(user_id).speedUpBoostFlg = true;
     }
 
-    public static void setUnrivale(int user_id,boolean boost_flg){
+    public static void setUnrivale(int user_id,int level){
+
+        // 音
+        SoundMng.playSoundUnrivaled(level);
+
         PlayerMng.players.get(user_id).unrivaledTime = TimeUtils.getCurrentTime() + ITEM_UNRIVALE_TIME;
         PlayerMng.players.get(user_id).unrivaledFlg = true;
-        if( boost_flg ){
+        if( level == 2 ){
             PLAYER_RADIUS_PX[user_id] = PLAYER_RADIUS_BOOST_PX;
             PlayerMng.players.get(user_id).unrivaledBoostFlg = true;
         }
