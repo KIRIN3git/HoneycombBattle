@@ -1,16 +1,19 @@
 package kirin3.jp.honeycombbattle.result;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import kirin3.jp.honeycombbattle.R;
+import kirin3.jp.honeycombbattle.main.MainActivity;
 import kirin3.jp.honeycombbattle.mng.PlayerMng;
 
 public class ResultActivity extends AppCompatActivity {
@@ -23,6 +26,7 @@ public class ResultActivity extends AppCompatActivity {
     static TextView sTextPlayerScore1,sTextPlayerScore2,sTextPlayerScore3,sTextPlayerScore4;
     static LinearLayout sLayoutPlayer1,sLayoutPlayer2,sLayoutPlayer3,sLayoutPlayer4;
     static ImageView sImgRank1,sImgRank2,sImgRank3,sImgRank4;
+    static Button sButtonBack;
     static int sRankPlayer1 = -1,sRankPlayer2 = -1,sRankPlayer3 = -1,sRankPlayer4 = -1;
 
     @Override
@@ -129,7 +133,9 @@ public class ResultActivity extends AppCompatActivity {
         sImgRank2 = (ImageView) findViewById(R.id.imgRank2);
         sImgRank3 = (ImageView) findViewById(R.id.imgRank3);
         sImgRank4 = (ImageView) findViewById(R.id.imgRank4);
-        
+
+        sButtonBack = (Button) findViewById(R.id.buttonBack);
+
         setCircleColor();
 
 
@@ -145,6 +151,15 @@ public class ResultActivity extends AppCompatActivity {
 
         if(PlayerMng.sPlayerNumber >= 3 ) sLayoutPlayer3.setVisibility(View.VISIBLE);
         if(PlayerMng.sPlayerNumber >= 4 ) sLayoutPlayer4.setVisibility(View.VISIBLE);
+
+
+        sButtonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public void setCircleColor(){

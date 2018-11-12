@@ -420,13 +420,15 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		printText = "試合終了";
 		// Canvas 中心点
 		printX = canvas.getWidth() / 2;
-		printY = canvas.getHeight() * 3 / 4;
+		printY = canvas.getHeight() * 2 / 3;
 		ViewUtils.mirrorDrowText(canvas,paint,printX,printY,printText);
 
 
 		// 描画
 		surfaceHolder.unlockCanvasAndPost(canvas);
 		thread = null; // スレッド停止要請
+
+		SoundMng.playSoundGameOver();
 
 		TimeMng.sleepGameOver();
 

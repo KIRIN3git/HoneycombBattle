@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import java.util.Locale;
 
@@ -35,7 +36,7 @@ public class TimeMng {
 	static float LIMIT_TEXT_SIZE_PX;
 
 	// カウントダウンミリ秒
-	static long COUNT_DONW_MS = 1 * 1000;
+	static long COUNT_DONW_MS = 3 * 1000;
 	// ゲームオーバー時間ミリ秒
 	static long GAMEOVER_MS = 2 * 1000;
 	// カウントダウン開始時間保存
@@ -56,6 +57,8 @@ public class TimeMng {
 
 	public static int coutnta = 0;
 	public static int alla = 0;
+	public static int sound_start1_count;
+	public static boolean sound_start2_flg;
 
 
 	// FPS
@@ -66,6 +69,8 @@ public class TimeMng {
 	static String sCname;
 
 	public static void timeInit(Context context,int timeNo){
+		sound_start1_count = -1;
+		sound_start2_flg = false;
 
 		sCname = LogUtils.makeLogTag(TimeMng.class);
 
@@ -96,6 +101,7 @@ public class TimeMng {
 
 	public static void drawCountDown(Context context, Paint paint, Canvas canvas){
 
+		int count_num;
 		String printText = "";
 		float printX,printY;
 
@@ -107,9 +113,19 @@ public class TimeMng {
 		paint.setColor(Color.RED);
 
 		if( COUNT_DONW_MS - StartMillis > 0 ){
-			printText = String.valueOf( ( (COUNT_DONW_MS - StartMillis) / 1000 ) + 1 );
+			count_num = (int)( (COUNT_DONW_MS - StartMillis) / 1000 ) + 1;
+			// 値変更時に音を鳴らす
+			if( count_num != sound_start1_count ){
+				SoundMng.playSoundStart1();
+			}
+			sound_start1_count = count_num;
+			printText = String.valueOf( count_num );
 		}
 		else if( COUNT_DONW_MS - StartMillis > -500 ){
+			if( sound_start2_flg == false ){
+				SoundMng.playSoundStart2();
+				sound_start2_flg = true;
+			}
 			printText = "START";
 		}
 		else{
@@ -119,7 +135,7 @@ public class TimeMng {
 
 		if( sSituation == SITUATION_COUNTDOWN ){
 			printX = canvas.getWidth() / 2;
-			printY = canvas.getHeight() * 3 / 4;
+			printY = canvas.getHeight() * 2 / 3;
 			// 反転表示
 			mirrorDrowText(canvas,paint,printX,printY,printText);
 		}

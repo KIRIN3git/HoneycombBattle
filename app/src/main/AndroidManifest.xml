@@ -20,7 +20,8 @@
 
         <activity
             android:name=".game.GameActivity"
-            android:theme="@style/AppFullScreenTheme">
+            android:theme="@style/AppFullScreenTheme"
+            android:launchMode="singleInstance">
         </activity>
 
         <activity
