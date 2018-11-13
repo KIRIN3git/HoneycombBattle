@@ -393,6 +393,8 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		SoundMng.soundEnd(); // 音データ解放
 		Log.w( "DEBUG_DATA", "surfaceDestroyed" );
 		endThread();
+
+
 	}
 
 	public void endThread(){

@@ -28,4 +28,15 @@ public class GameActivity extends AppCompatActivity {
 				| View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
 	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+
+	}
+	@Override
+	public void onStop(){
+		super.onStop();
+		finish();
+	}
 }

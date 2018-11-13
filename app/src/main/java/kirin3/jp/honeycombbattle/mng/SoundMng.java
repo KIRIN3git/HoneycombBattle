@@ -18,9 +18,9 @@ public class SoundMng {
     public static void soundInit(Context context){
         sSoundPool1 = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
         sSoundPool2 = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
-        sSoundStart1 = sSoundPool1.load(context, R.raw.se_maoudamashii_system27, 0);
+        sSoundStart1 = sSoundPool1.load(context, R.raw.se_maoudamashii_retro02, 0);
         sSoundStart2 = sSoundPool1.load(context, R.raw.se_maoudamashii_system24, 0);
-        sSoundGameOver = sSoundPool1.load(context, R.raw.se_maoudamashii_chime09, 0);
+        sSoundGameOver = sSoundPool1.load(context, R.raw.se_maoudamashii_chime05, 0);
         sSoundDead = sSoundPool1.load(context, R.raw.powerdown07, 0);
         sSoundBomb1 = sSoundPool2.load(context, R.raw.bomb, 0);
         sSoundBomb2 = sSoundPool2.load(context, R.raw.explosion3, 0);
