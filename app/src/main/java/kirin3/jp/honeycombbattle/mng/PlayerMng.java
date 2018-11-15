@@ -39,7 +39,8 @@ public class PlayerMng {
 
 
     // プレイヤースタート位置
-	static float sPlayerDpXY[][] = {{-92,116},{-92,-116},{92,116},{92,-116}};
+	static float sPlayerDpXY2[][] = {{0,126},{0,-126}};
+	static float sPlayerDpXY34[][] = {{-92,116},{-92,-116},{92,116},{92,-116}};
 //	static float sPlayerDpXY[][] = {{-72,106},{-82,-116},{65,150},{92,-116}};
 
 	// プレイヤー残機位置
@@ -111,7 +112,8 @@ public class PlayerMng {
 		PlayerStatus player;
 		players.clear();
 		for(int i = 0; i < sPlayerNumber; i++ ){
-			player = new PlayerStatus( i+1, (int)(dpToPx(sPlayerDpXY[i][0],context.getResources()) * sSizeMagnification),(int)(dpToPx(sPlayerDpXY[i][1],context.getResources()) * sSizeMagnification), PLAYER_COLOR[i],LIFE_NUMBER );
+			if( sPlayerNumber <= 2 ) player = new PlayerStatus( i+1, (int)(dpToPx(sPlayerDpXY2[i][0],context.getResources()) * sSizeMagnification),(int)(dpToPx(sPlayerDpXY2[i][1],context.getResources()) * sSizeMagnification), PLAYER_COLOR[i],LIFE_NUMBER );
+			else player = new PlayerStatus( i+1, (int)(dpToPx(sPlayerDpXY34[i][0],context.getResources()) * sSizeMagnification),(int)(dpToPx(sPlayerDpXY34[i][1],context.getResources()) * sSizeMagnification), PLAYER_COLOR[i],LIFE_NUMBER );
 			players.add(player);
 		}
 	}

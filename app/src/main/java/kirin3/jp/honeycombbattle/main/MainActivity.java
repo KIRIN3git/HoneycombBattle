@@ -1,25 +1,24 @@
 package kirin3.jp.honeycombbattle.main;
 
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
-import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import java.lang.reflect.Method;
-
 import kirin3.jp.honeycombbattle.R;
 import kirin3.jp.honeycombbattle.game.GameActivity;
 import kirin3.jp.honeycombbattle.game.GameSurfaceView;
+import kirin3.jp.honeycombbattle.util.SettingsUtils;
 import kirin3.jp.honeycombbattle.util.ViewUtils;
 
 public class MainActivity extends AppCompatActivity {
+
+    Context mContext;
 
     static RadioGroup sRadioGroupBattleTime;
     static RadioGroup sRadioGroupPlayerNumber;
@@ -38,6 +37,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mContext = getApplicationContext();
+
+        int no,id = 0;
+        id = SettingsUtils.getSettingRadioIdTime(mContext);
+        if( id != 0 ){
+            sRadioIButtonBattleTime = (RadioButton) findViewById(id);
+            sRadioIButtonBattleTime.setChecked(true);
+        }
+
 
         sRadioGroupBattleTime = (RadioGroup) findViewById(R.id.RadioGroupBattleTime);
         sRadioGroupPlayerNumber = (RadioGroup) findViewById(R.id.RadioGroupPlayerNumber);
@@ -66,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
                 sRadioIButtonPlayerSpeed = (RadioButton) findViewById(sRadioGroupPlayerSpeed.getCheckedRadioButtonId());
                 sRadioIButtonItemQuantity = (RadioButton) findViewById(sRadioGroupItemQuantity.getCheckedRadioButtonId());
                 sRadioButtonFieldSize = (RadioButton) findViewById(sRadioGroupFieldSize.getCheckedRadioButtonId());
+
+                SettingsUtils.setSettingRadioIdTime(mContext, sRadioGroupBattleTime.getCheckedRadioButtonId());
 
 
                 // インテントのインスタンス生成
