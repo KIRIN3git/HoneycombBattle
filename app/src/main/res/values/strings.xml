@@ -22,4 +22,11 @@
     <string name="size_3">普通</string>
     <string name="size_4">大きめ</string>
     <string name="size_5">大きい</string>
+
+
+    <string name="admob_app_id">ca-app-pub-1057765466901496~2670630334</string>
+    <string name="banner_ad_unit_id_test">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_ad_unit_id_main">ca-app-pub-1057765466901496/5540336254</string>
+    <string name="interstitial_ad_unit_id_next_game">ca-app-pub-1057765466901496/8775237200</string>
+
 </resources>

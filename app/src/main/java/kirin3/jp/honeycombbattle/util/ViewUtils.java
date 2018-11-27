@@ -118,7 +118,6 @@ public class ViewUtils {
                 e.printStackTrace();
             }
         }
-
         return real;
     }
 }

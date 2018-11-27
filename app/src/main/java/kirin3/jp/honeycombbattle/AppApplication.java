@@ -9,6 +9,8 @@ import android.view.Display;
 
 import java.lang.reflect.Method;
 
+import kirin3.jp.honeycombbattle.util.AdmobHelper;
+
 public class AppApplication extends Application {
 
     @Override

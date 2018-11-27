@@ -12,14 +12,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.InterstitialAd;
+
 import kirin3.jp.honeycombbattle.R;
 import kirin3.jp.honeycombbattle.main.MainActivity;
 import kirin3.jp.honeycombbattle.mng.PlayerMng;
+import kirin3.jp.honeycombbattle.util.AdmobHelper;
 
 public class ResultActivity extends AppCompatActivity {
 
     public static final String INTENT_WINNER_ID = "INTENT_WINNER_ID";
     public Context mContext;
+
+    private InterstitialAd mInterstitialAd;
 
     static TextView sTextPlayerColor1,sTextPlayerColor2,sTextPlayerColor3,sTextPlayerColor4;
     static TextView sTextPlayerRank1,sTextPlayerRank2,sTextPlayerRank3,sTextPlayerRank4;
@@ -39,6 +45,16 @@ public class ResultActivity extends AppCompatActivity {
         setRank();
 
         outputData();
+
+
+        AdmobHelper.setInterstitialNextGame();
+        AdmobHelper.sInterstitialAdNextGame.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                Intent intent = new Intent(mContext, MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public void setRank(){
@@ -156,8 +172,10 @@ public class ResultActivity extends AppCompatActivity {
         sButtonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), MainActivity.class);
-                startActivity(intent);
+                if( !AdmobHelper.loadInterstitialNextGame() ) {
+                    Intent intent = new Intent(v.getContext(), MainActivity.class);
+                    startActivity(intent);
+                }
             }
         });
     }

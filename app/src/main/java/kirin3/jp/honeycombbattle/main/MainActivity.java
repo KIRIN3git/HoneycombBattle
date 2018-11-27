@@ -10,9 +10,12 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.google.android.gms.ads.AdView;
+
 import kirin3.jp.honeycombbattle.R;
 import kirin3.jp.honeycombbattle.game.GameActivity;
 import kirin3.jp.honeycombbattle.game.GameSurfaceView;
+import kirin3.jp.honeycombbattle.util.AdmobHelper;
 import kirin3.jp.honeycombbattle.util.SettingsUtils;
 import kirin3.jp.honeycombbattle.util.ViewUtils;
 
@@ -40,13 +43,36 @@ public class MainActivity extends AppCompatActivity {
 
         mContext = getApplicationContext();
 
-        int no,id = 0;
+        // AdMob設定
+        AdmobHelper.initializeAdmob(mContext);
+        AdmobHelper.loadBanner((AdView)findViewById(R.id.adView));
+
+        int id = 0;
         id = SettingsUtils.getSettingRadioIdTime(mContext);
         if( id != 0 ){
             sRadioIButtonBattleTime = (RadioButton) findViewById(id);
             sRadioIButtonBattleTime.setChecked(true);
         }
-
+        id = SettingsUtils.getSettingRadioIdNumber(mContext);
+        if( id != 0 ){
+            sRadioIButtonPlayerNumber = (RadioButton) findViewById(id);
+            sRadioIButtonPlayerNumber.setChecked(true);
+        }
+        id = SettingsUtils.getSettingRadioIdSpeed(mContext);
+        if( id != 0 ){
+            sRadioIButtonPlayerSpeed = (RadioButton) findViewById(id);
+            sRadioIButtonPlayerSpeed.setChecked(true);
+        }
+        id = SettingsUtils.getSettingRadioIdItem(mContext);
+        if( id != 0 ){
+            sRadioIButtonItemQuantity = (RadioButton) findViewById(id);
+            sRadioIButtonItemQuantity.setChecked(true);
+        }
+        id = SettingsUtils.getSettingRadioIdField(mContext);
+        if( id != 0 ){
+            sRadioButtonFieldSize = (RadioButton) findViewById(id);
+            sRadioButtonFieldSize.setChecked(true);
+        }
 
         sRadioGroupBattleTime = (RadioGroup) findViewById(R.id.RadioGroupBattleTime);
         sRadioGroupPlayerNumber = (RadioGroup) findViewById(R.id.RadioGroupPlayerNumber);
@@ -77,6 +103,10 @@ public class MainActivity extends AppCompatActivity {
                 sRadioButtonFieldSize = (RadioButton) findViewById(sRadioGroupFieldSize.getCheckedRadioButtonId());
 
                 SettingsUtils.setSettingRadioIdTime(mContext, sRadioGroupBattleTime.getCheckedRadioButtonId());
+                SettingsUtils.setSettingRadioIdNumber(mContext, sRadioGroupPlayerNumber.getCheckedRadioButtonId());
+                SettingsUtils.setSettingRadioIdSpeed(mContext, sRadioGroupPlayerSpeed.getCheckedRadioButtonId());
+                SettingsUtils.setSettingRadioIdItem(mContext, sRadioGroupItemQuantity.getCheckedRadioButtonId());
+                SettingsUtils.setSettingRadioIdField(mContext, sRadioGroupFieldSize.getCheckedRadioButtonId());
 
 
                 // インテントのインスタンス生成
