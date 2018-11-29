@@ -41,7 +41,7 @@ public class AdmobHelper {
     public static void setInterstitialNextGame() {
         // イニシャライズ
         sInterstitialAdNextGame = new InterstitialAd(sAppContext);
-        sInterstitialAdNextGame.setAdUnitId(sAppContext.getResources().getString(R.string.interstitial_ad_unit_id_next_game));
+        sInterstitialAdNextGame.setAdUnitId(sAppContext.getResources().getString(R.string.interstitial_ad_unit_id_test));
         // ロード
         sInterstitialAdNextGame.loadAd(new AdRequest.Builder().build());
     }

@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 
 import kirin3.jp.honeycombbattle.R;
@@ -42,10 +43,10 @@ public class ResultActivity extends AppCompatActivity {
 
         mContext = getApplicationContext();
 
+        AdmobHelper.loadBanner((AdView)findViewById(R.id.adView));
+
         setRank();
-
         outputData();
-
 
         AdmobHelper.setInterstitialNextGame();
         AdmobHelper.sInterstitialAdNextGame.setAdListener(new AdListener() {

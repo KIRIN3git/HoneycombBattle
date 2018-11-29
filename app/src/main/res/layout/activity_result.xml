@@ -9,19 +9,24 @@
     android:orientation="vertical"
     tools:context="kirin3.jp.honeycombbattle.main.MainActivity">
 
-
-
-
     <LinearLayout
-        android:id="@+id/linearLayout1"
-        android:layout_height="wrap_content"
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_gravity="center"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true">
+        android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true">
+
+           <LinearLayout
             android:id="@+id/layoutPlayer1"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
@@ -62,7 +67,7 @@
 
         </LinearLayout>
 
-        <LinearLayout
+            <LinearLayout
             android:id="@+id/layoutPlayer2"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
@@ -95,7 +100,7 @@
 
         </LinearLayout>
 
-        <LinearLayout
+            <LinearLayout
             android:id="@+id/layoutPlayer3"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
@@ -127,7 +132,7 @@
 
         </LinearLayout>
 
-        <LinearLayout
+            <LinearLayout
             android:id="@+id/layoutPlayer4"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
@@ -159,11 +164,33 @@
                 android:layout_height="wrap_content" />
 
         </LinearLayout>
+        </LinearLayout>
+        <Button
+            android:id="@+id/buttonBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="戻る"/>
+
+
     </LinearLayout>
-    <Button
-        android:id="@+id/buttonBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="戻る"/>
+
+    <LinearLayout
+        android:visibility = "visible"
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id_test">
+        </com.google.android.gms.ads.AdView>
+
+    </LinearLayout>
 </LinearLayout>

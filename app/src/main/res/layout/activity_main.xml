@@ -83,7 +83,6 @@
             android:layout_marginBottom="10dp">
         </TextView>
 
-
         <RadioGroup
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
@@ -377,10 +376,11 @@
     </LinearLayout>
 
     <LinearLayout
+        android:visibility = "visible"
         xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="50dp">
 
         <com.google.android.gms.ads.AdView
             android:id="@+id/adView"
@@ -389,7 +389,7 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             ads:adSize="BANNER"
-            ads:adUnitId="@string/banner_ad_unit_id_main">
+            ads:adUnitId="@string/banner_ad_unit_id_test">
         </com.google.android.gms.ads.AdView>
 
     </LinearLayout>
