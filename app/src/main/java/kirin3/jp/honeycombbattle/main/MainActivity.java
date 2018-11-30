@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -98,6 +99,13 @@ public class MainActivity extends AppCompatActivity {
 
         Log.w( "DEBUG_DATA", "getXDpi " + ViewUtils.getXDpi(getApplicationContext().getResources()) );
         Log.w( "DEBUG_DATA", "getDisplayMagnification " + ViewUtils.getDisplayMagnification(getApplicationContext().getResources()) );
+
+
+        Log.w( "DEBUG_DATA", "is_tablet " + ViewUtils.checkTablet(getApplicationContext().getResources()));
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        Log.w( "DEBUG_DATA", "metrics.densityDpi " + metrics.densityDpi );
+
 
         Button btn = (Button)findViewById(R.id.game_start);
         btn.setOnClickListener(new View.OnClickListener() {

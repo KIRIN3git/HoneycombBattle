@@ -6,10 +6,13 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.os.Build;
+import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
 import java.lang.reflect.Method;
+
+import kirin3.jp.honeycombbattle.R;
 
 public class ViewUtils {
 
@@ -37,6 +40,7 @@ public class ViewUtils {
      */
     public static float getDisplayMagnification(Resources resources){
         float dpi = getDensityDpi(resources);
+        Log.w( "DEBUG_DATA", "dpi" + dpi );
         if(dpi <= 120 ) return 0.75f;
         else if(dpi <= 160 ) return 1.0f;
         else if(dpi <= 240 ) return 1.5f;
@@ -119,5 +123,13 @@ public class ViewUtils {
             }
         }
         return real;
+    }
+
+
+    /* タブレット端末かの判定を行う
+     * bools.xmlにて判定
+     */
+    public static  boolean checkTablet(Resources resources){
+        return resources.getBoolean(R.bool.is_tablet);
     }
 }
