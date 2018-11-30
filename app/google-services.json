@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "767075406352",
+    "firebase_url": "https://honeycombbattle.firebaseio.com",
+    "project_id": "honeycombbattle",
+    "storage_bucket": "honeycombbattle.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:767075406352:android:4722e5b614cc7895",
+        "android_client_info": {
+          "package_name": "kirin3.jp.honeycombbattle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "767075406352-59tqlsrcffpseh98abai8gjr60p5s9l2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kirin3.jp.honeycombbattle",
+            "certificate_hash": "7e5b35a1d37387e4d95cbdbf351ec45c2c9ad822"
+          }
+        },
+        {
+          "client_id": "767075406352-gcbc7ele55rh4mv3pror12lr8skr0vim.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGlOi8LU2ivaevk0McSeTayp4htPwT9rw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "767075406352-gcbc7ele55rh4mv3pror12lr8skr0vim.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      },
+      "admob_app_id": "ca-app-pub-1057765466901496~2670630334"
+    }
+  ],
+  "configuration_version": "1"
+}
