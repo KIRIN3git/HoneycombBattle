@@ -371,7 +371,10 @@
             android:id="@+id/game_start"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="GAME START">
+            android:textSize="20dp"
+            android:textColor="@color/white"
+            android:background="@drawable/shape_rounded_corners"
+            android:text="START">
         </Button>
     </LinearLayout>
 

@@ -3,5 +3,5 @@
     <!-- 選択時の文字色 -->
     <item android:state_checked="true" android:color="@color/white" />
     <!-- 非選択時の文字色 -->
-    <item android:state_checked="false" android:color="@color/light_purple" />
+    <item android:state_checked="false" android:color="@color/lightPurple" />
 </selector>

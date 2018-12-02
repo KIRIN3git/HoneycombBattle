@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+//import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.ads.AdView;
 
 import kirin3.jp.honeycombbattle.R;
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        Crashlytics.getInstance().crash(); // Force a crash
 
         try {
             Thread.sleep(1000);

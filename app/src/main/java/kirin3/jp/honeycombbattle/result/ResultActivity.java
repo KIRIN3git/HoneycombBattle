@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -161,10 +162,10 @@ public class ResultActivity extends AppCompatActivity {
         setImgRank(sTextPlayerRank3,sImgRank3,sRankPlayer3);
         setImgRank(sTextPlayerRank4,sImgRank4,sRankPlayer4);
 
-        sTextPlayerScore1.setText(PlayerMng.players.get(0).score + "点");
-        sTextPlayerScore2.setText(PlayerMng.players.get(1).score + "点");
-        if(PlayerMng.sPlayerNumber >= 3 ) sTextPlayerScore3.setText(PlayerMng.players.get(2).score + "点");
-        if(PlayerMng.sPlayerNumber >= 4 ) sTextPlayerScore4.setText(PlayerMng.players.get(3).score + "点");
+        sTextPlayerScore1.setText(String.valueOf(PlayerMng.players.get(0).score));
+        sTextPlayerScore2.setText(String.valueOf(PlayerMng.players.get(1).score));
+        if(PlayerMng.sPlayerNumber >= 3 ) sTextPlayerScore3.setText(String.valueOf(PlayerMng.players.get(2).score));
+        if(PlayerMng.sPlayerNumber >= 4 ) sTextPlayerScore4.setText(String.valueOf(PlayerMng.players.get(3).score));
 
         if(PlayerMng.sPlayerNumber >= 3 ) sLayoutPlayer3.setVisibility(View.VISIBLE);
         if(PlayerMng.sPlayerNumber >= 4 ) sLayoutPlayer4.setVisibility(View.VISIBLE);
@@ -208,5 +209,18 @@ public class ResultActivity extends AppCompatActivity {
             imgRank.setImageResource(R.drawable.rank3);
         }
         else imgRank.setImageDrawable(null);
+    }
+
+    // 〇バックキーのハック
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode != KeyEvent.KEYCODE_BACK){
+            return super.onKeyDown(keyCode, event);
+        }else{ // キーバック処理
+            if( !AdmobHelper.loadInterstitialNextGame() ) {
+                Intent intent = new Intent(mContext, MainActivity.class);
+                startActivity(intent);
+            }
+            return false;
+        }
     }
 }
