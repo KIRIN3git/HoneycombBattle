@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.RectF;
 import android.os.Build;
 import android.util.Log;
 import android.view.Display;
@@ -81,8 +82,8 @@ public class ViewUtils {
 
 
     // テキストビューの反転表示
-    // 後々canvasサイズはこちらで保持？
     public static void mirrorDrowText(Canvas canvas, Paint paint, float x, float y, String text){
+
         canvas.drawText(text, x - paint.measureText(text) / 2, y - ((paint.descent() + paint.ascent()) / 2), paint);
 
         // 反転表示
@@ -91,7 +92,51 @@ public class ViewUtils {
 
         canvas.rotate(180,mirrorX,mirrorY);
         canvas.drawText(text, mirrorX - paint.measureText(text) / 2, mirrorY - ((paint.descent() + paint.ascent()) / 2), paint);
+//        canvas.rotate(180,mirrorX,mirrorY);
+    }
+
+    // テキストビューの反転表示
+    // 背景もプラス
+    public static void mirrorDrowTextPlusRect(Canvas canvas, Paint paint, Paint paint2, float x, float y, String text){
+
+        // 余白
+        float sabun = 30;
+        // 丸み
+        float rx = 30,ry = 30;
+        RectF rectF;
+
+        rectF = new RectF(x - paint.measureText(text) / 2 - sabun,
+                y - ((paint.descent() + paint.ascent()) / 2) + sabun,
+                x - (paint.measureText(text) / 2) + paint.measureText(text) + sabun,
+                y - ((paint.descent() + paint.ascent()) / 2) + ((paint.descent() + paint.ascent())) - sabun);
+
+        canvas.drawRoundRect(
+                rectF,
+                rx,   // 角丸を表す円のrx
+                ry,   // 角丸を表す円のry
+                paint2);
+
+        canvas.drawText(text, x - paint.measureText(text) / 2, y - ((paint.descent() + paint.ascent()) / 2), paint);
+
+        // 反転表示
+        mirrorX = canvas.getWidth() - x;
+        mirrorY = canvas.getHeight() - y;
+
+
+        rectF = new RectF(mirrorX - paint.measureText(text) / 2 - sabun,
+                mirrorY - ((paint.descent() + paint.ascent()) / 2) + sabun,
+                mirrorX - (paint.measureText(text) / 2) + paint.measureText(text) + sabun,
+                mirrorY - ((paint.descent() + paint.ascent()) / 2) + ((paint.descent() + paint.ascent())) - sabun);
+
+        canvas.drawRoundRect(
+                rectF,
+                rx,   // 角丸を表す円のrx
+                ry,   // 角丸を表す円のry
+                paint2);
+
         canvas.rotate(180,mirrorX,mirrorY);
+        canvas.drawText(text, mirrorX - paint.measureText(text) / 2, mirrorY - ((paint.descent() + paint.ascent()) / 2), paint);
+
     }
 
     // 端末のサイズを取得(Pointクラス px)

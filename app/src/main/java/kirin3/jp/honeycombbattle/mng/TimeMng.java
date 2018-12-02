@@ -4,16 +4,18 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 import java.util.Locale;
 
 import kirin3.jp.honeycombbattle.Config;
+import kirin3.jp.honeycombbattle.R;
 import kirin3.jp.honeycombbattle.util.LogUtils;
+import kirin3.jp.honeycombbattle.util.ViewUtils;
 
 import static kirin3.jp.honeycombbattle.util.TimeUtils.getCurrentTime;
 import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 import static kirin3.jp.honeycombbattle.util.ViewUtils.mirrorDrowText;
+import static kirin3.jp.honeycombbattle.util.ViewUtils.mirrorDrowTextPlusRect;
 
 /**
  * Created by shinji on 2017/06/08.
@@ -22,6 +24,10 @@ import static kirin3.jp.honeycombbattle.util.ViewUtils.mirrorDrowText;
  */
 
 public class TimeMng {
+
+	// 何度も生成しないように使いまわし
+	// GameSufaceViewに１つ、TimeMngに１つ
+	static Paint paintSecond;
 
 	// バトル時間ミリ秒
 	public static int sBattleTimeCandidate[] = {2,60,120};
@@ -35,8 +41,12 @@ public class TimeMng {
 	static float LIMIT_TEXT_SIZE_DP = 40.0f;
 	static float LIMIT_TEXT_SIZE_PX;
 
+	// ゲームオーバーテキストサイズ
+	static float GAMEOVER_TEXT_SIZE_DP = 40.0f;
+	static float GAMEOVER_TEXT_SIZE_PX;
+
 	// カウントダウンミリ秒
-	static long COUNT_DONW_MS = 1 * 1000;
+	static long COUNT_DONW_MS = 3 * 1000;
 	// ゲームオーバー時間ミリ秒
 	static long GAMEOVER_MS = 2 * 1000;
 	// カウントダウン開始時間保存
@@ -69,6 +79,8 @@ public class TimeMng {
 	static String sCname;
 
 	public static void timeInit(Context context,int timeNo){
+		 paintSecond = new Paint();
+
 		sound_start1_count = -1;
 		sound_start2_flg = false;
 
@@ -78,6 +90,7 @@ public class TimeMng {
 
 		COUNTDONW_TEXT_SIZE_PX = dpToPx(COUNTDONW_TEXT_SIZE_DP,context.getResources());
 		LIMIT_TEXT_SIZE_PX = dpToPx(LIMIT_TEXT_SIZE_DP,context.getResources());
+		GAMEOVER_TEXT_SIZE_PX = dpToPx(GAMEOVER_TEXT_SIZE_DP,context.getResources());
 	}
 
 	public static int getSituation(){
@@ -99,6 +112,27 @@ public class TimeMng {
 	}
 
 
+	public static void drawGameOver(Context context, Paint paint, Canvas canvas) {
+
+		String printText;
+		float printX,printY;
+
+		paint.reset();
+		paint.setTextSize(GAMEOVER_TEXT_SIZE_PX);
+		paint.setColor(context.getResources().getColor(R.color.startText));
+
+		paintSecond.reset();
+		paintSecond.setColor(context.getResources().getColor(R.color.startBack));
+
+
+		printText = "THE END";
+		// Canvas 中心点
+		printX = canvas.getWidth() / 2;
+		printY = canvas.getHeight() * 2 / 3;
+
+		ViewUtils.mirrorDrowTextPlusRect(canvas,paint,paintSecond,printX,printY,printText);
+	}
+
 	public static void drawCountDown(Context context, Paint paint, Canvas canvas){
 
 		int count_num;
@@ -110,7 +144,10 @@ public class TimeMng {
 
 		paint.reset();
 		paint.setTextSize(COUNTDONW_TEXT_SIZE_PX);
-		paint.setColor(Color.RED);
+		paint.setColor(context.getResources().getColor(R.color.startText));
+
+		paintSecond.reset();
+		paintSecond.setColor(context.getResources().getColor(R.color.startBack));
 
 		if( COUNT_DONW_MS - StartMillis > 0 ){
 			count_num = (int)( (COUNT_DONW_MS - StartMillis) / 1000 ) + 1;
@@ -137,7 +174,8 @@ public class TimeMng {
 			printX = canvas.getWidth() / 2;
 			printY = canvas.getHeight() * 2 / 3;
 			// 反転表示
-			mirrorDrowText(canvas,paint,printX,printY,printText);
+			ViewUtils.mirrorDrowTextPlusRect(canvas,paint,paintSecond,printX,printY,printText);
+//			mirrorDrowText(canvas,paint,printX,printY,printText);
 		}
 	}
 
@@ -156,15 +194,18 @@ public class TimeMng {
 
 		if( getBattleLimitTimeS() < 0 ) timeOverFlg = true;
 
+		paintSecond.reset();
+		paintSecond.setColor(context.getResources().getColor(R.color.countdownBack));
+
 		paint.reset();
 		paint.setTextSize(LIMIT_TEXT_SIZE_PX);
-		paint.setColor(Color.RED);
+		paint.setColor(context.getResources().getColor(R.color.countdownText));
 		if( !timeOverFlg ){
 			// 反転表示
 			printText = String.format(Locale.JAPAN, "%02d", getBattleLimitTimeS());
 			printX = ( canvas.getWidth() / 2 );
 			printY = canvas.getHeight()  + ((paint.descent() + paint.ascent()) / 2);
-			mirrorDrowText(canvas,paint,printX,printY,printText);
+			mirrorDrowTextPlusRect(canvas,paint,paintSecond,printX,printY,printText);
 		}
 		else{
 //			canvas.drawText("STOP", 0, canvas.getHeight(), paint);

@@ -34,13 +34,7 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 	Context mContext;
 
-	// 背景ALPHA
-	final static int BACK_ALPHA = 255 ;
 
-	// 背景RGB
-	final static int BACK_R = 200 ;
-	final static int BACK_G = 200 ;
-	final static int BACK_B = 200 ;
 
 	SurfaceHolder surfaceHolder;
 	Thread thread;
@@ -60,9 +54,6 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 	public static final String INTENT_ITEM_QUANTITY = "INTENT_ITEM_QUANTITY";
 	public static final String INTENT_FIELD_SIZE = "INTENT_FIELD_SIZE";
 
-    // リミットテキストサイズ
-    static float GAMEOVER_TEXT_SIZE_DP = 40.0f;
-    static float GAMEOVER_TEXT_SIZE_PX;
 
 	public GameSurfaceView(Context context){
 		super(context);
@@ -70,9 +61,6 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		mContext = context;
 
 		setIntentData();
-
-        GAMEOVER_TEXT_SIZE_PX = dpToPx(GAMEOVER_TEXT_SIZE_DP,context.getResources());
-
 
 		// 時間情報の初期化
 		TimeMng.timeInit(context,sBattleTimeNo);
@@ -198,7 +186,7 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		// ペイントを設定
 		Paint paint = new Paint();
 		Paint bgPaint = new Paint();
-		bgPaint.setColor(Color.argb(BACK_ALPHA, BACK_R, BACK_G, BACK_B));
+
 
 		TimeMng.countDownStart(mContext);
 
@@ -210,7 +198,8 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 				canvas = surfaceHolder.lockCanvas();
 //				Log.w( "DEBUG_DATA", "lockCanvas" );
 
-				canvas.drawRect( 0, 0, screen_width, screen_height, bgPaint);
+				// 背景色描画
+				FieldMng.drawBackground(canvas, screen_width, screen_height, bgPaint, sPlayerNumberNo);
 
 				// 基本六角形
 				FieldMng.drawHex(paint, canvas);
@@ -412,18 +401,12 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 	 */
 	public void processGameOver(Paint paint,Canvas canvas,int winner_no){
 
-		String printText;
-		float printX,printY;
 
-        paint.reset();
-        paint.setTextSize(GAMEOVER_TEXT_SIZE_PX);
-        paint.setColor(Color.RED);
 
-		printText = "試合終了";
-		// Canvas 中心点
-		printX = canvas.getWidth() / 2;
-		printY = canvas.getHeight() * 2 / 3;
-		ViewUtils.mirrorDrowText(canvas,paint,printX,printY,printText);
+
+
+
+		TimeMng.drawGameOver(mContext,paint,canvas);
 
 
 		// 描画

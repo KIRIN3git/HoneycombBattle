@@ -183,6 +183,53 @@ public class FieldMng {
 		};
 	}
 
+	// 背景ALPHA
+	final static int BACK_ALPHA = 255 ;
+
+	// 背景RGB
+	final static int BACKGROUND_USER_RGB[][] = {
+			{200,200,205},
+			{205,200,200}, //ピンク
+			{200,205,205}, //水色
+			{205,205,200}
+	};
+
+
+	public static void drawBackground(Canvas canvas,int screen_width,int screen_height,Paint bgPaint,int sPlayerNumberNo) {
+
+
+
+		// ２人プレイ
+		if( sPlayerNumberNo == 0 ){
+			bgPaint.setColor(Color.argb(BACK_ALPHA, BACKGROUND_USER_RGB[0][0],  BACKGROUND_USER_RGB[0][1],  BACKGROUND_USER_RGB[0][2]));
+			canvas.drawRect( 0, 0, screen_width, screen_height/2, bgPaint);
+			bgPaint.setColor(Color.argb(BACK_ALPHA, BACKGROUND_USER_RGB[1][0],  BACKGROUND_USER_RGB[1][1],  BACKGROUND_USER_RGB[1][2]));
+			canvas.drawRect( 0, screen_height/2, screen_width, screen_height, bgPaint);
+		}
+		// ３人プレイ
+		else if( sPlayerNumberNo == 1 ){
+			bgPaint.setColor(Color.argb(BACK_ALPHA, BACKGROUND_USER_RGB[0][0],  BACKGROUND_USER_RGB[0][1],  BACKGROUND_USER_RGB[0][2]));
+			canvas.drawRect( 0, 0, screen_width, screen_height/2, bgPaint);
+			bgPaint.setColor(Color.argb(BACK_ALPHA, BACKGROUND_USER_RGB[1][0],  BACKGROUND_USER_RGB[1][1],  BACKGROUND_USER_RGB[1][2]));
+			canvas.drawRect( 0, screen_height/2, screen_width/2, screen_height, bgPaint);
+			bgPaint.setColor(Color.argb(BACK_ALPHA, BACKGROUND_USER_RGB[2][0],  BACKGROUND_USER_RGB[2][1],  BACKGROUND_USER_RGB[2][2]));
+			canvas.drawRect( screen_width/2, screen_height/2, screen_width, screen_height, bgPaint);
+		}
+		// ４人プレイ
+		else if( sPlayerNumberNo == 2 ){
+
+			bgPaint.setColor(Color.argb(BACK_ALPHA, BACKGROUND_USER_RGB[0][0],  BACKGROUND_USER_RGB[0][1],  BACKGROUND_USER_RGB[0][2]));
+			canvas.drawRect( 0, 0, screen_width/2, screen_height/2, bgPaint);
+			bgPaint.setColor(Color.argb(BACK_ALPHA, BACKGROUND_USER_RGB[1][0],  BACKGROUND_USER_RGB[1][1],  BACKGROUND_USER_RGB[1][2]));
+			canvas.drawRect( 0, screen_height/2, screen_width/2, screen_height, bgPaint);
+			bgPaint.setColor(Color.argb(BACK_ALPHA, BACKGROUND_USER_RGB[2][0],  BACKGROUND_USER_RGB[2][1],  BACKGROUND_USER_RGB[2][2]));
+			canvas.drawRect( screen_width/2, screen_height/2, screen_width, screen_height, bgPaint);
+			bgPaint.setColor(Color.argb(BACK_ALPHA, BACKGROUND_USER_RGB[3][0],  BACKGROUND_USER_RGB[3][1],  BACKGROUND_USER_RGB[3][2]));
+			canvas.drawRect( screen_width/2, 0, screen_width, screen_height/2, bgPaint);
+		}
+
+	}
+
 	public static void drawHex(Paint paint, Canvas canvas){
 		float add_x,add_y;
 

@@ -12,4 +12,10 @@
     <color name="gold">#DAA520</color>
     <color name="silver">#C0C0C0</color>
     <color name="bronze">#C47222</color>
+
+    <color name="startBack">#626262</color>
+    <color name="startText">#FF5722</color>
+    <color name="countdownBack">#586365</color>
+    <color name="countdownText">#ffc042</color>
+
 </resources>

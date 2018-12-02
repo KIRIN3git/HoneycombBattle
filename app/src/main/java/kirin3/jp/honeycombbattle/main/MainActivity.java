@@ -82,6 +82,11 @@ public class MainActivity extends AppCompatActivity {
             sRadioButtonFieldSize = (RadioButton) findViewById(id);
             sRadioButtonFieldSize.setChecked(true);
         }
+        // タブレットだった場合は大きいを最初から洗濯
+        else{
+            sRadioButtonFieldSize = (RadioButton) findViewById(R.id.RadioItemFieldSize5);
+            sRadioButtonFieldSize.setChecked(true);
+        }
 
         sRadioGroupBattleTime = (RadioGroup) findViewById(R.id.RadioGroupBattleTime);
         sRadioGroupPlayerNumber = (RadioGroup) findViewById(R.id.RadioGroupPlayerNumber);

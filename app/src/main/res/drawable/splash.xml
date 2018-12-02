@@ -13,7 +13,7 @@
         android:height="300dp"
         android:gravity="center">
         <bitmap
-            android:src="@mipmap/kirin3" />
+            android:src="@mipmap/kirin3_logo" />
     </item>
 
 </layer-list>

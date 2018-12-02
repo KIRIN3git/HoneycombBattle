@@ -34,12 +34,14 @@ public class PlayerMng {
     public static int sPlayerNumber;
 
     // スピード
-    static int sPlayerSpeedCandidate[] = {28,22,16,10,4};
+    static int sPlayerSpeedCandidate[] = {28,24,22,16,8};
     static int sPlayerSpeed;
 
 
     // プレイヤースタート位置
+	// ２人
 	static float sPlayerDpXY2[][] = {{0,126},{0,-126}};
+	// ３、４人
 	static float sPlayerDpXY34[][] = {{-92,116},{-92,-116},{92,116},{92,-116}};
 //	static float sPlayerDpXY[][] = {{-72,106},{-82,-116},{65,150},{92,-116}};
 
