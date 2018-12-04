@@ -105,10 +105,12 @@ public class ViewUtils {
         float rx = 30,ry = 30;
         RectF rectF;
 
-        rectF = new RectF(x - paint.measureText(text) / 2 - sabun,
-                y - ((paint.descent() + paint.ascent()) / 2) + sabun,
+
+        rectF = new RectF(
+                x - paint.measureText(text) / 2 - sabun,
+                y + (paint.descent() + paint.ascent()),
                 x - (paint.measureText(text) / 2) + paint.measureText(text) + sabun,
-                y - ((paint.descent() + paint.ascent()) / 2) + ((paint.descent() + paint.ascent())) - sabun);
+                y - (paint.descent() + paint.ascent()));
 
         canvas.drawRoundRect(
                 rectF,
@@ -124,9 +126,9 @@ public class ViewUtils {
 
 
         rectF = new RectF(mirrorX - paint.measureText(text) / 2 - sabun,
-                mirrorY - ((paint.descent() + paint.ascent()) / 2) + sabun,
+                mirrorY + (paint.descent() + paint.ascent()),
                 mirrorX - (paint.measureText(text) / 2) + paint.measureText(text) + sabun,
-                mirrorY - ((paint.descent() + paint.ascent()) / 2) + ((paint.descent() + paint.ascent())) - sabun);
+                mirrorY - (paint.descent() + paint.ascent()));
 
         canvas.drawRoundRect(
                 rectF,

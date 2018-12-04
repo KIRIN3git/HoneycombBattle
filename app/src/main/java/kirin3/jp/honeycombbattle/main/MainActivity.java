@@ -82,13 +82,18 @@ public class MainActivity extends AppCompatActivity {
         }
         id = SettingsUtils.getSettingRadioIdField(mContext);
         if( id != 0 ){
+            Log.w( "DEBUG_DATA", "tablet aaaaaaaaaaaaaaaaaaaaaaaaaa" );
             sRadioButtonFieldSize = (RadioButton) findViewById(id);
             sRadioButtonFieldSize.setChecked(true);
         }
-        // タブレットだった場合は大きいを最初から洗濯
-        else{
-            sRadioButtonFieldSize = (RadioButton) findViewById(R.id.RadioItemFieldSize5);
-            sRadioButtonFieldSize.setChecked(true);
+        // タブレットだった場合は大きいを最初から選択
+        else {
+            if (ViewUtils.checkTablet(getApplicationContext().getResources())) {
+                Log.w("DEBUG_DATA", "tablet bbbbbbbbbbbbbbbbbbbbbbbbbb");
+                sRadioButtonFieldSize = (RadioButton) findViewById(R.id.RadioItemFieldSize5);
+                sRadioButtonFieldSize.setChecked(true);
+
+            }
         }
 
         sRadioGroupBattleTime = (RadioGroup) findViewById(R.id.RadioGroupBattleTime);
@@ -131,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
                 SettingsUtils.setSettingRadioIdSpeed(mContext, sRadioGroupPlayerSpeed.getCheckedRadioButtonId());
                 SettingsUtils.setSettingRadioIdItem(mContext, sRadioGroupItemQuantity.getCheckedRadioButtonId());
                 SettingsUtils.setSettingRadioIdField(mContext, sRadioGroupFieldSize.getCheckedRadioButtonId());
-
 
                 // インテントのインスタンス生成
                 Intent intent = new Intent(MainActivity.this, GameActivity.class);
