@@ -11,13 +11,18 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-//import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
+
 import com.google.android.gms.ads.AdView;
 
+import io.fabric.sdk.android.Fabric;
+import io.fabric.sdk.android.services.common.Crash;
 import kirin3.jp.honeycombbattle.R;
 import kirin3.jp.honeycombbattle.game.GameActivity;
 import kirin3.jp.honeycombbattle.game.GameSurfaceView;
 import kirin3.jp.honeycombbattle.util.AdmobHelper;
+import kirin3.jp.honeycombbattle.util.CrashlyticsHelper;
 import kirin3.jp.honeycombbattle.util.SettingsUtils;
 import kirin3.jp.honeycombbattle.util.ViewUtils;
 
@@ -42,7 +47,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        Crashlytics.getInstance().crash(); // Force a crash
+        mContext = getApplicationContext();
+
+        CrashlyticsHelper.initializeCrashlytics(mContext);
 
         try {
             Thread.sleep(1000);
@@ -52,8 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         setContentView(R.layout.activity_main);
-
-        mContext = getApplicationContext();
 
         // AdMob設定
         AdmobHelper.initializeAdmob(mContext);
@@ -145,6 +150,12 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
+
+        // Clashlytics初期化
+        Fabric.with(this, new Crashlytics());
+
     }
 
 }

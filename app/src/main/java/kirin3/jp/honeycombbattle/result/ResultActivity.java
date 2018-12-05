@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
@@ -21,6 +22,7 @@ import kirin3.jp.honeycombbattle.R;
 import kirin3.jp.honeycombbattle.main.MainActivity;
 import kirin3.jp.honeycombbattle.mng.PlayerMng;
 import kirin3.jp.honeycombbattle.util.AdmobHelper;
+import kirin3.jp.honeycombbattle.util.CrashlyticsHelper;
 
 public class ResultActivity extends AppCompatActivity {
 
@@ -170,11 +172,11 @@ public class ResultActivity extends AppCompatActivity {
         if(PlayerMng.sPlayerNumber >= 3 ) sLayoutPlayer3.setVisibility(View.VISIBLE);
         if(PlayerMng.sPlayerNumber >= 4 ) sLayoutPlayer4.setVisibility(View.VISIBLE);
 
-
         sButtonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if( !AdmobHelper.loadInterstitialNextGame() ) {
+
                     Intent intent = new Intent(v.getContext(), MainActivity.class);
                     startActivity(intent);
                 }
