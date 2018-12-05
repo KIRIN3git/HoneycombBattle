@@ -172,7 +172,7 @@ public class TimeMng {
 
 		if( sSituation == SITUATION_COUNTDOWN ){
 			printX = canvas.getWidth() / 2;
-			printY = canvas.getHeight() * 2 / 3;
+			printY = canvas.getHeight() * 3 / 4;
 			// 反転表示
 			ViewUtils.mirrorDrowTextPlusRect(canvas,paint,paintSecond,printX,printY,printText);
 //			mirrorDrowText(canvas,paint,printX,printY,printText);
