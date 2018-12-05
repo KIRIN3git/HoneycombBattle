@@ -417,14 +417,17 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 
 		TimeMng.sleepGameOver();
 
-		Log.w( "DEBUG_DATA", "winner_no " + winner_no );
+
 
 		// フィールドの色をカウントして、全ユーザーのscoreに値を設定
 		FieldMng.countScore();
 
+		Log.w( "DEBUG_DATA", "RESULT" );
+
 		Intent intent = new Intent(mContext, ResultActivity.class);
 		intent.putExtra(ResultActivity.INTENT_WINNER_ID,winner_no);
 		mContext.startActivity(intent);
+
 	}
 
 

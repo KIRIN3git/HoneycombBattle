@@ -2,18 +2,18 @@
 <layer-list
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:opacity="opaque"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <item
         android:drawable="@color/white"/>
 
-    <item
-        android:width="200dp"
-        android:height="300dp"
-        android:gravity="center">
-        <bitmap
-            android:src="@mipmap/kirin3_logo" />
-    </item>
 
+    <item>
+        <bitmap
+            android:src="@drawable/kirin3_logo"
+            android:gravity="center" />
+
+    </item>
 </layer-list>
