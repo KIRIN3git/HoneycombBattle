@@ -36,6 +36,7 @@ public class ResultActivity extends AppCompatActivity {
     static TextView sTextPlayerScore1,sTextPlayerScore2,sTextPlayerScore3,sTextPlayerScore4;
     static LinearLayout sLayoutPlayer1,sLayoutPlayer2,sLayoutPlayer3,sLayoutPlayer4;
     static ImageView sImgRank1,sImgRank2,sImgRank3,sImgRank4;
+    static ImageView sImgBone1,sImgBone2,sImgBone3,sImgBone4;
     static Button sButtonBack;
     static int sRankPlayer1 = -1,sRankPlayer2 = -1,sRankPlayer3 = -1,sRankPlayer4 = -1;
 
@@ -49,7 +50,9 @@ public class ResultActivity extends AppCompatActivity {
         AdmobHelper.loadBanner((AdView)findViewById(R.id.adView));
 
         setRank();
+        setBone();
         outputData();
+
 
         AdmobHelper.setInterstitialNextGame();
         AdmobHelper.sInterstitialAdNextGame.setAdListener(new AdListener() {
@@ -89,8 +92,6 @@ public class ResultActivity extends AppCompatActivity {
         // 他人が勝者だったら
         if( winner_id != -1 ) rank++;
 
-
-
          for (int i = 0; i < PlayerMng.sPlayerNumber; i++) {
              if (i == winner_id) continue;
              if (i == user_id) continue;
@@ -99,6 +100,22 @@ public class ResultActivity extends AppCompatActivity {
              }
          }
          return rank;
+    }
+
+    public void setBone() {
+
+        sImgBone1 = (ImageView) findViewById(R.id.imgBone1);
+        sImgBone2 = (ImageView) findViewById(R.id.imgBone2);
+        sImgBone3 = (ImageView) findViewById(R.id.imgBone3);
+        sImgBone4 = (ImageView) findViewById(R.id.imgBone4);
+
+        Log.w( "DEBUG_DATA", "PlayerMng.players.get(0).status" + PlayerMng.players.get(0).status);
+        Log.w( "DEBUG_DATA", "PlayerMng.players.get(0).life" + PlayerMng.players.get(0).lifeNum);
+
+        if(PlayerMng.players.get(0).status == PlayerMng.STATUS_GAMEOVER ) sImgBone1.setVisibility(View.VISIBLE);
+        if(PlayerMng.players.get(1).status == PlayerMng.STATUS_GAMEOVER ) sImgBone2.setVisibility(View.VISIBLE);
+        if( PlayerMng.sPlayerNumber >= 3 && PlayerMng.players.get(2).status == PlayerMng.STATUS_GAMEOVER ) sImgBone3.setVisibility(View.VISIBLE);
+        if( PlayerMng.sPlayerNumber >= 4 && PlayerMng.players.get(3).status == PlayerMng.STATUS_GAMEOVER ) sImgBone4.setVisibility(View.VISIBLE);
     }
 
 
@@ -156,8 +173,7 @@ public class ResultActivity extends AppCompatActivity {
 
         sButtonBack = (Button) findViewById(R.id.buttonBack);
 
-        setCircleColor();
-
+//        setCircleColor();
 
         setImgRank(sTextPlayerRank1,sImgRank1,sRankPlayer1);
         setImgRank(sTextPlayerRank2,sImgRank2,sRankPlayer2);
@@ -183,7 +199,7 @@ public class ResultActivity extends AppCompatActivity {
             }
         });
     }
-
+/*
     public void setCircleColor(){
 
         sTextPlayerColor1 = (TextView)findViewById(R.id.textPlayerColor1);
@@ -195,8 +211,9 @@ public class ResultActivity extends AppCompatActivity {
         sTextPlayerColor2.setTextColor(Color.rgb(PlayerMng.PLAYER_COLOR[1][0], PlayerMng.PLAYER_COLOR[1][1], PlayerMng.PLAYER_COLOR[1][2]));
         sTextPlayerColor3.setTextColor(Color.rgb(PlayerMng.PLAYER_COLOR[2][0], PlayerMng.PLAYER_COLOR[2][1], PlayerMng.PLAYER_COLOR[2][2]));
         sTextPlayerColor4.setTextColor(Color.rgb(PlayerMng.PLAYER_COLOR[3][0], PlayerMng.PLAYER_COLOR[3][1], PlayerMng.PLAYER_COLOR[3][2]));
-    }
 
+    }
+*/
     public void setImgRank(TextView textPlayerRank,ImageView imgRank,int rank){
 
 //        textPlayerRank.setText(rank + " 位");
