@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="kirin3.jp.honeycombbattle.main.MainActivity">
+    tools:context="kirin3.jp.honeycombbattle.top.TopActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -377,7 +377,7 @@
                 android:layout_width="wrap_content"
                 android:textSize="20dp"
                 android:textColor="@color/white"
-                android:background="@drawable/shape_rounded_corners"
+                android:background="@drawable/shape_rounded_corners_yellow"
                 android:text="START">
             </Button>
         </LinearLayout>

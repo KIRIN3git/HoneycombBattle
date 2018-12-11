@@ -9,6 +9,8 @@ import com.google.android.gms.ads.MobileAds;
 
 import kirin3.jp.honeycombbattle.R;
 
+import static kirin3.jp.honeycombbattle.util.LogUtils.LOGD;
+
 public class AdmobHelper {
 
     private static final String TAG = LogUtils.makeLogTag(AdmobHelper.class);
@@ -21,6 +23,7 @@ public class AdmobHelper {
     // 初回のみ起動
     // バナーもインターステシャルも必要
     public static void initializeAdmob(Context context) {
+        LOGD(TAG, "initializeAdmob");
         sAppContext = context.getApplicationContext();
         MobileAds.initialize(sAppContext,sAppContext.getResources().getString(R.string.admob_app_id) );
     }
@@ -30,6 +33,7 @@ public class AdmobHelper {
      * AdmobHelper.setAdmob((AdView)findViewById(R.id.adView));
      */
     public static void loadBanner(AdView view) {
+        LOGD(TAG, "loadBanner");
         AdRequest adRequest = new AdRequest.Builder().build();
         view.loadAd(adRequest);
     }
@@ -39,6 +43,7 @@ public class AdmobHelper {
      * onCreateで呼ぶと一度しかロードできないので注意
      */
     public static void setInterstitialNextGame() {
+        LOGD(TAG, "setInterstitialNextGame");
         // イニシャライズ
         sInterstitialAdNextGame = new InterstitialAd(sAppContext);
         sInterstitialAdNextGame.setAdUnitId(sAppContext.getResources().getString(R.string.interstitial_ad_unit_id_test));
@@ -50,6 +55,7 @@ public class AdmobHelper {
      * 成功時:true,失敗時:false
      */
     public static boolean loadInterstitialNextGame() {
+        LOGD(TAG, "loadInterstitialNextGame");
         if (sInterstitialAdNextGame.isLoaded()) {
             sInterstitialAdNextGame.show();
             return true;
@@ -65,7 +71,7 @@ public class AdmobHelper {
         AdmobHelper.sInterstitialAdNextGame.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
-                Intent intent = new Intent(mContext, MainActivity.class);
+                Intent intent = new Intent(mContext, TopActivity.class);
                 startActivity(intent);
             }
         });

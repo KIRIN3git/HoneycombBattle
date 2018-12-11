@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context="kirin3.jp.honeycombbattle.main.MainActivity">
+    tools:context="kirin3.jp.honeycombbattle.top.TopActivity">
 
     <LinearLayout
         xmlns:ads="http://schemas.android.com/apk/res-auto"
@@ -49,6 +49,7 @@
                     <TextView
                         android:textSize="15sp"
                         android:text="point"
+                        android:layout_marginTop="5dp"
                         android:rotation="180"
                         android:gravity="bottom"
                         android:layout_width="wrap_content"
@@ -78,6 +79,30 @@
                     android:layout_height="40dp"
                     android:layout_gravity="center"/>
 
+                <LinearLayout
+                    android:id="@+id/layoutWinning2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:textSize="15sp"
+                        android:text="win"
+                        android:rotation="180"
+                        android:layout_marginTop="5dp"
+                        android:gravity="bottom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
+                    <TextView
+                        android:id="@+id/textWinningNum2"
+                        android:gravity="center"
+                        android:textColor="@color/lightBlue"
+                        android:rotation="180"
+                        android:textSize="30sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -106,6 +131,7 @@
                     <TextView
                         android:textSize="15sp"
                         android:text="point"
+                        android:layout_marginTop="5dp"
                         android:rotation="180"
                         android:gravity="bottom"
                         android:layout_width="wrap_content"
@@ -134,6 +160,29 @@
                     android:layout_height="40dp"
                     android:layout_gravity="center"/>
 
+                <LinearLayout
+                    android:id="@+id/layoutWinning4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:textSize="15sp"
+                        android:text="win"
+                        android:rotation="180"
+                        android:layout_marginTop="5dp"
+                        android:gravity="bottom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
+                    <TextView
+                        android:id="@+id/textWinningNum4"
+                        android:gravity="center"
+                        android:textColor="@color/lightBlue"
+                        android:rotation="180"
+                        android:textSize="30sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>
@@ -145,13 +194,25 @@
             android:layout_weight="1"
             android:gravity="center">
             <Button
-                android:id="@+id/buttonBack"
+                android:id="@+id/buttonReset"
+                android:layout_marginRight="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
                 android:textColor="@color/white"
-                android:background="@drawable/shape_rounded_corners"
-                android:text="BACK"/>
+                android:background="@drawable/shape_rounded_corners_purple"
+                android:text="RESET"/>
+
+            <Button
+                android:id="@+id/buttonBack"
+                android:layout_marginLeft="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@color/white"
+                android:background="@drawable/shape_rounded_corners_yellow"
+                android:text="TOP"/>
+
         </LinearLayout>
         <LinearLayout
             android:id="@+id/linearLayout3"
@@ -168,6 +229,28 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:layout_gravity="center">
+
+                <LinearLayout
+                    android:id="@+id/layoutWinning1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/textWinningNum1"
+                        android:gravity="center"
+                        android:textColor="@color/lightBlue"
+                        android:textSize="30sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:textSize="15sp"
+                        android:text="win"
+                        android:gravity="bottom"
+                        android:layout_marginBottom="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/imgRank1"
@@ -197,6 +280,7 @@
                     <TextView
                         android:textSize="15sp"
                         android:text="point"
+                        android:layout_marginBottom="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <ImageView
@@ -220,6 +304,27 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:layout_gravity="center">
+
+                <LinearLayout
+                    android:id="@+id/layoutWinning3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/textWinningNum3"
+                        android:textColor="@color/lightBlue"
+                        android:textSize="30sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:textSize="15sp"
+                        android:text="win"
+                        android:gravity="bottom"
+                        android:layout_marginBottom="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/imgRank3"
@@ -248,6 +353,7 @@
                     <TextView
                         android:textSize="15sp"
                         android:text="point"
+                        android:layout_marginBottom="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <ImageView

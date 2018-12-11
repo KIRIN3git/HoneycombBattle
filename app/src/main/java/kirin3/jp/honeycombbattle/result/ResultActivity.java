@@ -2,7 +2,6 @@ package kirin3.jp.honeycombbattle.result;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,16 +12,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 
 import kirin3.jp.honeycombbattle.R;
-import kirin3.jp.honeycombbattle.main.MainActivity;
+import kirin3.jp.honeycombbattle.top.TopActivity;
 import kirin3.jp.honeycombbattle.mng.PlayerMng;
 import kirin3.jp.honeycombbattle.util.AdmobHelper;
-import kirin3.jp.honeycombbattle.util.CrashlyticsHelper;
+import kirin3.jp.honeycombbattle.util.SettingsUtils;
 
 public class ResultActivity extends AppCompatActivity {
 
@@ -34,10 +32,12 @@ public class ResultActivity extends AppCompatActivity {
     static TextView sTextPlayerColor1,sTextPlayerColor2,sTextPlayerColor3,sTextPlayerColor4;
     static TextView sTextPlayerRank1,sTextPlayerRank2,sTextPlayerRank3,sTextPlayerRank4;
     static TextView sTextPlayerScore1,sTextPlayerScore2,sTextPlayerScore3,sTextPlayerScore4;
+    static TextView sTextWinningNum1,sTextWinningNum2,sTextWinningNum3,sTextWinningNum4;
+
     static LinearLayout sLayoutPlayer1,sLayoutPlayer2,sLayoutPlayer3,sLayoutPlayer4;
     static ImageView sImgRank1,sImgRank2,sImgRank3,sImgRank4;
     static ImageView sImgBone1,sImgBone2,sImgBone3,sImgBone4;
-    static Button sButtonBack;
+    static Button sButtonReset,sButtonBack;
     static int sRankPlayer1 = -1,sRankPlayer2 = -1,sRankPlayer3 = -1,sRankPlayer4 = -1;
 
     @Override
@@ -49,16 +49,77 @@ public class ResultActivity extends AppCompatActivity {
 
         AdmobHelper.loadBanner((AdView)findViewById(R.id.adView));
 
+
+        sLayoutPlayer1 = (LinearLayout)findViewById(R.id.layoutPlayer1);
+        sLayoutPlayer2 = (LinearLayout)findViewById(R.id.layoutPlayer2);
+        sLayoutPlayer3 = (LinearLayout)findViewById(R.id.layoutPlayer3);
+        sLayoutPlayer4 = (LinearLayout)findViewById(R.id.layoutPlayer4);
+/*
+        sTextPlayerRank1 = (TextView)findViewById(R.id.textPlayerRank1);
+        sTextPlayerRank2 = (TextView)findViewById(R.id.textPlayerRank2);
+        sTextPlayerRank3 = (TextView)findViewById(R.id.textPlayerRank3);
+        sTextPlayerRank4 = (TextView)findViewById(R.id.textPlayerRank4);
+*/
+        sTextPlayerScore1 = (TextView)findViewById(R.id.textPlayerScore1);
+        sTextPlayerScore2 = (TextView)findViewById(R.id.textPlayerScore2);
+        sTextPlayerScore3 = (TextView)findViewById(R.id.textPlayerScore3);
+        sTextPlayerScore4 = (TextView)findViewById(R.id.textPlayerScore4);
+
+        sTextWinningNum1 = (TextView)findViewById(R.id.textWinningNum1);
+        sTextWinningNum2 = (TextView)findViewById(R.id.textWinningNum2);
+        sTextWinningNum3 = (TextView)findViewById(R.id.textWinningNum3);
+        sTextWinningNum4 = (TextView)findViewById(R.id.textWinningNum4);
+
+        sImgRank1 = (ImageView) findViewById(R.id.imgRank1);
+        sImgRank2 = (ImageView) findViewById(R.id.imgRank2);
+        sImgRank3 = (ImageView) findViewById(R.id.imgRank3);
+        sImgRank4 = (ImageView) findViewById(R.id.imgRank4);
+
+        sButtonReset = (Button) findViewById(R.id.buttonReset);
+        sButtonBack = (Button) findViewById(R.id.buttonBack);
+
+        /*
+         * リセットボタン
+         */
+        sButtonReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SettingsUtils.resetWinningNum(mContext);
+                sTextWinningNum1.setText("0");
+                sTextWinningNum2.setText("0");
+                sTextWinningNum3.setText("0");
+                sTextWinningNum4.setText("0");
+
+                sTextWinningNum1.setTextColor(getResources().getColor(R.color.lightBlue));
+                sTextWinningNum2.setTextColor(getResources().getColor(R.color.lightBlue));
+                sTextWinningNum3.setTextColor(getResources().getColor(R.color.lightBlue));
+                sTextWinningNum4.setTextColor(getResources().getColor(R.color.lightBlue));
+            }
+        });
+
+        sButtonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if( !AdmobHelper.loadInterstitialNextGame() ) {
+
+                    Intent intent = new Intent(v.getContext(), TopActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
         setRank();
+        setWinnerNum();
         setBone();
-        outputData();
+        setScore();
+        setPlayNum();
 
 
         AdmobHelper.setInterstitialNextGame();
         AdmobHelper.sInterstitialAdNextGame.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
-                Intent intent = new Intent(mContext, MainActivity.class);
+                Intent intent = new Intent(mContext, TopActivity.class);
                 startActivity(intent);
             }
         });
@@ -76,9 +137,40 @@ public class ResultActivity extends AppCompatActivity {
         sRankPlayer2 = checkRank(1,winner_no);
         if(PlayerMng.sPlayerNumber >= 3 ) sRankPlayer3 = checkRank(2,winner_no);
         if(PlayerMng.sPlayerNumber >= 4 ) sRankPlayer4 = checkRank(3,winner_no);
+
+
+        setImgRank(sTextPlayerRank1,sImgRank1,sRankPlayer1);
+        setImgRank(sTextPlayerRank2,sImgRank2,sRankPlayer2);
+        setImgRank(sTextPlayerRank3,sImgRank3,sRankPlayer3);
+        setImgRank(sTextPlayerRank4,sImgRank4,sRankPlayer4);
     }
 
+    /*
+     * 勝利数の表示、プリファランスへの登録
+     * setRank後の必要あり
+     */
+    public void setWinnerNum(){
+        int win_num1,win_num2,win_num3,win_num4;
+        win_num1 = SettingsUtils.getWiiningNum1(mContext) + (sRankPlayer1 == 1?1:0);
+        win_num2 = SettingsUtils.getWiiningNum2(mContext) + (sRankPlayer2 == 1?1:0);
+        win_num3 = SettingsUtils.getWiiningNum3(mContext) + (sRankPlayer3 == 1?1:0);
+        win_num4 = SettingsUtils.getWiiningNum4(mContext) + (sRankPlayer4 == 1?1:0);
 
+        sTextWinningNum1.setText(String.valueOf(win_num1));
+        sTextWinningNum2.setText(String.valueOf(win_num2));
+        sTextWinningNum3.setText(String.valueOf(win_num3));
+        sTextWinningNum4.setText(String.valueOf(win_num4));
+
+        if(win_num1 > 0) sTextWinningNum1.setTextColor(getResources().getColor(R.color.lightRed));
+        if(win_num2 > 0) sTextWinningNum2.setTextColor(getResources().getColor(R.color.lightRed));
+        if(win_num3 > 0) sTextWinningNum3.setTextColor(getResources().getColor(R.color.lightRed));
+        if(win_num4 > 0) sTextWinningNum4.setTextColor(getResources().getColor(R.color.lightRed));
+
+        if(win_num1 > 0) SettingsUtils.setWinningNum1(mContext,win_num1);
+        if(win_num2 > 0) SettingsUtils.setWinningNum2(mContext,win_num2);
+        if(win_num3 > 0) SettingsUtils.setWinningNum3(mContext,win_num3);
+        if(win_num4 > 0) SettingsUtils.setWinningNum4(mContext,win_num4);
+    }
 
 
 
@@ -149,36 +241,7 @@ public class ResultActivity extends AppCompatActivity {
     }
     */
 
-    public void outputData(){
-
-        sLayoutPlayer1 = (LinearLayout)findViewById(R.id.layoutPlayer1);
-        sLayoutPlayer2 = (LinearLayout)findViewById(R.id.layoutPlayer2);
-        sLayoutPlayer3 = (LinearLayout)findViewById(R.id.layoutPlayer3);
-        sLayoutPlayer4 = (LinearLayout)findViewById(R.id.layoutPlayer4);
-/*
-        sTextPlayerRank1 = (TextView)findViewById(R.id.textPlayerRank1);
-        sTextPlayerRank2 = (TextView)findViewById(R.id.textPlayerRank2);
-        sTextPlayerRank3 = (TextView)findViewById(R.id.textPlayerRank3);
-        sTextPlayerRank4 = (TextView)findViewById(R.id.textPlayerRank4);
-*/
-        sTextPlayerScore1 = (TextView)findViewById(R.id.textPlayerScore1);
-        sTextPlayerScore2 = (TextView)findViewById(R.id.textPlayerScore2);
-        sTextPlayerScore3 = (TextView)findViewById(R.id.textPlayerScore3);
-        sTextPlayerScore4 = (TextView)findViewById(R.id.textPlayerScore4);
-
-        sImgRank1 = (ImageView) findViewById(R.id.imgRank1);
-        sImgRank2 = (ImageView) findViewById(R.id.imgRank2);
-        sImgRank3 = (ImageView) findViewById(R.id.imgRank3);
-        sImgRank4 = (ImageView) findViewById(R.id.imgRank4);
-
-        sButtonBack = (Button) findViewById(R.id.buttonBack);
-
-//        setCircleColor();
-
-        setImgRank(sTextPlayerRank1,sImgRank1,sRankPlayer1);
-        setImgRank(sTextPlayerRank2,sImgRank2,sRankPlayer2);
-        setImgRank(sTextPlayerRank3,sImgRank3,sRankPlayer3);
-        setImgRank(sTextPlayerRank4,sImgRank4,sRankPlayer4);
+    public void setScore(){
 
         sTextPlayerScore1.setText(String.valueOf(PlayerMng.players.get(0).score));
         sTextPlayerScore2.setText(String.valueOf(PlayerMng.players.get(1).score));
@@ -188,16 +251,15 @@ public class ResultActivity extends AppCompatActivity {
         if(PlayerMng.sPlayerNumber >= 3 ) sLayoutPlayer3.setVisibility(View.VISIBLE);
         if(PlayerMng.sPlayerNumber >= 4 ) sLayoutPlayer4.setVisibility(View.VISIBLE);
 
-        sButtonBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if( !AdmobHelper.loadInterstitialNextGame() ) {
 
-                    Intent intent = new Intent(v.getContext(), MainActivity.class);
-                    startActivity(intent);
-                }
-            }
-        });
+    }
+
+
+    public void setPlayNum(){
+        int play_num;
+
+        play_num = SettingsUtils.getPlayNum(mContext) + 1;
+        SettingsUtils.setPlayNum(mContext,play_num);
     }
 /*
     public void setCircleColor(){
@@ -236,7 +298,7 @@ public class ResultActivity extends AppCompatActivity {
             return super.onKeyDown(keyCode, event);
         }else{ // キーバック処理
             if( !AdmobHelper.loadInterstitialNextGame() ) {
-                Intent intent = new Intent(mContext, MainActivity.class);
+                Intent intent = new Intent(mContext, TopActivity.class);
                 startActivity(intent);
             }
             return false;

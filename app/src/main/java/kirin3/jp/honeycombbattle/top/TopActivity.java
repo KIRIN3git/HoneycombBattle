@@ -1,4 +1,4 @@
-package kirin3.jp.honeycombbattle.main;
+package kirin3.jp.honeycombbattle.top;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,17 +16,16 @@ import io.fabric.sdk.android.Fabric;
 
 import com.google.android.gms.ads.AdView;
 
-import io.fabric.sdk.android.Fabric;
-import io.fabric.sdk.android.services.common.Crash;
 import kirin3.jp.honeycombbattle.R;
 import kirin3.jp.honeycombbattle.game.GameActivity;
 import kirin3.jp.honeycombbattle.game.GameSurfaceView;
 import kirin3.jp.honeycombbattle.util.AdmobHelper;
+import kirin3.jp.honeycombbattle.util.AnalyticsHelper;
 import kirin3.jp.honeycombbattle.util.CrashlyticsHelper;
 import kirin3.jp.honeycombbattle.util.SettingsUtils;
 import kirin3.jp.honeycombbattle.util.ViewUtils;
 
-public class MainActivity extends AppCompatActivity {
+public class TopActivity extends AppCompatActivity {
 
     Context mContext;
 
@@ -49,19 +48,11 @@ public class MainActivity extends AppCompatActivity {
 
         mContext = getApplicationContext();
 
-        CrashlyticsHelper.initializeCrashlytics(mContext);
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-        }
-        setTheme(R.style.AppTheme);
 
 
         setContentView(R.layout.activity_main);
 
         // AdMob設定
-        AdmobHelper.initializeAdmob(mContext);
         AdmobHelper.loadBanner((AdView)findViewById(R.id.adView));
 
         int id = 0;
@@ -87,14 +78,12 @@ public class MainActivity extends AppCompatActivity {
         }
         id = SettingsUtils.getSettingRadioIdField(mContext);
         if( id != 0 ){
-            Log.w( "DEBUG_DATA", "tablet aaaaaaaaaaaaaaaaaaaaaaaaaa" );
             sRadioButtonFieldSize = (RadioButton) findViewById(id);
             sRadioButtonFieldSize.setChecked(true);
         }
         // タブレットだった場合は大きいを最初から選択
         else {
             if (ViewUtils.checkTablet(getApplicationContext().getResources())) {
-                Log.w("DEBUG_DATA", "tablet bbbbbbbbbbbbbbbbbbbbbbbbbb");
                 sRadioButtonFieldSize = (RadioButton) findViewById(R.id.RadioItemFieldSize5);
                 sRadioButtonFieldSize.setChecked(true);
 
@@ -142,8 +131,14 @@ public class MainActivity extends AppCompatActivity {
                 SettingsUtils.setSettingRadioIdItem(mContext, sRadioGroupItemQuantity.getCheckedRadioButtonId());
                 SettingsUtils.setSettingRadioIdField(mContext, sRadioGroupFieldSize.getCheckedRadioButtonId());
 
+                AnalyticsHelper.setAnalyticsConfig("time_config",sRadioIButtonBattleTime.getText().toString());
+                AnalyticsHelper.setAnalyticsConfig("number_config",sRadioIButtonPlayerNumber.getText().toString());
+                AnalyticsHelper.setAnalyticsConfig("speed_config",sRadioIButtonPlayerSpeed.getText().toString());
+                AnalyticsHelper.setAnalyticsConfig("item_config",sRadioIButtonItemQuantity.getText().toString());
+                AnalyticsHelper.setAnalyticsConfig("field_config",sRadioButtonFieldSize.getText().toString());
+
                 // インテントのインスタンス生成
-                Intent intent = new Intent(MainActivity.this, GameActivity.class);
+                Intent intent = new Intent(TopActivity.this, GameActivity.class);
                 intent.putExtra(GameSurfaceView.INTENT_BATTLE_TIME,sRadioIButtonBattleTime.getText());
                 intent.putExtra(GameSurfaceView.INTENT_PLAYER_NUMBER,sRadioIButtonPlayerNumber.getText());
                 intent.putExtra(GameSurfaceView.INTENT_PLAYER_SPEED,sRadioIButtonPlayerSpeed.getText());

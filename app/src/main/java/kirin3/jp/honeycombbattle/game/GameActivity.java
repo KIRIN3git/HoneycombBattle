@@ -5,8 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
-import kirin3.jp.honeycombbattle.main.MainActivity;
-
 public class GameActivity extends AppCompatActivity {
 	GameSurfaceView surfaceView;
 
@@ -17,7 +15,7 @@ public class GameActivity extends AppCompatActivity {
 		/*
 		Bundle extras = getIntent().getExtras();
 		String data = extras.getString("INTENT_ITEM_QUANTITY");
-		Log.w(MainActivity.INTENT_ITEM_QUANTITY, "data " + data);
+		Log.w(TopActivity.INTENT_ITEM_QUANTITY, "data " + data);
 		*/
 
 		surfaceView = new GameSurfaceView(this);

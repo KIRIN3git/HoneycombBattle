@@ -9,7 +9,8 @@ public class LogUtils {
     private static final String LOG_PREFIX = "util_";
 
     /*
-     * String cname = LogUtils.makeLogTag(TimeMng.class);
+     * private static final String TAG = LogUtils.makeLogTag(AnalyticsHelper.class);
+     * LOGD(TAG, "setAnalyticsEnabled : " + enabled);
      */
     public static String makeLogTag(Class cls) {
         return makeLogTag(cls.getSimpleName());

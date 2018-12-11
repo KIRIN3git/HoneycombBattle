@@ -17,13 +17,19 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-1057765466901496~2670630334"/>
 
-        <activity android:name=".main.MainActivity"
-            android:theme="@style/SplashTheme">
+        <activity android:name=".splash.SplashActivity"
+            android:theme="@style/AppFullScreenTheme"
+            android:noHistory="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".top.TopActivity"
+            android:theme="@style/AppFullScreenTheme">
         </activity>
 
         <activity

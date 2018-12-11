@@ -13,6 +13,13 @@ public class SettingsUtils {
     public static final String PREF_SETTING_ITEM = "pref_setting_item";
     public static final String PREF_SETTING_FIELD = "pref_setting_field";
 
+    public static final String PREF_WINNING_NUM1 = "pref_winning_num1";
+    public static final String PREF_WINNING_NUM2 = "pref_winning_num2";
+    public static final String PREF_WINNING_NUM3 = "pref_winning_num3";
+    public static final String PREF_WINNING_NUM4 = "pref_winning_num4";
+
+    public static final String PREF_PLAY_NUM = "pref_play_num";
+
     // TIMEのラジオボタンのIDを保存
     public static void setSettingRadioIdTime(final Context context, final Integer time_id) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
@@ -71,5 +78,85 @@ public class SettingsUtils {
     public static Integer getSettingRadioIdField(final Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getInt(PREF_SETTING_FIELD, 0);
+    }
+
+
+    // プレイヤー1の勝利数を保存
+    public static void setWinningNum1(final Context context, final Integer num) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        sp.edit().putInt(PREF_WINNING_NUM1, num).apply();
+
+        if(num != 0) AnalyticsHelper.setAnalyticsWinNum("win_num1",String.valueOf(num));
+    }
+
+    // プレイヤー1の勝利数を取得
+    public static Integer getWiiningNum1(final Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getInt(PREF_WINNING_NUM1, 0);
+    }
+
+    // プレイヤー2の勝利数を保存
+    public static void setWinningNum2(final Context context, final Integer num) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        sp.edit().putInt(PREF_WINNING_NUM2, num).apply();
+
+        if(num != 0) AnalyticsHelper.setAnalyticsWinNum("win_num2",String.valueOf(num));
+    }
+
+    // プレイヤー2の勝利数を取得
+    public static Integer getWiiningNum2(final Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getInt(PREF_WINNING_NUM2, 0);
+    }
+
+    // プレイヤー3の勝利数を保存
+    public static void setWinningNum3(final Context context, final Integer num) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        sp.edit().putInt(PREF_WINNING_NUM3, num).apply();
+
+        if(num != 0) AnalyticsHelper.setAnalyticsWinNum("win_num3",String.valueOf(num));
+    }
+
+    // プレイヤー3の勝利数を取得
+    public static Integer getWiiningNum3(final Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getInt(PREF_WINNING_NUM3, 0);
+    }
+
+    // プレイヤー4の勝利数を保存
+    public static void setWinningNum4(final Context context, final Integer num) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        sp.edit().putInt(PREF_WINNING_NUM4, num).apply();
+
+        if(num != 0) AnalyticsHelper.setAnalyticsWinNum("win_num4",String.valueOf(num));
+    }
+
+    // プレイヤー4の勝利数を取得
+    public static Integer getWiiningNum4(final Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getInt(PREF_WINNING_NUM4, 0);
+    }
+
+    // プレイヤーの勝利数をリセット
+    public static void resetWinningNum(final Context context) {
+        setWinningNum1(context,0);
+        setWinningNum2(context,0);
+        setWinningNum3(context,0);
+        setWinningNum4(context,0);
+    }
+
+
+    // ゲームのクリア数を保存
+    public static void setPlayNum(final Context context, final Integer num) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        sp.edit().putInt(PREF_PLAY_NUM, num).apply();
+
+        AnalyticsHelper.setAnalyticsPlayNum("play_num",String.valueOf(num));
+    }
+
+    // プレイヤー4の勝利数を取得
+    public static Integer getPlayNum(final Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getInt(PREF_PLAY_NUM, 0);
     }
 }

@@ -14,7 +14,9 @@
     <color name="bronze">#C47222</color>
     <color name="darkYellow">#edb918</color>
     <color name="darkRed">#b40926</color>
-
+    <color name="lightBlue">#7476d6</color>
+    <color name="lightGreen">#39ae5c</color>
+    <color name="lightRed">#f76161</color>
 
     <color name="startBack">#626262</color>
     <color name="startText">#FF5722</color>
