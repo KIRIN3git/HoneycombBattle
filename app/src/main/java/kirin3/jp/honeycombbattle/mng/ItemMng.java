@@ -64,7 +64,7 @@ public class ItemMng {
     final static public int STATUS_USED = 1;
 
     // アイテム出現量
-    static int sQuantityCandidate[] = {200,150,100,80,20};
+    static int sQuantityCandidate[] = {100,80,60,40,20};
     static int sItemQuantity;
 
     // アイテム数

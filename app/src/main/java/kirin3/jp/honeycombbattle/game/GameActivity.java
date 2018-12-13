@@ -35,6 +35,5 @@ public class GameActivity extends AppCompatActivity {
 	@Override
 	public void onStop(){
 		super.onStop();
-		Log.w( "DEBUG_DATA", "finish" );
 	}
 }

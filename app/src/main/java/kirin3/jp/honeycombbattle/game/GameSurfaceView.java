@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,9 +18,6 @@ import kirin3.jp.honeycombbattle.mng.PlayerMng;
 import kirin3.jp.honeycombbattle.mng.SoundMng;
 import kirin3.jp.honeycombbattle.mng.TimeMng;
 import kirin3.jp.honeycombbattle.result.ResultActivity;
-import kirin3.jp.honeycombbattle.util.ViewUtils;
-
-import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 
 /**
  * Created by shinji on 2017/04/06.
@@ -136,38 +132,38 @@ public class GameSurfaceView extends SurfaceView implements  Runnable,SurfaceHol
 		}
 
 
-		if( item_quantity.equals(getResources().getString(R.string.quantity_1)) ){
+		if( item_quantity.equals(getResources().getString(R.string.item_1)) ){
 			sItemQuantityNo = 0;
 		}
-		else if( item_quantity.equals(getResources().getString(R.string.quantity_2)) ){
+		else if( item_quantity.equals(getResources().getString(R.string.item_2)) ){
 			sItemQuantityNo = 1;
 		}
-		else if( item_quantity.equals(getResources().getString(R.string.quantity_3)) ){
+		else if( item_quantity.equals(getResources().getString(R.string.item_3)) ){
 			sItemQuantityNo = 2;
 		}
-		else if( item_quantity.equals(getResources().getString(R.string.quantity_4)) ){
+		else if( item_quantity.equals(getResources().getString(R.string.item_4)) ){
 			sItemQuantityNo = 3;
 		}
-		else if( item_quantity.equals(getResources().getString(R.string.quantity_5)) ){
+		else if( item_quantity.equals(getResources().getString(R.string.item_5)) ){
 			sItemQuantityNo = 4;
 		}
 		else{
 			sItemQuantityNo = 2;
 		}
 
-		if( field_size.equals(getResources().getString(R.string.size_1)) ){
+		if( field_size.equals(getResources().getString(R.string.field_1)) ){
 			sFieldSizeMagnification = 0.5f;
 		}
-		else if( field_size.equals(getResources().getString(R.string.size_2)) ){
+		else if( field_size.equals(getResources().getString(R.string.field_2)) ){
 			sFieldSizeMagnification = 0.8f;
 		}
-		else if( field_size.equals(getResources().getString(R.string.size_3)) ){
+		else if( field_size.equals(getResources().getString(R.string.field_3)) ){
 			sFieldSizeMagnification = 1.0f;
 		}
-		else if( field_size.equals(getResources().getString(R.string.size_4)) ){
+		else if( field_size.equals(getResources().getString(R.string.field_4)) ){
 			sFieldSizeMagnification = 1.2f;
 		}
-		else if( field_size.equals(getResources().getString(R.string.size_5)) ){
+		else if( field_size.equals(getResources().getString(R.string.field_5)) ){
 			sFieldSizeMagnification = 1.5f;
 		}
 		else{
