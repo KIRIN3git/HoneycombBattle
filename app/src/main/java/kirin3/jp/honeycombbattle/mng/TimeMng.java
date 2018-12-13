@@ -128,7 +128,7 @@ public class TimeMng {
 		printText = "THE END";
 		// Canvas 中心点
 		printX = canvas.getWidth() / 2;
-		printY = canvas.getHeight() * 2 / 4;
+		printY = canvas.getHeight() * 2 / 3;;
 
 		ViewUtils.mirrorDrowTextPlusRect(canvas,paint,paintSecond,printX,printY,printText);
 	}

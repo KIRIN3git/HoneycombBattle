@@ -65,8 +65,6 @@ public class PlayerMng {
     static float PLAYER_RADIUS_DEFO_PX;
     static float PLAYER_RADIUS_BOOST_PX;
 
-
-
 	// 移動マーカーの半径
 	static float DIRECTION_RADIUS_DP = 20.0f;
 	static float DIRECTION_RADIUS_PX;
@@ -354,7 +352,6 @@ public class PlayerMng {
 
 		// 死亡音
 		SoundMng.playSoundDead();
-
 		PlayerMng.players.get(user_id).status = PlayerMng.STATUS_DEAD;
 		PlayerMng.players.get(user_id).deadTime = getCurrentTime();
 	}
@@ -375,6 +372,13 @@ public class PlayerMng {
 					PlayerMng.players.get(i).deadTime = 0;
 					PlayerMng.players.get(i).nowPositionX = PlayerMng.players.get(i).startPositionX;
 					PlayerMng.players.get(i).nowPositionY = PlayerMng.players.get(i).startPositionY;
+					PlayerMng.players.get(i).speedUpTime = 0;
+					PlayerMng.players.get(i).speedUpFlg = false;
+					PlayerMng.players.get(i).speedUpBoostFlg = false;
+					PlayerMng.players.get(i).unrivaledTime = 0;
+					PlayerMng.players.get(i).unrivaledFlg = false;
+					PlayerMng.players.get(i).unrivaledBoostFlg = false;
+					PLAYER_RADIUS_PX[i] = PLAYER_RADIUS_DEFO_PX;
 					PlayerMng.players.get(i).lifeNum--;
 					if( PlayerMng.players.get(i).lifeNum <= 0 ){
 						PlayerMng.players.get(i).status = PlayerMng.STATUS_GAMEOVER;

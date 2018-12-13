@@ -43,12 +43,13 @@ public class ItemMng {
     // アイテムベースTEXT
     static String ITEM_BASE_TEXT[] ={"B","L","W","S","U"};
 
-    // ブーストアイテムの確率
+    // ブーストアイテムの確率(1/x)
     static Integer ITEM_BOOST_PROPORTION = 5;
 
     // アイテムベースカラー
     static int ITEM_BASE_COLOR[][] = {
-            {51,0,255},
+//            {51,0,255},
+            {0,0,0},
             {0,0,0}};
 
     // アイテムテキストカラー
@@ -158,6 +159,12 @@ public class ItemMng {
         paint.reset();
 
         for(int i = 0; i < sItemNum; i++ ) {
+
+            ITEM_RADIUS_PX = dpToPx(ITEM_RADIUS_DP,context.getResources()) * sSizeMagnification;
+            if( ItemMng.items.get(i).boost_flg ) ITEM_RADIUS_PX *= 1.5; // ブーストアイテムは1.5倍
+            ITEM_TEXT_PX = dpToPx(ITEM_TEXT_DP,context.getResources()) * sSizeMagnification;
+            if( ItemMng.items.get(i).boost_flg ) ITEM_TEXT_PX *= 1.5; // ブーストアイテムは1.5倍
+
             // 利用済みは非表示
             if( ItemMng.items.get(i).status != STATUS_NORMAL ){
                 continue;
