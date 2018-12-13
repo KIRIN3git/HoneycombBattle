@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
@@ -21,9 +22,9 @@ import kirin3.jp.honeycombbattle.game.GameActivity;
 import kirin3.jp.honeycombbattle.game.GameSurfaceView;
 import kirin3.jp.honeycombbattle.util.AdmobHelper;
 import kirin3.jp.honeycombbattle.util.AnalyticsHelper;
-import kirin3.jp.honeycombbattle.util.CrashlyticsHelper;
 import kirin3.jp.honeycombbattle.util.SettingsUtils;
 import kirin3.jp.honeycombbattle.util.ViewUtils;
+import kirin3.jp.honeycombbattle.webview.WebViewActivity;
 
 public class TopActivity extends AppCompatActivity {
 
@@ -42,6 +43,8 @@ public class TopActivity extends AppCompatActivity {
     static RadioButton sRadioButtonFieldSize;
 
 
+    TextView textPrivacyPoricy;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +53,7 @@ public class TopActivity extends AppCompatActivity {
 
 
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_top);
 
         // AdMob設定
         AdmobHelper.loadBanner((AdView)findViewById(R.id.adView));
@@ -89,6 +92,8 @@ public class TopActivity extends AppCompatActivity {
 
             }
         }
+
+        textPrivacyPoricy = (TextView) findViewById(R.id.textPrivacyPoricy);
 
         sRadioGroupBattleTime = (RadioGroup) findViewById(R.id.RadioGroupBattleTime);
         sRadioGroupPlayerNumber = (RadioGroup) findViewById(R.id.RadioGroupPlayerNumber);
@@ -147,6 +152,21 @@ public class TopActivity extends AppCompatActivity {
                 // ゲーム画面の起動
                 startActivity(intent);
 
+            }
+        });
+
+        textPrivacyPoricy.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                // インテントのインスタンス生成
+                Intent intent = new Intent(TopActivity.this, WebViewActivity.class);
+
+                intent.putExtra(
+                        WebViewActivity.INTENT_INPUT_URL,
+                        getApplicationContext().getString(R.string.privacy_poricy_url));
+
+                // プライバシーポリシーの起動
+                startActivity(intent);
             }
         });
 

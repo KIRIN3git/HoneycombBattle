@@ -42,6 +42,11 @@
             android:theme="@style/AppFullScreenTheme">
         </activity>
 
+        <activity android:name=".webview.WebViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppFullScreenTheme">
+        </activity>
+
     </application>
 
 

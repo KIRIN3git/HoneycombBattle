@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="2" />
+                                                <entry key="scalingPercent" value="82" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -34,7 +34,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="76" />
+                                                <entry key="scalingPercent" value="93" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -44,9 +44,12 @@
                                   </option>
                                   <option name="values">
                                     <map>
+                                      <entry key="backgroundAssetType" value="COLOR" />
                                       <entry key="backgroundColor" value="ffffff" />
-                                      <entry key="foregroundImage" value="D:\Android\img\HoneycombBattle\icon_honeycomb.png" />
+                                      <entry key="foregroundImage" value="E:\PROJECT\AndroidAppli\IMG\icon_honeycomb.png" />
+                                      <entry key="legacyIconShape" value="NONE" />
                                       <entry key="previewDensity" value="XXXHIGH" />
+                                      <entry key="webIconShape" value="NONE" />
                                     </map>
                                   </option>
                                 </PersistentState>
