@@ -5,17 +5,19 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 
 import kirin3.jp.honeycombbattle.R;
+import kirin3.jp.honeycombbattle.util.LogUtils;
 
 public class SoundMng {
 
+    private static final String TAG = LogUtils.makeLogTag(SoundMng.class);
 
     private static SoundPool sSoundPool2, sSoundPool1;
-    private static int sSoundStart1,sSoundStart2, sSoundGameOver;
-    private static int sSoundBomb1,sSoundBomb2,sSoundLaser1,sSoundLaser2,sSoundWave1,sSoundWave2;
-    private static int sSoundSpeed1,sSoundSpeed2,sSoundUnrivared1,sSoundUnrivared2;
+    private static int sSoundStart1, sSoundStart2, sSoundGameOver;
+    private static int sSoundBomb1, sSoundBomb2, sSoundLaser1, sSoundLaser2, sSoundWave1, sSoundWave2;
+    private static int sSoundSpeed1, sSoundSpeed2, sSoundUnrivared1, sSoundUnrivared2;
     private static int sSoundDead;
 
-    public static void soundInit(Context context){
+    public static void soundInit(Context context) {
         sSoundPool1 = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
         sSoundPool2 = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
         sSoundStart1 = sSoundPool1.load(context, R.raw.se_maoudamashii_retro02, 0);
@@ -34,7 +36,7 @@ public class SoundMng {
         sSoundUnrivared2 = sSoundPool2.load(context, R.raw.powerup08, 0);
     }
 
-    public static void soundEnd(){
+    public static void soundEnd() {
         sSoundPool1.release();
         sSoundPool2.release();
     }

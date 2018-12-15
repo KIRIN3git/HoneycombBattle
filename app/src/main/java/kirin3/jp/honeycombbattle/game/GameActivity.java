@@ -2,10 +2,15 @@ package kirin3.jp.honeycombbattle.game;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
+import kirin3.jp.honeycombbattle.util.LogUtils;
+
 public class GameActivity extends AppCompatActivity {
+
+
+	private static final String TAG = LogUtils.makeLogTag(GameActivity.class);
+
 	GameSurfaceView surfaceView;
 
 	@Override

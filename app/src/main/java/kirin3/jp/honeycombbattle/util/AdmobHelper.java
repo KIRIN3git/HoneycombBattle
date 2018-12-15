@@ -17,7 +17,7 @@ public class AdmobHelper {
 
 
     private static Context sAppContext = null;
-    public  static InterstitialAd sInterstitialAdNextGame;
+    public static InterstitialAd sInterstitialAdNextGame;
     public static String test;
 
     // 初回のみ起動
@@ -25,7 +25,7 @@ public class AdmobHelper {
     public static void initializeAdmob(Context context) {
         LOGD(TAG, "initializeAdmob");
         sAppContext = context.getApplicationContext();
-        MobileAds.initialize(sAppContext,sAppContext.getResources().getString(R.string.admob_app_id) );
+        MobileAds.initialize(sAppContext, sAppContext.getResources().getString(R.string.admob_app_id));
     }
 
     /*
@@ -46,10 +46,11 @@ public class AdmobHelper {
         LOGD(TAG, "setInterstitialNextGame");
         // イニシャライズ
         sInterstitialAdNextGame = new InterstitialAd(sAppContext);
-        sInterstitialAdNextGame.setAdUnitId(sAppContext.getResources().getString(R.string.interstitial_ad_unit_id_test));
+        sInterstitialAdNextGame.setAdUnitId(sAppContext.getResources().getString(R.string.interstitial_ad_unit_id_next_game));
         // ロード
         sInterstitialAdNextGame.loadAd(new AdRequest.Builder().build());
     }
+
     /*
      * インターステシャル呼び出し
      * 成功時:true,失敗時:false

@@ -12,6 +12,7 @@ import kirin3.jp.honeycombbattle.R;
 import kirin3.jp.honeycombbattle.util.LogUtils;
 import kirin3.jp.honeycombbattle.util.ViewUtils;
 
+import static kirin3.jp.honeycombbattle.util.LogUtils.LOGD;
 import static kirin3.jp.honeycombbattle.util.TimeUtils.getCurrentTime;
 import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 import static kirin3.jp.honeycombbattle.util.ViewUtils.mirrorDrowText;
@@ -19,257 +20,260 @@ import static kirin3.jp.honeycombbattle.util.ViewUtils.mirrorDrowTextPlusRect;
 
 /**
  * Created by shinji on 2017/06/08.
- *
+ * <p>
  * 時間の管理、表示、状況の判断を行う
  */
 
 public class TimeMng {
 
-	// 何度も生成しないように使いまわし
-	// GameSufaceViewに１つ、TimeMngに１つ
-	static Paint paintSecond;
+    private static final String TAG = LogUtils.makeLogTag(TimeMng.class);
 
-	// バトル時間ミリ秒
-	public static int sBattleTimeCandidate[] = {2,60,120};
-	static long sBattleTime;
+    // 何度も生成しないように使いまわし
+    // GameSufaceViewに１つ、TimeMngに１つ
+    static Paint paintSecond;
 
-	// カウントダウンテキストサイズ
-	static float COUNTDONW_TEXT_SIZE_DP = 60.0f;
-	static float COUNTDONW_TEXT_SIZE_PX;
+    // バトル時間ミリ秒
+    public static int sBattleTimeCandidate[] = {30, 60, 120};
+    static long sBattleTime;
 
-	// リミットテキストサイズ
-	static float LIMIT_TEXT_SIZE_DP = 40.0f;
-	static float LIMIT_TEXT_SIZE_PX;
+    // カウントダウンテキストサイズ
+    static float COUNTDONW_TEXT_SIZE_DP = 60.0f;
+    static float COUNTDONW_TEXT_SIZE_PX;
 
-	// ゲームオーバーテキストサイズ
-	static float GAMEOVER_TEXT_SIZE_DP = 40.0f;
-	static float GAMEOVER_TEXT_SIZE_PX;
+    // リミットテキストサイズ
+    static float LIMIT_TEXT_SIZE_DP = 40.0f;
+    static float LIMIT_TEXT_SIZE_PX;
 
-	// カウントダウンミリ秒
-	static long COUNT_DONW_MS = 3 * 1000;
-	// ゲームオーバー時間ミリ秒
-	static long GAMEOVER_MS = 2 * 1000;
-	// カウントダウン開始時間保存
-	static long sStartCountDownMS;
-	// 戦闘開始時間保存
-	static long sStartBattleMS = 0;
-	// 現在時間
-	static long CurrentTimeMillis;
-	// 前回時間
-	static long BeforeTimeMillis = sStartCountDownMS;
+    // ゲームオーバーテキストサイズ
+    static float GAMEOVER_TEXT_SIZE_DP = 40.0f;
+    static float GAMEOVER_TEXT_SIZE_PX;
 
-	// 状況 0:何もなし,1:カウントダウン,2:バトル中,3,GAMEOVER
-	public static final int SITUATION_NOTHING = 0;
-	public static final int SITUATION_COUNTDOWN = 1;
-	public static final int SITUATION_BATTLE = 2;
-	public static final int SITUATION_GAMEOVER = 3;
-	public static int sSituation = SITUATION_NOTHING;
+    // カウントダウンミリ秒
+    static long COUNT_DONW_MS = 3 * 1000;
+    // ゲームオーバー時間ミリ秒
+    static long GAMEOVER_MS = 2 * 1000;
+    // カウントダウン開始時間保存
+    static long sStartCountDownMS;
+    // 戦闘開始時間保存
+    static long sStartBattleMS = 0;
+    // 現在時間
+    static long CurrentTimeMillis;
+    // 前回時間
+    static long BeforeTimeMillis = sStartCountDownMS;
 
-	public static int coutnta = 0;
-	public static int alla = 0;
-	public static int sound_start1_count;
-	public static boolean sound_start2_flg;
+    // 状況 0:何もなし,1:カウントダウン,2:バトル中,3,GAMEOVER
+    public static final int SITUATION_NOTHING = 0;
+    public static final int SITUATION_COUNTDOWN = 1;
+    public static final int SITUATION_BATTLE = 2;
+    public static final int SITUATION_GAMEOVER = 3;
+    public static int sSituation = SITUATION_NOTHING;
 
-
-	// FPS
-	static long sFps = Config.FPS;
-	static long sRunStartTime = 0, sRunEndTime = 0;
-	static long sNowFps = 0;
-
-	static String sCname;
-
-	public static void timeInit(Context context,int timeNo){
-		 paintSecond = new Paint();
-
-		sound_start1_count = -1;
-		sound_start2_flg = false;
-
-		sCname = LogUtils.makeLogTag(TimeMng.class);
-
-		sBattleTime = sBattleTimeCandidate[timeNo] * 1000;
-
-		COUNTDONW_TEXT_SIZE_PX = dpToPx(COUNTDONW_TEXT_SIZE_DP,context.getResources());
-		LIMIT_TEXT_SIZE_PX = dpToPx(LIMIT_TEXT_SIZE_DP,context.getResources());
-		GAMEOVER_TEXT_SIZE_PX = dpToPx(GAMEOVER_TEXT_SIZE_DP,context.getResources());
-	}
-
-	public static int getSituation(){
-		return sSituation;
-	}
-
-	public static void setSituation(int situ){
-		sSituation = situ;
-	}
-
-	public static void countDownStart(Context context){
-		sSituation = SITUATION_COUNTDOWN;
-		sStartCountDownMS = getCurrentTime();
-	}
-
-	public static void battleStart(Context context){
-		sSituation = SITUATION_BATTLE;
-		sStartBattleMS = getCurrentTime();
-	}
+    public static int coutnta = 0;
+    public static int alla = 0;
+    public static int sound_start1_count;
+    public static boolean sound_start2_flg;
 
 
-	public static void drawGameOver(Context context, Paint paint, Canvas canvas) {
+    // FPS
+    static long sFps = Config.FPS;
+    static long sRunStartTime = 0, sRunEndTime = 0;
+    static long sNowFps = 0;
 
-		String printText;
-		float printX,printY;
+    static String sCname;
 
-		paint.reset();
-		paint.setTextSize(GAMEOVER_TEXT_SIZE_PX);
-		paint.setColor(context.getResources().getColor(R.color.startText));
+    public static void timeInit(Context context, int timeNo) {
+        paintSecond = new Paint();
 
-		paintSecond.reset();
-		paintSecond.setColor(context.getResources().getColor(R.color.startBack));
+        sound_start1_count = -1;
+        sound_start2_flg = false;
+
+        sCname = LogUtils.makeLogTag(TimeMng.class);
+
+        sBattleTime = sBattleTimeCandidate[timeNo] * 1000;
+
+        COUNTDONW_TEXT_SIZE_PX = dpToPx(COUNTDONW_TEXT_SIZE_DP, context.getResources());
+        LIMIT_TEXT_SIZE_PX = dpToPx(LIMIT_TEXT_SIZE_DP, context.getResources());
+        GAMEOVER_TEXT_SIZE_PX = dpToPx(GAMEOVER_TEXT_SIZE_DP, context.getResources());
+    }
+
+    public static int getSituation() {
+        return sSituation;
+    }
+
+    public static void setSituation(int situ) {
+        sSituation = situ;
+    }
+
+    public static void countDownStart(Context context) {
+        sSituation = SITUATION_COUNTDOWN;
+        sStartCountDownMS = getCurrentTime();
+    }
+
+    public static void battleStart(Context context) {
+        sSituation = SITUATION_BATTLE;
+        sStartBattleMS = getCurrentTime();
+    }
 
 
-		printText = "THE END";
-		// Canvas 中心点
-		printX = canvas.getWidth() / 2;
-		printY = canvas.getHeight() * 2 / 3;;
+    public static void drawGameOver(Context context, Paint paint, Canvas canvas) {
 
-		ViewUtils.mirrorDrowTextPlusRect(canvas,paint,paintSecond,printX,printY,printText);
-	}
+        String printText;
+        float printX, printY;
 
-	public static void drawCountDown(Context context, Paint paint, Canvas canvas){
+        paint.reset();
+        paint.setTextSize(GAMEOVER_TEXT_SIZE_PX);
+        paint.setColor(context.getResources().getColor(R.color.startText));
 
-		int count_num;
-		String printText = "";
-		float printX,printY;
+        paintSecond.reset();
+        paintSecond.setColor(context.getResources().getColor(R.color.startBack));
 
-		//カウントダウン開始からの経過ミリ秒
-		long StartMillis = getCurrentTime() - sStartCountDownMS;
 
-		paint.reset();
-		paint.setTextSize(COUNTDONW_TEXT_SIZE_PX);
-		paint.setColor(context.getResources().getColor(R.color.startText));
+        printText = "THE END";
+        // Canvas 中心点
+        printX = canvas.getWidth() / 2;
+        printY = canvas.getHeight() * 2 / 3;
+        ;
 
-		paintSecond.reset();
-		paintSecond.setColor(context.getResources().getColor(R.color.startBack));
+        ViewUtils.mirrorDrowTextPlusRect(canvas, paint, paintSecond, printX, printY, printText);
+    }
 
-		if( COUNT_DONW_MS - StartMillis > 0 ){
-			count_num = (int)( (COUNT_DONW_MS - StartMillis) / 1000 ) + 1;
-			// 値変更時に音を鳴らす
-			if( count_num != sound_start1_count ){
-				SoundMng.playSoundStart1();
-			}
-			sound_start1_count = count_num;
-			printText = String.valueOf( count_num );
-		}
-		else if( COUNT_DONW_MS - StartMillis > -500 ){
-			if( sound_start2_flg == false ){
-				SoundMng.playSoundStart2();
-				sound_start2_flg = true;
-			}
-			printText = "START";
-		}
-		else{
-			// バトル開始
-			battleStart(context);
-		}
+    public static void drawCountDown(Context context, Paint paint, Canvas canvas) {
 
-		if( sSituation == SITUATION_COUNTDOWN ){
-			printX = canvas.getWidth() / 2;
-			printY = canvas.getHeight() * 6 / 7;
-			// 反転表示
-			ViewUtils.mirrorDrowTextPlusRect(canvas,paint,paintSecond,printX,printY,printText);
+        int count_num;
+        String printText = "";
+        float printX, printY;
+
+        //カウントダウン開始からの経過ミリ秒
+        long StartMillis = getCurrentTime() - sStartCountDownMS;
+
+        paint.reset();
+        paint.setTextSize(COUNTDONW_TEXT_SIZE_PX);
+        paint.setColor(context.getResources().getColor(R.color.startText));
+
+        paintSecond.reset();
+        paintSecond.setColor(context.getResources().getColor(R.color.startBack));
+
+        if (COUNT_DONW_MS - StartMillis > 0) {
+            count_num = (int) ((COUNT_DONW_MS - StartMillis) / 1000) + 1;
+            // 値変更時に音を鳴らす
+            if (count_num != sound_start1_count) {
+                SoundMng.playSoundStart1();
+            }
+            sound_start1_count = count_num;
+            printText = String.valueOf(count_num);
+        } else if (COUNT_DONW_MS - StartMillis > -500) {
+            if (sound_start2_flg == false) {
+                SoundMng.playSoundStart2();
+                sound_start2_flg = true;
+            }
+            printText = "START";
+        } else {
+            // バトル開始
+            battleStart(context);
+        }
+
+        if (sSituation == SITUATION_COUNTDOWN) {
+            printX = canvas.getWidth() / 2;
+            printY = canvas.getHeight() * 6 / 7;
+            // 反転表示
+            ViewUtils.mirrorDrowTextPlusRect(canvas, paint, paintSecond, printX, printY, printText);
 //			mirrorDrowText(canvas,paint,printX,printY,printText);
-		}
-	}
+        }
+    }
 
-	public static long getBattleLimitTimeS(){
-		return ( ( sBattleTime - (getCurrentTime() - sStartBattleMS) ) / 1000 ) + 1;
-	}
-	public static long getBattleLimitTImeMS(){
-		return ( sBattleTime - (System.currentTimeMillis() - sStartBattleMS) ) - ( getBattleLimitTimeS() * 1000 ) + 1000;
-	}
+    public static long getBattleLimitTimeS() {
+        return ((sBattleTime - (getCurrentTime() - sStartBattleMS)) / 1000) + 1;
+    }
+
+    public static long getBattleLimitTImeMS() {
+        return (sBattleTime - (System.currentTimeMillis() - sStartBattleMS)) - (getBattleLimitTimeS() * 1000) + 1000;
+    }
 
 
-	public static void drawLimitTime(Context context,Paint paint, Canvas canvas){
-		boolean timeOverFlg = false;
-		String printText;
-		float printX,printY;
+    public static void drawLimitTime(Context context, Paint paint, Canvas canvas) {
+        boolean timeOverFlg = false;
+        String printText;
+        float printX, printY;
 
-		if( getBattleLimitTimeS() < 0 ) timeOverFlg = true;
+        if (getBattleLimitTimeS() < 0) timeOverFlg = true;
 
-		paintSecond.reset();
-		paintSecond.setColor(context.getResources().getColor(R.color.countdownBack));
+        paintSecond.reset();
+        paintSecond.setColor(context.getResources().getColor(R.color.countdownBack));
 
-		paint.reset();
-		paint.setTextSize(LIMIT_TEXT_SIZE_PX);
-		paint.setColor(context.getResources().getColor(R.color.countdownText));
-		if( !timeOverFlg ){
-			// 反転表示
-			printText = String.format(Locale.JAPAN, "%02d", getBattleLimitTimeS());
-			printX = ( canvas.getWidth() / 2 );
-			printY = canvas.getHeight()  + ((paint.descent() + paint.ascent()) / 2);
-			mirrorDrowTextPlusRect(canvas,paint,paintSecond,printX,printY,printText);
-		}
-		else{
+        paint.reset();
+        paint.setTextSize(LIMIT_TEXT_SIZE_PX);
+        paint.setColor(context.getResources().getColor(R.color.countdownText));
+        if (!timeOverFlg) {
+            // 反転表示
+            printText = String.format(Locale.JAPAN, "%02d", getBattleLimitTimeS());
+            printX = (canvas.getWidth() / 2);
+            printY = canvas.getHeight() + ((paint.descent() + paint.ascent()) / 2);
+            mirrorDrowTextPlusRect(canvas, paint, paintSecond, printX, printY, printText);
+        } else {
 //			canvas.drawText("STOP", 0, canvas.getHeight(), paint);
-			// 試合終了
-			sSituation = SITUATION_GAMEOVER;
-		}
-	}
+            // 試合終了
+            sSituation = SITUATION_GAMEOVER;
+        }
+    }
 
-	public static void drawFps(Context context,Paint paint, Canvas canvas){
-		String printText;
-		float printX,printY;
+    public static void drawFps(Paint paint, Canvas canvas) {
+        String printText;
+        float printX, printY;
 
-		paint.reset();
-		paint.setTextSize(LIMIT_TEXT_SIZE_PX);
-		paint.setColor(Color.GREEN);
-		// 反転表示
-		printText = String.format(Locale.JAPAN, "%d", sNowFps);
-		printX = paint.measureText(printText) / 2;
-		printY = canvas.getHeight()  + ((paint.descent() + paint.ascent()) / 2);
-		mirrorDrowText(canvas,paint,printX,printY,printText);
-	}
+        if(Config.IS_DOGFOOD_BUILD == false) return;
 
-	public static long getsFpsMsec(){
-		return 1000 / sFps;
-	}
+        paint.reset();
+        paint.setTextSize(LIMIT_TEXT_SIZE_PX);
+        paint.setColor(Color.GREEN);
+        // 反転表示
+        printText = String.format(Locale.JAPAN, "%d", sNowFps);
+        printX = paint.measureText(printText) / 2;
+        printY = canvas.getHeight() + ((paint.descent() + paint.ascent()) / 2);
+        mirrorDrowText(canvas, paint, printX, printY, printText);
+    }
 
-	public static long getsMsecFps(long msec){
-		return 1000 / msec;
-	}
+    public static long getsFpsMsec() {
+        return 1000 / sFps;
+    }
 
-	public static void fpsStart(){
-		// FPSのためにwhileの起動時間保存
-		sRunStartTime = System.currentTimeMillis();
-	}
+    public static long getsMsecFps(long msec) {
+        return 1000 / msec;
+    }
 
-	// 処理が速い場合は若干のスリープ
-	public static void fpsEnd(){
+    public static void fpsStart() {
+        // FPSのためにwhileの起動時間保存
+        sRunStartTime = System.currentTimeMillis();
+    }
 
-		sRunEndTime = System.currentTimeMillis();
+    // 処理が速い場合は若干のスリープ
+    public static void fpsEnd() {
+
+        sRunEndTime = System.currentTimeMillis();
 
 //		Log.w( "DEBUG_DATA", "time[" + (sRunEndTime - sRunStartTime)  + "]" );
-		// 15で高速　40で低速
-		sNowFps =  getsMsecFps(sRunEndTime - sRunStartTime);
-		LogUtils.LOGW(sCname,"FPS[" +sNowFps + "]");
-		LogUtils.LOGW(sCname,"time[" + (sRunEndTime - sRunStartTime)  + "]");
-		LogUtils.LOGW(sCname,"getsFpsMsec()[" + getsFpsMsec()  + "]");
+        // 15で高速　40で低速
+        sNowFps = getsMsecFps(sRunEndTime - sRunStartTime);
+        LogUtils.LOGW(sCname, "FPS[" + sNowFps + "]");
+        LogUtils.LOGW(sCname, "time[" + (sRunEndTime - sRunStartTime) + "]");
+        LogUtils.LOGW(sCname, "getsFpsMsec()[" + getsFpsMsec() + "]");
 
-		// FPS制限
-		// 基本引っ掛からない
-		// 60fpsは1000 / 60 = 16.6666
-		// 1フレームに16.7ミリ秒かけられる
-		if(sRunEndTime - sRunStartTime < getsFpsMsec()){
-			try {
-				Thread.sleep(getsFpsMsec() - (sRunEndTime - sRunStartTime));
-			} catch (InterruptedException e) {
-			}
-		}
-	}
+        // FPS制限
+        // 基本引っ掛からない
+        // 60fpsは1000 / 60 = 16.6666
+        // 1フレームに16.7ミリ秒かけられる
+        if (sRunEndTime - sRunStartTime < getsFpsMsec()) {
+            try {
+                Thread.sleep(getsFpsMsec() - (sRunEndTime - sRunStartTime));
+            } catch (InterruptedException e) {
+            }
+        }
+    }
 
-	// ゲームオーバー時のスリープ
-	public static void sleepGameOver(){
-		try {
-			Thread.sleep(GAMEOVER_MS);
-		} catch (InterruptedException e) {
-		}
-	}
+    // ゲームオーバー時のスリープ
+    public static void sleepGameOver() {
+        try {
+            Thread.sleep(GAMEOVER_MS);
+        } catch (InterruptedException e) {
+        }
+    }
 }

@@ -36,6 +36,7 @@ public class IOUtils {
     public static void writeToFile(Context context, String data, String filename) {
         writeToFile(context, data.getBytes(CHARSET_UTF8), filename);
     }
+
     public static void writeToFile(Context context, byte[] data, String filename) {
         File file = new File(context.getFilesDir(), filename);
         try {

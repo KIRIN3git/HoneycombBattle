@@ -17,21 +17,19 @@
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:orientation="vertical"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true">
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/title"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="40sp"
+                android:textSize="38sp"
                 android:textStyle="bold"
                 android:textColor="@color/lightRed"
                 android:text="@string/app_name"
                 android:layout_above="@+id/linearLayout1"
+                android:layout_marginTop="5dp"
                 android:layout_marginBottom="15dp">
             </TextView>
 
@@ -404,11 +402,20 @@
                 android:text="@string/start">
             </Button>
 
+
+            <TextView
+                android:id="@+id/textManual"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:text="@string/manual"/>
+
             <TextView
                 android:id="@+id/textPrivacyPoricy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:text="@string/privacy_poricy"/>
 
@@ -429,7 +436,7 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             ads:adSize="BANNER"
-            ads:adUnitId="@string/banner_ad_unit_id_test">
+            ads:adUnitId="@string/banner_ad_unit_id_top">
         </com.google.android.gms.ads.AdView>
 
     </LinearLayout>

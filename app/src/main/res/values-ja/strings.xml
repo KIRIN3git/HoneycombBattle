@@ -28,6 +28,8 @@
     <string name="field_4">大きめ</string>
     <string name="field_5">大きい</string>
     <string name="start">START</string>
+    <string name="manual"><u>マニュアル</u></string>
+    <string name="manual_url">https://sites.google.com/view/honeycom-battle-manual</string>
     <string name="privacy_poricy"><u>プライバシーポリシー</u></string>
     <string name="privacy_poricy_url">https://sites.google.com/view/kirin3-privacy-policy/</string>
 
@@ -38,7 +40,7 @@
 
     <string name="admob_app_id">ca-app-pub-1057765466901496~2670630334</string>
     <string name="banner_ad_unit_id_test">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="banner_ad_unit_id_main">ca-app-pub-1057765466901496/5540336254</string>
+    <string name="banner_ad_unit_id_top">ca-app-pub-1057765466901496/5540336254</string>
     <string name="banner_ad_unit_id_result">ca-app-pub-1057765466901496/8601531718</string>
 
     <string name="interstitial_ad_unit_id_test">ca-app-pub-3940256099942544/1033173712</string>

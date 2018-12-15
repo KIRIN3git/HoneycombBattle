@@ -34,7 +34,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="93" />
+                                                <entry key="scalingPercent" value="71" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -46,7 +46,8 @@
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
                                       <entry key="backgroundColor" value="ffffff" />
-                                      <entry key="foregroundImage" value="E:\PROJECT\AndroidAppli\IMG\icon_honeycomb.png" />
+                                      <entry key="backgroundImage" value="D:\Android\img\HoneycombBattle\background.png" />
+                                      <entry key="foregroundImage" value="D:\Android\img\HoneycombBattle\icon_honeycomb.png" />
                                       <entry key="legacyIconShape" value="NONE" />
                                       <entry key="previewDensity" value="XXXHIGH" />
                                       <entry key="webIconShape" value="NONE" />

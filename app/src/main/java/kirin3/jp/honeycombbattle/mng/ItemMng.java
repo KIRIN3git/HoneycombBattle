@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Random;
 
 import kirin3.jp.honeycombbattle.status.ItemStatus;
+import kirin3.jp.honeycombbattle.util.LogUtils;
 import kirin3.jp.honeycombbattle.util.TimeUtils;
 
 import static kirin3.jp.honeycombbattle.mng.FieldMng.DALETE_NO;
@@ -24,6 +25,8 @@ import static kirin3.jp.honeycombbattle.util.ViewUtils.dpToPx;
 
 public class ItemMng {
 
+    private static final String TAG = LogUtils.makeLogTag(ItemMng.class);
+
     // 長さ倍率
     static float sSizeMagnification;
 
@@ -35,13 +38,11 @@ public class ItemMng {
     static float ITEM_TEXT_PX;
 
 
-
-
     // アイテム種類
     static int type;
 
     // アイテムベースTEXT
-    static String ITEM_BASE_TEXT[] ={"B","L","W","S","U"};
+    static String ITEM_BASE_TEXT[] = {"B", "L", "W", "S", "U"};
 
     // ブーストアイテムの確率(1/x)
     static Integer ITEM_BOOST_PROPORTION = 5;
@@ -49,23 +50,23 @@ public class ItemMng {
     // アイテムベースカラー
     static int ITEM_BASE_COLOR[][] = {
 //            {51,0,255},
-            {0,0,0},
-            {0,0,0}};
+            {0, 0, 0},
+            {0, 0, 0}};
 
     // アイテムテキストカラー
     static int ITEM_TEXT_COLOR[][] = {
-            {255,0,0},
-            {0,255,0},
-            {140,140,200},
-            {255,255,100},
-            {255,0,255}};
+            {255, 0, 0},
+            {0, 255, 0},
+            {140, 140, 200},
+            {255, 255, 100},
+            {255, 0, 255}};
 
     // ステータス
     final static public int STATUS_NORMAL = 0;
     final static public int STATUS_USED = 1;
 
     // アイテム出現量
-    static int sQuantityCandidate[] = {100,80,60,40,20};
+    static int sQuantityCandidate[] = {100, 80, 60, 40, 20};
     static int sItemQuantity;
 
     // アイテム数
@@ -78,12 +79,12 @@ public class ItemMng {
     final static int SPEEDUP_TIME = 5 * 1000;
 
     // アイテム無敵時間（ミリ秒）
-    final static int ITEM_UNRIVALE_TIME = 5 * 1000;
+    final static int ITEM_UNRIVALED_TIME = 5 * 1000;
 
     // 復活無敵時間（ミリ秒）
-    final static int REVIVAL_UNRIVALE_TIME = 1 * 1000;
+    final static int REVIVAL_UNRIVALED_TIME = 1 * 1000;
 
-    public static void itemInit(int quantityNo,float sizeMagnification){
+    public static void itemInit(int quantityNo, float sizeMagnification) {
 
         sItemNum = 0;
         items = new ArrayList<ItemStatus>();
@@ -93,17 +94,17 @@ public class ItemMng {
         sItemQuantity = sQuantityCandidate[quantityNo];
     }
 
-    public static void createItem(Context context,Canvas canvas){
+    public static void createItem(Context context, Canvas canvas) {
 
         boolean item_boost_flg;
-        int max_x,max_y;
-        int throw_random,place_random,start_x_random,start_y_random,item_type_random,x_dire_random,y_dire_random;
+        int max_x, max_y;
+        int throw_random, place_random, start_x_random, start_y_random, item_type_random, x_dire_random, y_dire_random;
         ItemStatus item;
 
         Random r = new Random();
         throw_random = r.nextInt(sItemQuantity);
 
-        if( throw_random == 0 ){
+        if (throw_random == 0) {
             sItemNum++;
             max_x = canvas.getWidth();
             max_y = canvas.getHeight();
@@ -113,65 +114,62 @@ public class ItemMng {
             item_type_random = r.nextInt(ITEM_BASE_TEXT.length);
 //            item_type_random = 0; //☆
 
-            if( r.nextInt(ITEM_BOOST_PROPORTION) == 0 ) item_boost_flg = true;
+            if (r.nextInt(ITEM_BOOST_PROPORTION) == 0) item_boost_flg = true;
             else item_boost_flg = false;
 
-            if( place_random == 0 ) {
+            if (place_random == 0) {
                 start_x_random = 0;
                 start_y_random = r.nextInt(max_y) + 1;
                 x_dire_random = r.nextInt(5) + 1;
                 y_dire_random = r.nextInt(10) - 5;
-            }
-            else if( place_random == 1 ) {
+            } else if (place_random == 1) {
                 start_x_random = max_x;
                 start_y_random = r.nextInt(max_y) + 1;
-                x_dire_random = - ( r.nextInt(5) + 1 );
+                x_dire_random = -(r.nextInt(5) + 1);
                 y_dire_random = r.nextInt(10) - 5;
-            }
-            else if( place_random == 2 ) {
+            } else if (place_random == 2) {
                 start_x_random = r.nextInt(max_x) + 1;
                 start_y_random = 0;
                 x_dire_random = r.nextInt(10) - 5;
                 y_dire_random = r.nextInt(5) + 1;
-            }
-            else{
+            } else {
                 start_x_random = r.nextInt(max_x) + 1;
                 start_y_random = max_y;
                 x_dire_random = r.nextInt(10) - 5;
-                y_dire_random = - ( r.nextInt(5) + 1 );
+                y_dire_random = -(r.nextInt(5) + 1);
             }
 
-            item = new ItemStatus( sItemNum,start_x_random,start_y_random,item_type_random,ITEM_BASE_TEXT[item_type_random],ITEM_BASE_COLOR[item_boost_flg?1:0],ITEM_TEXT_COLOR[item_type_random],x_dire_random,y_dire_random,item_boost_flg );
+            item = new ItemStatus(sItemNum, start_x_random, start_y_random, item_type_random, ITEM_BASE_TEXT[item_type_random], ITEM_BASE_COLOR[item_boost_flg ? 1 : 0], ITEM_TEXT_COLOR[item_type_random], x_dire_random, y_dire_random, item_boost_flg);
             items.add(item);
         }
     }
 
     public static void drawItem(Context context, Paint paint, Canvas canvas) {
 
-        int max_x,max_y;
-        float widht,height;
+        int max_x, max_y;
+        float widht, height;
 
         max_x = canvas.getWidth();
         max_y = canvas.getHeight();
 
-        ITEM_RADIUS_PX = dpToPx(ITEM_RADIUS_DP,context.getResources()) * sSizeMagnification;
-        ITEM_TEXT_PX = dpToPx(ITEM_TEXT_DP,context.getResources()) * sSizeMagnification;
+        ITEM_RADIUS_PX = dpToPx(ITEM_RADIUS_DP, context.getResources()) * sSizeMagnification;
+        ITEM_TEXT_PX = dpToPx(ITEM_TEXT_DP, context.getResources()) * sSizeMagnification;
         paint.reset();
 
-        for(int i = 0; i < sItemNum; i++ ) {
+        for (int i = 0; i < sItemNum; i++) {
 
-            ITEM_RADIUS_PX = dpToPx(ITEM_RADIUS_DP,context.getResources()) * sSizeMagnification;
-            if( ItemMng.items.get(i).boost_flg ) ITEM_RADIUS_PX *= 1.5; // ブーストアイテムは1.5倍
-            ITEM_TEXT_PX = dpToPx(ITEM_TEXT_DP,context.getResources()) * sSizeMagnification;
-            if( ItemMng.items.get(i).boost_flg ) ITEM_TEXT_PX *= 1.5; // ブーストアイテムは1.5倍
+            ITEM_RADIUS_PX = dpToPx(ITEM_RADIUS_DP, context.getResources()) * sSizeMagnification;
+            if (ItemMng.items.get(i).boost_flg) ITEM_RADIUS_PX *= 1.5; // ブーストアイテムは1.5倍
+            ITEM_TEXT_PX = dpToPx(ITEM_TEXT_DP, context.getResources()) * sSizeMagnification;
+            if (ItemMng.items.get(i).boost_flg) ITEM_TEXT_PX *= 1.5; // ブーストアイテムは1.5倍
 
             // 利用済みは非表示
-            if( ItemMng.items.get(i).status != STATUS_NORMAL ){
+            if (ItemMng.items.get(i).status != STATUS_NORMAL) {
                 continue;
             }
 
             // 描画範囲から出たものは非表示
-            if( ItemMng.items.get(i).nowPositionX < 0 || ItemMng.items.get(i).nowPositionX > max_x  || ItemMng.items.get(i).nowPositionY < 0 || ItemMng.items.get(i).nowPositionY > max_y ){
+            if (ItemMng.items.get(i).nowPositionX < 0 || ItemMng.items.get(i).nowPositionX > max_x || ItemMng.items.get(i).nowPositionY < 0 || ItemMng.items.get(i).nowPositionY > max_y) {
                 ItemMng.items.get(i).status = STATUS_USED;
                 continue;
             }
@@ -182,7 +180,7 @@ public class ItemMng {
             paint.setColor(Color.argb(255, ItemMng.items.get(i).baseColorR, ItemMng.items.get(i).baseColorG, ItemMng.items.get(i).baseColorB));
             canvas.drawCircle(ItemMng.items.get(i).nowPositionX, ItemMng.items.get(i).nowPositionY, ITEM_RADIUS_PX, paint);
 
-            paint.setTextSize( ITEM_TEXT_PX );
+            paint.setTextSize(ITEM_TEXT_PX);
             paint.setColor(Color.argb(255, ItemMng.items.get(i).textColorR, ItemMng.items.get(i).textColorG, ItemMng.items.get(i).textColorB));
 
             widht = paint.measureText(ItemMng.items.get(i).text);
@@ -191,24 +189,28 @@ public class ItemMng {
 
             // プレイヤーのアイテム取得チェック
             for (int j = 0; j < PlayerMng.sPlayerNumber; j++) {
-                if( PlayerMng.players.get(j).status == PlayerMng.STATUS_DEAD ) continue;
-                if( PlayerMng.players.get(j).status == PlayerMng.STATUS_GAMEOVER ) continue;
+                if (PlayerMng.players.get(j).status == PlayerMng.STATUS_DEAD) continue;
+                if (PlayerMng.players.get(j).status == PlayerMng.STATUS_GAMEOVER) continue;
 
                 // アイテムに重なっているか判定（三平方の定理）（プレイヤー座標は中心座標を基準にしているので注意）
-                if( Math.pow((ItemMng.items.get(i).nowPositionX - ( (max_x / 2) + PlayerMng.players.get(j).nowPositionX )),2) + Math.pow((ItemMng.items.get(i).nowPositionY - ( (max_y / 2) + PlayerMng.players.get(j).nowPositionY  )),2)
-                        <= Math.pow(ITEM_RADIUS_PX + PLAYER_RADIUS_PX[j], 2)  ){
+                if (Math.pow((ItemMng.items.get(i).nowPositionX - ((max_x / 2) + PlayerMng.players.get(j).nowPositionX)), 2) + Math.pow((ItemMng.items.get(i).nowPositionY - ((max_y / 2) + PlayerMng.players.get(j).nowPositionY)), 2)
+                        <= Math.pow(ITEM_RADIUS_PX + PLAYER_RADIUS_PX[j], 2)) {
 
                     ItemMng.items.get(i).status = STATUS_USED;
 
 //                    if(ItemMng.items.get(i).type == 0) setAtackEffect(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,0,4,true);
                     // ボム攻撃（ブースト時範囲4）
-                    if(ItemMng.items.get(i).type == 0) setAtackEffect(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,0,ItemMng.items.get(i).boost_flg?2:1,true);
-                    // 縦ライン攻撃
-                    else if(ItemMng.items.get(i).type == 1) setAtackEffect(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,1,ItemMng.items.get(i).boost_flg?2:1,true);
-                    // 横ライン攻撃
-                    else if(ItemMng.items.get(i).type == 2) setAtackEffect(j,PlayerMng.players.get(j).nowPositionCol,PlayerMng.players.get(j).nowPositionRow,2,ItemMng.items.get(i).boost_flg?2:1,true);
-                    else if(ItemMng.items.get(i).type == 3) setSpeedUp(j,ItemMng.items.get(i).boost_flg?2:1);
-                    else setUnrivale(j,ItemMng.items.get(i).boost_flg?2:1);
+                    if (ItemMng.items.get(i).type == 0)
+                        setAtackEffect(j, PlayerMng.players.get(j).nowPositionCol, PlayerMng.players.get(j).nowPositionRow, 0, ItemMng.items.get(i).boost_flg ? 2 : 1, true);
+                        // 縦ライン攻撃
+                    else if (ItemMng.items.get(i).type == 1)
+                        setAtackEffect(j, PlayerMng.players.get(j).nowPositionCol, PlayerMng.players.get(j).nowPositionRow, 1, ItemMng.items.get(i).boost_flg ? 2 : 1, true);
+                        // 横ライン攻撃
+                    else if (ItemMng.items.get(i).type == 2)
+                        setAtackEffect(j, PlayerMng.players.get(j).nowPositionCol, PlayerMng.players.get(j).nowPositionRow, 2, ItemMng.items.get(i).boost_flg ? 2 : 1, true);
+                    else if (ItemMng.items.get(i).type == 3)
+                        setSpeedUp(j, ItemMng.items.get(i).boost_flg ? 2 : 1);
+                    else setUnrivaled(j, ItemMng.items.get(i).boost_flg ? 2 : 1);
 
                 }
             }
@@ -224,36 +226,37 @@ public class ItemMng {
      * mode:0 円、mode:1 縦線、mode:2 横線
      * effect:効果の表示あり、なし
      */
-    public static void setAtackEffect(int user_id, int col, int row, int mode, int level, boolean effect ){
+    public static void setAtackEffect(int user_id, int col, int row, int mode, int level, boolean effect) {
         List<List<Integer>> cr;
 
-        if(mode == 0) cr = getAround(col,row,level);
-        else if(mode == 1) cr = getColLine(row,level);
-        else cr = getRowLine(col,level);
+        if (mode == 0) cr = getAround(col, row, level);
+        else if (mode == 1) cr = getColLine(row, level);
+        else cr = getRowLine(col, level);
 
-        if( hex_color_num[col][row] != PlayerMng.players.get(user_id).no ) {
+        if (hex_color_num[col][row] != PlayerMng.players.get(user_id).no) {
 //            if( hex_color_num[col][row] != 0 ) PlayerMng.players.get((hex_color_num[col][row] ) - 1).score--;
             hex_color_num[col][row] = PlayerMng.players.get(user_id).no;
 //            PlayerMng.players.get(user_id).score++;
         }
 
-        for(int i = 0; i < cr.size(); i++){
+        for (int i = 0; i < cr.size(); i++) {
             // 壁等は色を塗れない
-            if( hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] == WALL_NO || hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] == DALETE_NO) continue;
+            if (hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] == WALL_NO || hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] == DALETE_NO)
+                continue;
             // 自分の色じゃなければ色塗り
-            if( hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] != PlayerMng.players.get(user_id).no ) {
+            if (hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] != PlayerMng.players.get(user_id).no) {
 //                if( hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] != 0 ) PlayerMng.players.get((hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] ) - 1).score--;
                 hex_color_num[cr.get(i).get(0)][cr.get(i).get(1)] = PlayerMng.players.get(user_id).no;
 //                PlayerMng.players.get(user_id).score++;
             }
 
-            if( effect ) hex_effect_num[cr.get(i).get(0)][cr.get(i).get(1)] = 1;
+            if (effect) hex_effect_num[cr.get(i).get(0)][cr.get(i).get(1)] = 1;
 
             // 爆破範囲内のキャラは死亡
-            for(int j = 0; j < PlayerMng.sPlayerNumber; j++){
+            for (int j = 0; j < PlayerMng.sPlayerNumber; j++) {
                 // 自分は平気
-                if( j == user_id ) continue;
-                if( PlayerMng.players.get(j).nowPositionCol == cr.get(i).get(0) && PlayerMng.players.get(j).nowPositionRow == cr.get(i).get(1) ){
+                if (j == user_id) continue;
+                if (PlayerMng.players.get(j).nowPositionCol == cr.get(i).get(0) && PlayerMng.players.get(j).nowPositionRow == cr.get(i).get(1)) {
                     PlayerMng.deadPlayer(j);
                 }
             }
@@ -262,13 +265,14 @@ public class ItemMng {
         PlayerMng.players.get(user_id).erea_flg = true;
     }
 
-    public static void addList(List<List<Integer>> list,int col, int row, int col_add,int row_add){
+    public static void addList(List<List<Integer>> list, int col, int row, int col_add, int row_add) {
 
         int c = col + col_add;
         int r = row + row_add;
 
 
-        if( c < 0 || r < 0 || c > hex_color_num[0].length - 1 || r > hex_color_num.length - 2) return;
+        if (c < 0 || r < 0 || c > hex_color_num[0].length - 1 || r > hex_color_num.length - 2)
+            return;
 
         list.add(Arrays.asList(c, r));
     }
@@ -281,7 +285,7 @@ public class ItemMng {
         SoundMng.playSoundBomb(level);
 
         // 距離
-        switch (level){
+        switch (level) {
             case 0:
                 distance = 1;
                 break;
@@ -300,10 +304,10 @@ public class ItemMng {
 
         list.add(Arrays.asList(col, row));
 
-        addList(list,col,row,-1,0);
-        addList(list,col,row,1,0);
-        addList(list,col,row,0,-1);
-        addList(list,col,row,0,1);
+        addList(list, col, row, -1, 0);
+        addList(list, col, row, 1, 0);
+        addList(list, col, row, 0, -1);
+        addList(list, col, row, 0, 1);
         if (row % 2 == 0) {
             addList(list, col, row, 1, -1);
             addList(list, col, row, 1, 1);
@@ -312,11 +316,11 @@ public class ItemMng {
             addList(list, col, row, -1, 1);
         }
 
-        if( distance >= 2 ){
-            addList(list,col,row,-2,0);
-            addList(list,col,row,2,0);
-            addList(list,col,row,0,-2);
-            addList(list,col,row,0,2);
+        if (distance >= 2) {
+            addList(list, col, row, -2, 0);
+            addList(list, col, row, 2, 0);
+            addList(list, col, row, 0, -2);
+            addList(list, col, row, 0, 2);
             if (row % 2 == 0) {
                 addList(list, col, row, 2, -1);
                 addList(list, col, row, 2, 1);
@@ -338,11 +342,11 @@ public class ItemMng {
             }
         }
 
-        if( distance >= 3 ) {
-            addList(list,col,row,-3,0);
-            addList(list,col,row,3,0);
-            addList(list,col,row,0,-3);
-            addList(list,col,row,0,3);
+        if (distance >= 3) {
+            addList(list, col, row, -3, 0);
+            addList(list, col, row, 3, 0);
+            addList(list, col, row, 0, -3);
+            addList(list, col, row, 0, 3);
             if (row % 2 == 0) {
                 addList(list, col, row, 3, -1);
                 addList(list, col, row, 3, 1);
@@ -358,7 +362,7 @@ public class ItemMng {
                 addList(list, col, row, -2, 2);
                 addList(list, col, row, -2, -1);
                 addList(list, col, row, -2, 1);
-            } else{
+            } else {
                 addList(list, col, row, -3, -1);
                 addList(list, col, row, -3, 1);
                 addList(list, col, row, -2, -2);
@@ -376,11 +380,11 @@ public class ItemMng {
             }
         }
 
-        if( distance >= 4 ) {
-            addList(list,col,row,-4,0);
-            addList(list,col,row,4,0);
-            addList(list,col,row,0,-4);
-            addList(list,col,row,0,4);
+        if (distance >= 4) {
+            addList(list, col, row, -4, 0);
+            addList(list, col, row, 4, 0);
+            addList(list, col, row, 0, -4);
+            addList(list, col, row, 0, 4);
             if (row % 2 == 0) {
                 addList(list, col, row, 4, -1);
                 addList(list, col, row, 4, 1);
@@ -437,7 +441,7 @@ public class ItemMng {
         SoundMng.playSoundLeaser(level);
 
         // 距離
-        switch (level){
+        switch (level) {
             case 0:
                 distance = 1;
                 break;
@@ -454,15 +458,15 @@ public class ItemMng {
 
         List<List<Integer>> list = new ArrayList<>();
 
-        for(int i = 0; i < hex_color_num.length; i++ ){
+        for (int i = 0; i < hex_color_num.length; i++) {
             list.add(Arrays.asList(i, row));
         }
 
-        if( distance == 3 ){
-            for(int i = 0; i < hex_color_num.length; i++ ){
+        if (distance == 3) {
+            for (int i = 0; i < hex_color_num.length; i++) {
                 list.add(Arrays.asList(i, row - 1));
             }
-            for(int i = 0; i < hex_color_num.length; i++ ){
+            for (int i = 0; i < hex_color_num.length; i++) {
                 list.add(Arrays.asList(i, row + 1));
             }
         }
@@ -478,7 +482,7 @@ public class ItemMng {
         SoundMng.playSoundWave(level);
 
         // 距離
-        switch (level){
+        switch (level) {
             case 0:
                 distance = 1;
                 break;
@@ -495,57 +499,57 @@ public class ItemMng {
 
         List<List<Integer>> list = new ArrayList<>();
 
-        for(int i = 0; i < hex_color_num[0].length; i++ ){
+        for (int i = 0; i < hex_color_num[0].length; i++) {
             list.add(Arrays.asList(col, i));
         }
-        if( distance == 3 ){
-            for(int i = 0; i < hex_color_num[0].length; i++ ){
+        if (distance == 3) {
+            for (int i = 0; i < hex_color_num[0].length; i++) {
                 list.add(Arrays.asList(col - 1, i));
             }
-            for(int i = 0; i < hex_color_num[0].length; i++ ){
+            for (int i = 0; i < hex_color_num[0].length; i++) {
                 list.add(Arrays.asList(col + 1, i));
             }
         }
         return list;
     }
 
-    public static void setSpeedUp(int user_id,int level){
+    public static void setSpeedUp(int user_id, int level) {
 
         // 音
         SoundMng.playSoundSpeedUp(level);
 
         PlayerMng.players.get(user_id).speedUpTime = TimeUtils.getCurrentTime();
         PlayerMng.players.get(user_id).speedUpFlg = true;
-        if( level == 2 ) PlayerMng.players.get(user_id).speedUpBoostFlg = true;
+        if (level == 2) PlayerMng.players.get(user_id).speedUpBoostFlg = true;
     }
 
-    public static void setUnrivale(int user_id,int level){
+    public static void setUnrivaled(int user_id, int level) {
 
         // 音
         SoundMng.playSoundUnrivaled(level);
 
-        PlayerMng.players.get(user_id).unrivaledTime = TimeUtils.getCurrentTime() + ITEM_UNRIVALE_TIME;
+        PlayerMng.players.get(user_id).unrivaledTime = TimeUtils.getCurrentTime() + ITEM_UNRIVALED_TIME;
         PlayerMng.players.get(user_id).unrivaledFlg = true;
-        if( level == 2 ){
+        if (level == 2) {
             PLAYER_RADIUS_PX[user_id] = PLAYER_RADIUS_BOOST_PX;
             PlayerMng.players.get(user_id).unrivaledBoostFlg = true;
         }
     }
 
-    public static void checkItemEffect(){
+    public static void checkItemEffect() {
         long currentTime = TimeUtils.getCurrentTime();
 
-        for(int i = 0; i < PlayerMng.sPlayerNumber; i++){
-            if( PlayerMng.players.get(i).speedUpFlg ){
-                if( currentTime > PlayerMng.players.get(i).speedUpTime + SPEEDUP_TIME ){
+        for (int i = 0; i < PlayerMng.sPlayerNumber; i++) {
+            if (PlayerMng.players.get(i).speedUpFlg) {
+                if (currentTime > PlayerMng.players.get(i).speedUpTime + SPEEDUP_TIME) {
                     PlayerMng.players.get(i).speedUpTime = 0;
                     PlayerMng.players.get(i).speedUpFlg = false;
                     PlayerMng.players.get(i).speedUpBoostFlg = false;
                 }
             }
 
-            if( PlayerMng.players.get(i).unrivaledFlg ){
-                if( currentTime > PlayerMng.players.get(i).unrivaledTime) {
+            if (PlayerMng.players.get(i).unrivaledFlg) {
+                if (currentTime > PlayerMng.players.get(i).unrivaledTime) {
                     PlayerMng.players.get(i).unrivaledTime = 0;
                     PlayerMng.players.get(i).unrivaledFlg = false;
                     if (PlayerMng.players.get(i).unrivaledBoostFlg) {

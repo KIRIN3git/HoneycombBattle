@@ -2,10 +2,9 @@ package kirin3.jp.honeycombbattle.top;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -13,22 +12,26 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
-
 import com.google.android.gms.ads.AdView;
 
+import io.fabric.sdk.android.Fabric;
 import kirin3.jp.honeycombbattle.R;
 import kirin3.jp.honeycombbattle.game.GameActivity;
 import kirin3.jp.honeycombbattle.game.GameSurfaceView;
 import kirin3.jp.honeycombbattle.util.AdmobHelper;
 import kirin3.jp.honeycombbattle.util.AnalyticsHelper;
+import kirin3.jp.honeycombbattle.util.LogUtils;
 import kirin3.jp.honeycombbattle.util.SettingsUtils;
 import kirin3.jp.honeycombbattle.util.ViewUtils;
 import kirin3.jp.honeycombbattle.webview.WebViewActivity;
 
+import static kirin3.jp.honeycombbattle.util.LogUtils.LOGD;
+
 public class TopActivity extends AppCompatActivity {
 
     Context mContext;
+
+    private static final String TAG = LogUtils.makeLogTag(TopActivity.class);
 
     static RadioGroup sRadioGroupBattleTime;
     static RadioGroup sRadioGroupPlayerNumber;
@@ -43,7 +46,7 @@ public class TopActivity extends AppCompatActivity {
     static RadioButton sRadioButtonFieldSize;
 
 
-    TextView textPrivacyPoricy;
+    TextView textManual, textPrivacyPoricy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,35 +55,34 @@ public class TopActivity extends AppCompatActivity {
         mContext = getApplicationContext();
 
 
-
         setContentView(R.layout.activity_top);
 
         // AdMob設定
-        AdmobHelper.loadBanner((AdView)findViewById(R.id.adView));
+        AdmobHelper.loadBanner((AdView) findViewById(R.id.adView));
 
         int id = 0;
         id = SettingsUtils.getSettingRadioIdTime(mContext);
-        if( id != 0 ){
+        if (id != 0) {
             sRadioIButtonBattleTime = (RadioButton) findViewById(id);
             sRadioIButtonBattleTime.setChecked(true);
         }
         id = SettingsUtils.getSettingRadioIdNumber(mContext);
-        if( id != 0 ){
+        if (id != 0) {
             sRadioIButtonPlayerNumber = (RadioButton) findViewById(id);
             sRadioIButtonPlayerNumber.setChecked(true);
         }
         id = SettingsUtils.getSettingRadioIdSpeed(mContext);
-        if( id != 0 ){
+        if (id != 0) {
             sRadioIButtonPlayerSpeed = (RadioButton) findViewById(id);
             sRadioIButtonPlayerSpeed.setChecked(true);
         }
         id = SettingsUtils.getSettingRadioIdItem(mContext);
-        if( id != 0 ){
+        if (id != 0) {
             sRadioIButtonItemQuantity = (RadioButton) findViewById(id);
             sRadioIButtonItemQuantity.setChecked(true);
         }
         id = SettingsUtils.getSettingRadioIdField(mContext);
-        if( id != 0 ){
+        if (id != 0) {
             sRadioButtonFieldSize = (RadioButton) findViewById(id);
             sRadioButtonFieldSize.setChecked(true);
         }
@@ -93,6 +95,7 @@ public class TopActivity extends AppCompatActivity {
             }
         }
 
+        textManual = (TextView) findViewById(R.id.textManual);
         textPrivacyPoricy = (TextView) findViewById(R.id.textPrivacyPoricy);
 
         sRadioGroupBattleTime = (RadioGroup) findViewById(R.id.RadioGroupBattleTime);
@@ -109,17 +112,14 @@ public class TopActivity extends AppCompatActivity {
             }
         });
 
-        Log.w( "DEBUG_DATA", "getXDpi " + ViewUtils.getXDpi(getApplicationContext().getResources()) );
-        Log.w( "DEBUG_DATA", "getDisplayMagnification " + ViewUtils.getDisplayMagnification(getApplicationContext().getResources()) );
-
-
-        Log.w( "DEBUG_DATA", "is_tablet " + ViewUtils.checkTablet(getApplicationContext().getResources()));
+        LOGD(TAG, "getXDpi : " + ViewUtils.getXDpi(getApplicationContext().getResources()));
+        LOGD(TAG, "getDisplayMagnification : " + ViewUtils.getDisplayMagnification(getApplicationContext().getResources()));
+        LOGD(TAG, "is_tablet : " + ViewUtils.checkTablet(getApplicationContext().getResources()));
 
         DisplayMetrics metrics = new DisplayMetrics();
-        Log.w( "DEBUG_DATA", "metrics.densityDpi " + metrics.densityDpi );
+        LOGD(TAG, "densityDpi : " + metrics.densityDpi);
 
-
-        Button btn = (Button)findViewById(R.id.game_start);
+        Button btn = (Button) findViewById(R.id.game_start);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,26 +136,42 @@ public class TopActivity extends AppCompatActivity {
                 SettingsUtils.setSettingRadioIdItem(mContext, sRadioGroupItemQuantity.getCheckedRadioButtonId());
                 SettingsUtils.setSettingRadioIdField(mContext, sRadioGroupFieldSize.getCheckedRadioButtonId());
 
-                AnalyticsHelper.setAnalyticsConfig("time_config",sRadioIButtonBattleTime.getText().toString());
-                AnalyticsHelper.setAnalyticsConfig("number_config",sRadioIButtonPlayerNumber.getText().toString());
-                AnalyticsHelper.setAnalyticsConfig("speed_config",sRadioIButtonPlayerSpeed.getText().toString());
-                AnalyticsHelper.setAnalyticsConfig("item_config",sRadioIButtonItemQuantity.getText().toString());
-                AnalyticsHelper.setAnalyticsConfig("field_config",sRadioButtonFieldSize.getText().toString());
+                AnalyticsHelper.setAnalyticsConfig("time_config", sRadioIButtonBattleTime.getText().toString());
+                AnalyticsHelper.setAnalyticsConfig("number_config", sRadioIButtonPlayerNumber.getText().toString());
+                AnalyticsHelper.setAnalyticsConfig("speed_config", sRadioIButtonPlayerSpeed.getText().toString());
+                AnalyticsHelper.setAnalyticsConfig("item_config", sRadioIButtonItemQuantity.getText().toString());
+                AnalyticsHelper.setAnalyticsConfig("field_config", sRadioButtonFieldSize.getText().toString());
 
                 // インテントのインスタンス生成
                 Intent intent = new Intent(TopActivity.this, GameActivity.class);
-                intent.putExtra(GameSurfaceView.INTENT_BATTLE_TIME,sRadioIButtonBattleTime.getText());
-                intent.putExtra(GameSurfaceView.INTENT_PLAYER_NUMBER,sRadioIButtonPlayerNumber.getText());
-                intent.putExtra(GameSurfaceView.INTENT_PLAYER_SPEED,sRadioIButtonPlayerSpeed.getText());
-                intent.putExtra(GameSurfaceView.INTENT_ITEM_QUANTITY,sRadioIButtonItemQuantity.getText());
-                intent.putExtra(GameSurfaceView.INTENT_FIELD_SIZE,sRadioButtonFieldSize.getText());
+                intent.putExtra(GameSurfaceView.INTENT_BATTLE_TIME, sRadioIButtonBattleTime.getText());
+                intent.putExtra(GameSurfaceView.INTENT_PLAYER_NUMBER, sRadioIButtonPlayerNumber.getText());
+                intent.putExtra(GameSurfaceView.INTENT_PLAYER_SPEED, sRadioIButtonPlayerSpeed.getText());
+                intent.putExtra(GameSurfaceView.INTENT_ITEM_QUANTITY, sRadioIButtonItemQuantity.getText());
+                intent.putExtra(GameSurfaceView.INTENT_FIELD_SIZE, sRadioButtonFieldSize.getText());
                 // ゲーム画面の起動
                 startActivity(intent);
 
             }
         });
 
-        textPrivacyPoricy.setOnClickListener(new View.OnClickListener(){
+
+        textManual.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // インテントのインスタンス生成
+                Intent intent = new Intent(TopActivity.this, WebViewActivity.class);
+
+                intent.putExtra(
+                        WebViewActivity.INTENT_INPUT_URL,
+                        getApplicationContext().getString(R.string.manual_url));
+
+                // プライバシーポリシーの起動
+                startActivity(intent);
+            }
+        });
+
+        textPrivacyPoricy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // インテントのインスタンス生成
@@ -169,7 +185,6 @@ public class TopActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
 
 
         // Clashlytics初期化

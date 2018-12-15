@@ -13,6 +13,7 @@ public class WebViewActivity extends AppCompatActivity {
     public static final String INTENT_INPUT_URL = "INPUT_URL";
     static String url = "";
     static WebView sWebView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,10 +29,10 @@ public class WebViewActivity extends AppCompatActivity {
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // 端末の戻るボタンでブラウザバック
-        if(keyCode == KeyEvent.KEYCODE_BACK && sWebView.canGoBack()) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && sWebView.canGoBack()) {
             sWebView.goBack();
             return true;
         }
-        return super.onKeyDown(keyCode,  event);
+        return super.onKeyDown(keyCode, event);
     }
 }
