@@ -43,10 +43,8 @@
     <string name="banner_ad_unit_id_top">ca-app-pub-1057765466901496/5540336254</string>
     <string name="banner_ad_unit_id_result">ca-app-pub-1057765466901496/8601531718</string>
 
-
     <string name="interstitial_ad_unit_id_test">ca-app-pub-3940256099942544/1033173712</string>
     <string name="interstitial_ad_unit_id_next_game">ca-app-pub-1057765466901496/8775237200</string>
-
 
     <!-- Crashlytics -->
     <string name="com.crashlytics.useFirebaseAppId">true</string>
