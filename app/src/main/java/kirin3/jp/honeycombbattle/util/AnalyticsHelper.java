@@ -11,7 +11,7 @@ public class AnalyticsHelper {
 
     private static final String TAG = LogUtils.makeLogTag(AnalyticsHelper.class);
 
-    private static FirebaseAnalytics mFirebaseAnalytics;
+    private static FirebaseAnalytics mFirebaseAnalytics = null;
 
     public static synchronized void initializeAnalytic(Context context) {
         try {
@@ -42,7 +42,7 @@ public class AnalyticsHelper {
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, id);
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name);
         bundle.putString(key, value);
-        mFirebaseAnalytics.logEvent("original_event", bundle);
+        if( mFirebaseAnalytics != null && bundle != null ) mFirebaseAnalytics.logEvent("original_event", bundle);
     }
 
     public static void setAnalytics(String id, String name, String key, Integer value) {
@@ -51,7 +51,7 @@ public class AnalyticsHelper {
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, id);
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name);
         bundle.putInt(key, value);
-        mFirebaseAnalytics.logEvent("original_event", bundle);
+        if( mFirebaseAnalytics != null && bundle != null ) mFirebaseAnalytics.logEvent("original_event", bundle);
     }
 
     private static void setAnalyticsEnabled(boolean enabled) {
