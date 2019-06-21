@@ -13,6 +13,9 @@ public class AnalyticsHelper {
 
     private static FirebaseAnalytics mFirebaseAnalytics;
 
+    /****
+     * スプラッシュ画面など起動時のクラスで呼び出す必要あり
+     */
     public static synchronized void initializeAnalytic(Context context) {
         try {
             mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);

@@ -33,7 +33,6 @@ public class SplashActivity extends AppCompatActivity {
 
     private static final int SPLASH_DISPLAY_LENGHT = 2 * 1000;
 
-    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +61,5 @@ public class SplashActivity extends AppCompatActivity {
                 }
             }
         }, SPLASH_DISPLAY_LENGHT);
-
     }
-
 }

@@ -7,6 +7,4 @@ public class Config {
 
     // ゲームFPS
     public static final long FPS = 60;
-
-
 }

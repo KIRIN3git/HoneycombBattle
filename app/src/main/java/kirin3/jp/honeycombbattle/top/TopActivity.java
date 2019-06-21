@@ -42,7 +42,7 @@ public class TopActivity extends AppCompatActivity {
     static RadioButton sRadioIButtonBattleTime;
     static RadioButton sRadioIButtonPlayerNumber;
     static RadioButton sRadioIButtonPlayerSpeed;
-    static RadioButton sRadioIButtonItemQuantity;
+    public static RadioButton sRadioIButtonItemQuantity;
     static RadioButton sRadioButtonFieldSize;
 
 
